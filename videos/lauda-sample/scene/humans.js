@@ -120,8 +120,8 @@ const FOREARM = [
   { t: 1, w: 0.058, d: 0.044 },
 ];
 const THIGH = [
-  { t: 0, w: 0.17, d: 0.17 },
-  { t: 0.35, w: 0.155, d: 0.16, f: 0.01 },
+  { t: 0, w: 0.19, d: 0.19 },
+  { t: 0.35, w: 0.17, d: 0.175, f: 0.01 },
   { t: 0.8, w: 0.115, d: 0.12 },
   { t: 1, w: 0.105, d: 0.11 },
 ];
@@ -216,7 +216,7 @@ export function buildDriver(suitColor = ACCENT) {
   d.add(new THREE.Mesh(torso, suit));
 
   // suit details: belt with buckle, zip, quilted shoulder seams, epaulettes, chest patch, collar
-  const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.168, 0.166, 0.05, 48), cloth("#1d1d1d", "#666", 0.7));
+  const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.176, 0.174, 0.05, 48), cloth("#1d1d1d", "#666", 0.7));
   belt.scale.z = 0.64;
   belt.position.y = 0.05;
   d.add(belt);
@@ -327,13 +327,11 @@ export function buildPerson(color = "#3b3d40", pose = {}) {
     place(thigh, hip, knee);
     const calf = new THREE.Mesh(limbGeometry(CALF), overall);
     place(calf, knee, ankle);
-    const kneeCap = new THREE.Mesh(new THREE.SphereGeometry(0.056, 24, 16), overall);
-    kneeCap.position.copy(knee);
-    const shoe = new THREE.Mesh(crease(rbox(0.11, 0.09, 0.28, 0.035, 4), 50), boot);
-    shoe.position.set(sx * 0.115, 0.045, 0.05);
-    const sole = new THREE.Mesh(rbox(0.115, 0.02, 0.29, 0.008), std("#0d0d0d", 0.8));
-    sole.position.set(sx * 0.115, 0.01, 0.05);
-    p.add(thigh, calf, kneeCap, shoe, sole);
+    const shoe = new THREE.Mesh(crease(rbox(0.095, 0.075, 0.25, 0.032, 4), 50), boot);
+    shoe.position.set(sx * 0.115, 0.045, 0.045);
+    const sole = new THREE.Mesh(rbox(0.1, 0.016, 0.26, 0.007), std("#0d0d0d", 0.8));
+    sole.position.set(sx * 0.115, 0.008, 0.045);
+    p.add(thigh, calf, shoe, sole);
   }
 
   // pelvis + torso
@@ -351,7 +349,7 @@ export function buildPerson(color = "#3b3d40", pose = {}) {
   body.rotateX(-Math.PI / 2);
   p.add(new THREE.Mesh(body, overall));
   // overall details: belt, chest pockets, zip, collar
-  const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.168, 0.168, 0.05, 40), std("#151515", 0.5));
+  const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.178, 0.178, 0.05, 40), std("#151515", 0.5));
   belt.scale.z = 0.65;
   belt.position.y = 1.0;
   p.add(belt);
@@ -370,46 +368,62 @@ export function buildPerson(color = "#3b3d40", pose = {}) {
   collar.position.y = 1.52;
   p.add(collar);
 
-  // neck, head, hair, ears
-  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.057, 0.12, 28), skin);
+  // neck, head, hair, ears — or a knitted balaclava for a driver
+  const knit = cloth("#ecebe7", "#ffffff", 0.95);
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.057, 0.12, 28), pose.balaclava ? knit : skin);
   neck.position.y = 1.57;
-  const head = new THREE.Mesh(headGeometry(0.1, 0.7), skin);
-  head.position.set(0, 1.71, 0.01);
-  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.104, 48, 24, 0, Math.PI * 2, 0, 1.55), cloth("#2a221d", "#5a4a40", 0.9));
-  hair.scale.set(0.82, 1.06, 1.02);
-  hair.position.set(0, 1.725, 0.002);
-  hair.rotation.x = -0.25;
-  p.add(neck, head, hair);
-  for (const sx of [-1, 1]) {
-    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 12), skin);
-    ear.scale.set(0.35, 1, 0.7);
-    ear.position.set(sx * 0.08, 1.705, -0.005);
-    p.add(ear);
+  p.add(neck);
+  if (pose.balaclava) {
+    const knitWhite = new THREE.Color("#ecebe7"), skinTone = new THREE.Color("#b98a6e");
+    const hood = cloth("#ffffff", "#ffffff", 0.95);
+    hood.vertexColors = true;
+    const head = new THREE.Mesh(
+      headGeometry(0.1, 0.8, (x, y, z) => (z > 0.45 && Math.abs(y - 0.07) < 0.13 && Math.abs(x) < 0.55 ? skinTone : knitWhite)),
+      hood,
+    );
+    head.position.set(0, 1.71, 0.01);
+    p.add(head);
+  } else {
+    const head = new THREE.Mesh(headGeometry(0.1, 0.7), skin);
+    head.position.set(0, 1.71, 0.01);
+    const hair = new THREE.Mesh(new THREE.SphereGeometry(0.104, 48, 24, 0, Math.PI * 2, 0, 1.55), cloth("#2a221d", "#5a4a40", 0.9));
+    hair.scale.set(0.82, 1.06, 1.02);
+    hair.position.set(0, 1.725, 0.002);
+    hair.rotation.x = -0.25;
+    p.add(head, hair);
+    for (const sx of [-1, 1]) {
+      const ear = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 12), skin);
+      ear.scale.set(0.35, 1, 0.7);
+      ear.position.set(sx * 0.08, 1.705, -0.005);
+      p.add(ear);
+    }
   }
 
   // arms hanging or reaching
+  const hands = {};
   for (const sx of [-1, 1]) {
-    const S = new THREE.Vector3(sx * 0.2, 1.42, -0.005);
-    const reach = pose.reach ?? 0.1;
-    const bend = pose.bend ?? 0.25;
-    const spread = pose.spread ?? 0.1;
+    const S = new THREE.Vector3(sx * 0.175, 1.415, -0.005);
+    const ap = { ...pose, ...(pose.arms?.[sx] ?? {}) };
+    const reach = ap.reach ?? 0.1;
+    const bend = ap.bend ?? 0.25;
+    const spread = ap.spread ?? 0.1;
     const upperDir = new THREE.Vector3(sx * Math.sin(spread), -Math.cos(reach), Math.sin(reach)).normalize();
     const E = S.clone().addScaledVector(upperDir, 0.29);
     const foreDir = upperDir.clone().applyAxisAngle(new THREE.Vector3(1, 0, 0), -bend).normalize();
     const W = E.clone().addScaledVector(foreDir, 0.25);
-    const deltoid = new THREE.Mesh(new THREE.SphereGeometry(0.057, 28, 20), overall);
-    deltoid.position.copy(S);
     const upper = new THREE.Mesh(limbGeometry(UPPER_ARM), overall);
     place(upper, S, E);
-    const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.04, 24, 16), overall);
+    const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.036, 24, 16), overall);
     elbow.position.copy(E);
     const fore = new THREE.Mesh(limbGeometry(FOREARM), overall);
     place(fore, E, W);
-    const hand = buildHand(skin, sx, 0.35);
+    const hand = buildHand(pose.gloves ? cloth("#262626", "#888888", 0.8) : skin, sx, ap.grip ?? 0.35);
     hand.position.copy(W).addScaledVector(foreDir, 0.05);
     hand.quaternion.setFromUnitVectors(Y, foreDir);
-    p.add(deltoid, upper, elbow, fore, hand);
+    hands[sx] = hand.position.clone();
+    p.add(upper, elbow, fore, hand);
   }
+  p.userData.hands = hands;
   if (pose.lean) p.rotation.x = pose.lean;
   return shadowed(p);
 }

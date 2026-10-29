@@ -73,7 +73,7 @@ export function loft(sections, n = 24, deg = 30) {
   for (let i = 0; i < sections.length - 1; i++) {
     for (let k = 0; k < n; k++) {
       const a = i * n + k, b = i * n + ((k + 1) % n), c = (i + 1) * n + k, d = (i + 1) * n + ((k + 1) % n);
-      idx.push(a, c, b, b, c, d);
+      idx.push(a, b, c, b, d, c); // outward-facing winding
     }
   }
   for (const [i, flip] of [[0, true], [sections.length - 1, false]]) {
