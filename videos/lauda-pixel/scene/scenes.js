@@ -26,30 +26,76 @@ function buildHospital() {
   S.rect(38, 26, 2, 70, P.greyD); S.rect(12, 60, 54, 2, P.greyD);
   // curtain folds
   for (let y = 20; y < 112; y++) for (let x = 68; x < 78; x++) S.px(x, y, (x % 3 === 0) ? "#1a2336" : dith(x, y, 0.5) ? "#253150" : "#1f2a44");
-  // IV stand with a drip bag
-  S.rect(86, 34, 1, 136, P.metal);
-  S.rect(82, 34, 9, 1, P.metal);
-  S.rect(83, 36, 6, 10, "#c9d6df"); S.rect(84, 40, 4, 5, "#9fb4c2");
-  S.rect(86, 46, 1, 60, "#8aa0ad");
-  // wall monitor on an arm
+  // wall monitor on an arm (bed sits below it)
   S.rect(150, 48, 22, 2, P.greyD);
-  S.rect(110, 30, 46, 34, "#2a3036"); S.rect(110, 30, 46, 1, "#3d454d");
-  S.rect(113, 33, 40, 26, P.screen);
-  S.rect(150, 61, 3, 1, P.ecg);
-  // bed: headboard, frame, mattress, pillow, patient under the sheet, bandaged head
-  S.rect(92, 112, 4, 58, P.metal); S.rect(176, 126, 3, 44, P.metal);
-  S.rect(92, 150, 87, 4, P.greyD);
-  S.rect(96, 142, 82, 8, P.sheetD);
-  const sheetTop = (x) => 136 - Math.round(4 * Math.exp(-(((x - 128) / 12) ** 2)) + 3 * Math.exp(-(((x - 160) / 9) ** 2)));
-  for (let x = 106; x < 178; x++) for (let y = sheetTop(x); y < 146; y++) S.px(x, y, y === sheetTop(x) ? P.sheetH : dith(x, y, 0.35) ? P.sheetD : P.sheet);
-  S.rect(96, 130, 16, 10, P.sheetH); S.rect(96, 139, 16, 1, P.sheetD);
-  const head = new Sprite(16, 14);
-  head.ellipse(8, 7, 6, 6, P.white);
-  for (let i = 0; i < 4; i++) head.rect(2, 3 + i * 3, 12, 1, "#c7ccd1");
-  head.set(4, 7, P.skin); head.set(5, 7, P.skin);
-  head.outline(P.out).blit(S, 97, 118);
-  for (let x = 98; x < 176; x += 6) S.rect(x, 154, 1, 16, P.greyD);
-  S.rect(98, 166, 2, 4, P.tyre); S.rect(170, 166, 2, 4, P.tyre);
+  S.rect(110, 26, 46, 34, "#2a3036"); S.rect(110, 26, 46, 1, "#3d454d");
+  S.rect(113, 29, 40, 26, P.screen);
+  // IV stand at the foot of the bed: a saline bag and a darker bag of blood
+  S.rect(176, 30, 1, 140, P.metal); S.rect(166, 30, 14, 1, P.metal);
+  S.rect(166, 32, 6, 12, "#c9d6df"); S.rect(167, 37, 4, 6, "#9fb4c2");
+  S.rect(174, 32, 6, 12, "#5e0f12"); S.rect(175, 34, 4, 9, "#8a161b"); S.px(176, 35, "#c23a3a");
+  // a cold pool of light over the patient
+  for (let y = 70; y < 170; y++) for (let x = 54; x < 180; x++) {
+    const d = ((x - 108) / 64) ** 2 + ((y - 128) / 46) ** 2;
+    if (d < 1 && dith(x, y, (1 - d) * 0.5)) S.px(x, y, mix(P.room2, "#3c5560", 0.55));
+  }
+  // bed frame, mattress, rails
+  S.rect(54, 116, 4, 54, P.metal); S.rect(54, 116, 4, 1, P.white);
+  S.rect(54, 150, 126, 5, P.greyD); S.rect(54, 150, 126, 1, P.metal);
+  S.rect(58, 142, 122, 8, P.sheetD);
+  for (let x = 60; x < 180; x += 7) S.rect(x, 155, 1, 15, P.greyD);
+  S.rect(62, 166, 2, 4, P.tyre); S.rect(172, 166, 2, 4, P.tyre);
+  // sheet over the body, with folds
+  const sheetTop = (x) => 132 - Math.round(5 * Math.exp(-(((x - 116) / 14) ** 2)) + 3 * Math.exp(-(((x - 160) / 10) ** 2)));
+  for (let x = 98; x < 180; x++) for (let y = sheetTop(x); y < 147; y++) S.px(x, y, y === sheetTop(x) ? P.sheetH : (x % 9 === 0 && y > sheetTop(x) + 2) ? P.sheetD : dith(x, y, 0.3) ? P.sheetD : P.sheet);
+  // pillow
+  const pillow = new Sprite(44, 16);
+  pillow.ellipse(22, 8, 21, 7, P.sheetH); pillow.rect(4, 10, 36, 3, P.sheet);
+  pillow.outline(P.out).blit(S, 58, 128);
+  // the patient, lying face-up: head in profile (crown on the pillow, chin to the right),
+  // bandaged and burned, under an oxygen mask, a bandaged arm on the sheet
+  const pat = new Sprite(124, 72);
+  // burns in patches (3×2-pixel blocks) over skin, so the face shape still reads
+  const burn = (x, y) => {
+    const h = hash(Math.floor(x / 3) * 7 + 3, Math.floor(y / 2) * 13 + 1), fine = hash(x, y);
+    if (h < 0.28) return fine < 0.7 ? "#9e3326" : "#6a2219";
+    if (h < 0.42) return fine < 0.6 ? "#4a1913" : "#2e100c";
+    if (h < 0.55) return "#d88a78";
+    return fine < 0.85 ? P.skin : "#c9967a";
+  };
+  pat.ellipse(60, 52, 13, 6, P.white); // gauze over neck and shoulder
+  pat.ellipse(28, 40, 18, 13, "skull"); // head lying face-up: crown on the pillow (left), chin right
+  pat.poly([[34, 30], [37, 21], [40, 21], [42, 30]], "face"); // nose pointing up
+  pat.poly([[41, 30], [45, 29], [48, 32], [49, 37], [44, 40]], "face"); // lips and chin
+  pat.poly([[44, 38], [50, 40], [56, 48], [46, 50]], "face"); // throat
+  for (let y = 0; y < pat.h; y++) for (let x = 0; x < pat.w; x++) {
+    const c = pat.get(x, y);
+    if (c === "skull") pat.set(x, y, x < 25 ? ((x + y) % 4 === 0 ? "#c7ccd1" : P.white) : burn(x, y));
+    else if (c === "face") pat.set(x, y, burn(x, y));
+  }
+  for (let y = 26; y < 36; y++) for (let x = 24; x < 31; x++) if (pat.get(x, y)) pat.set(x, y, (x + y) % 4 ? P.white : "#c7ccd1"); // forehead wrap
+  for (const [bx, by, r] of [[14, 36, 3], [21, 30, 2], [12, 46, 2], [27, 29, 2]]) // blood soaking through
+    for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) if (x * x + y * y <= r * r && pat.get(bx + x, by + y)) pat.set(bx + x, by + y, x * x + y * y < r ? "#6e0c0c" : "#9e2a26");
+  // profile edge in a darker skin tone so forehead, nose, lips and chin read clearly
+  for (let y = 1; y < pat.h - 1; y++) for (let x = 1; x < pat.w - 1; x++) {
+    const c = pat.get(x, y);
+    if (c && c !== P.white && c !== "#c7ccd1" && !pat.get(x, y - 1)) pat.set(x, y, "#7a4a38");
+  }
+  pat.ellipse(29, 44, 3, 4, "#a8705a"); pat.set(29, 44, "#5a3326"); // ear
+  pat.rect(44, 31, 3, 1, "#5a1f18"); // cracked lips at the mask's edge
+  pat.rect(31, 32, 5, 1, P.ink); pat.rect(30, 31, 7, 1, "#8c2f24"); pat.rect(31, 33, 5, 1, "#a83a2c"); // swollen shut eye
+  pat.ellipse(41, 26, 6, 4, "#7fa79b"); pat.ellipse(41, 26, 4, 2, "#557f73"); pat.rect(36, 25, 11, 1, "#c9ddd7"); // oxygen mask
+  for (let i = 0; i < 12; i++) pat.set(36 - i, 29 + Math.round(i * 0.5), "#8fb3a8"); // mask strap
+  pat.thick(66, 54, 100, 58, 3, P.white); // bandaged arm
+  for (let x = 68; x < 100; x += 3) pat.rect(x, 55 + Math.round((x - 66) * 0.12), 1, 4, "#c7ccd1");
+  pat.ellipse(105, 59, 5, 3, P.skin);
+  for (let y = 55; y < 64; y++) for (let x = 99; x < 112; x++) if (pat.get(x, y) === P.skin) pat.set(x, y, burn(x, y));
+  pat.rect(92, 56, 5, 2, "#e8e8e8"); // tape over the IV line
+  pat.outline(P.out).blit(S, 50, 82);
+  // oxygen tube to the wall, IV line to the drip
+  for (let i = 0; i <= 40; i++) { const k = i / 40; S.px(lerp(91, 106, k), lerp(105, 60, k) + Math.sin(k * 6) * 2, "#8fb3a8"); }
+  for (let i = 0; i <= 60; i++) { const k = i / 60; S.px(lerp(144, 170, k), lerp(138, 44, k) - Math.sin(k * 3.14) * 10, "#a8b8c2"); }
+  S.rect(104, 58, 4, 3, P.greyD);
   // floor tiles
   for (let y = 170; y < LH; y++) for (let x = 0; x < LW + 12; x++) S.px(x, y, (x % 16 === 0 || y % 12 === 0) ? "#151a1f" : dith(x, y, 0.3) ? "#1d242a" : "#1a2026");
   // bedside table
@@ -323,7 +369,7 @@ export function makeScenes() {
       blitBg(S, hospital, pan);
       S.ox = -pan;
       drawWindowGlass(S, t);
-      drawECG(S, t, 113, 33, 40, 26, { bpm: 54 });
+      drawECG(S, t, 113, 29, 40, 26, { bpm: 54 });
       helmetSprite(1.4, true).blit(S, HELMET_POS[0], HELMET_POS[1]);
       S.ox = 0;
     },
@@ -334,7 +380,7 @@ export function makeScenes() {
       if (u < cut) {
         blitBg(S, hospital);
         drawWindowGlass(S, t, 22); // day/night flicker through the window
-        drawECG(S, t, 113, 33, 40, 26, { bpm: 72 });
+        drawECG(S, t, 113, 29, 40, 26, { bpm: 72 });
         helmetSprite(1.4, true).blit(S, HELMET_POS[0], HELMET_POS[1]);
         S.dithRect(0, 0, LW, LH, P.ink, 0.45);
         const day = Math.min(42, Math.round(42 * inOut((u - 0.15) / Math.max(0.3, cut - 0.45))));

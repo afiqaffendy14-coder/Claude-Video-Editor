@@ -7,7 +7,7 @@ message: "The bravest thing Niki Lauda ever did was get out of the car"
 ## Frame 1: The hook (0.0-3.2s)
 
 - status: animated
-- scene: Hospital at night. The scorched red helmet on the bedside table, the patient bandaged in bed, rain on the window. The camera drifts left.
+- scene: Hospital at night, close on the bed: his head bandaged with blood soaking through, burns across his face, an oxygen mask, a bandaged arm with a burned hand, a blood bag on the drip. The scorched helmet sits on the bedside table; rain on the window.
 - voiceover: Doctors didn't think this man would survive.
 - sound: 8-bit heart-monitor beeps, soft rain behind glass, chiptune bed fades in
 

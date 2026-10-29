@@ -3,7 +3,7 @@ import { writeFileSync } from "node:fs";
 import { SCENES, LINES, DURATION } from "../scene/schedule.js";
 
 const notes = {
-  hook: { name: "The hook", stills: ["0.6", "2.8"], scene: "Hospital at night. The scorched red helmet on the bedside table, the patient bandaged in bed, rain on the window. The camera drifts left.", sound: "8-bit heart-monitor beeps, soft rain behind glass, chiptune bed fades in" },
+  hook: { name: "The hook", stills: ["0.6", "2.8"], scene: "Hospital at night, close on the bed: his head bandaged with blood soaking through, burns across his face, an oxygen mask, a bandaged arm with a burned hand, a blood bag on the drip. The scorched helmet sits on the bedside table; rain on the window.", sound: "8-bit heart-monitor beeps, soft rain behind glass, chiptune bed fades in" },
   comeback: { name: "42 days later", stills: ["4.4", "6.4"], scene: "Days flicker past the window as a DAY counter runs 0 → 42 (it turns red at 42). Cut to the sunny Monza grid: his red #1 shakes on its idle.", sound: "coin blip per counter tick, power-up jingle on 42, chiptune engine idle" },
   loop: { name: "The open loop", stills: ["7.4", "9.4"], scene: "He launches off screen. The empty grid holds and the colour drains away to dark.", sound: "engine launch and fade, the music drops out" },
   ring: { name: "The Green Hell", stills: ["10.6", "14.8"], scene: "The Nürburgring from above: dark forested hills and fog, his tiny red car snaking along the track.", sound: "distant engine echo through the hills, low drone" },
