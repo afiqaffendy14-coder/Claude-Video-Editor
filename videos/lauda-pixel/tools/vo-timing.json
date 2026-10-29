@@ -1,0 +1,210 @@
+[
+ {
+  "i": 1,
+  "scene": "hook",
+  "text": "Doctors didn't think this man would survive.",
+  "file": "assets/audio/vo/l01.wav",
+  "speech": 2.773,
+  "dur": 2.88
+ },
+ {
+  "i": 2,
+  "scene": "comeback",
+  "text": "Forty-two days later...",
+  "file": "assets/audio/vo/l02.wav",
+  "speech": 1.739,
+  "dur": 1.835
+ },
+ {
+  "i": 3,
+  "scene": "comeback",
+  "text": "he was racing again.",
+  "file": "assets/audio/vo/l03.wav",
+  "speech": 1.44,
+  "dur": 1.536
+ },
+ {
+  "i": 4,
+  "scene": "loop",
+  "text": "But that's not the bravest thing he did.",
+  "file": "assets/audio/vo/l04.wav",
+  "speech": 2.269,
+  "dur": 2.368
+ },
+ {
+  "i": 5,
+  "scene": "ring",
+  "text": "Niki Lauda.",
+  "file": "assets/audio/vo/l05.wav",
+  "speech": 1.11,
+  "dur": 1.216
+ },
+ {
+  "i": 6,
+  "scene": "ring",
+  "text": "World champion.",
+  "file": "assets/audio/vo/l06.wav",
+  "speech": 1.335,
+  "dur": 1.408
+ },
+ {
+  "i": 7,
+  "scene": "ring",
+  "text": "At the track drivers call the Green Hell.",
+  "file": "assets/audio/vo/l07.wav",
+  "speech": 2.584,
+  "dur": 2.667
+ },
+ {
+  "i": 8,
+  "scene": "crash",
+  "text": "Lap two.",
+  "file": "assets/audio/vo/l08.wav",
+  "speech": 0.944,
+  "dur": 1.045
+ },
+ {
+  "i": 9,
+  "scene": "crash",
+  "text": "His car hits the barrier and erupts in flames.",
+  "file": "assets/audio/vo/l09.wav",
+  "speech": 3.057,
+  "dur": 3.157
+ },
+ {
+  "i": 10,
+  "scene": "crash",
+  "text": "Drivers drag him out.",
+  "file": "assets/audio/vo/l10.wav",
+  "speech": 1.614,
+  "dur": 1.728
+ },
+ {
+  "i": 11,
+  "scene": "hospital",
+  "text": "Burned.",
+  "file": "assets/audio/vo/l11.wav",
+  "speech": 0.714,
+  "dur": 0.811
+ },
+ {
+  "i": 12,
+  "scene": "hospital",
+  "text": "Toxic fumes in his lungs.",
+  "file": "assets/audio/vo/l12.wav",
+  "speech": 2.122,
+  "dur": 2.219
+ },
+ {
+  "i": 13,
+  "scene": "hospital",
+  "text": "For days, he fights for his life.",
+  "file": "assets/audio/vo/l13.wav",
+  "speech": 2.069,
+  "dur": 2.176
+ },
+ {
+  "i": 14,
+  "scene": "monza",
+  "text": "Then, at Monza, he pulls a helmet over still-bleeding wounds...",
+  "file": "assets/audio/vo/l14.wav",
+  "speech": 4.07,
+  "dur": 4.139
+ },
+ {
+  "i": 15,
+  "scene": "monza",
+  "text": "and finishes fourth.",
+  "file": "assets/audio/vo/l15.wav",
+  "speech": 1.418,
+  "dur": 1.515
+ },
+ {
+  "i": 16,
+  "scene": "fuji",
+  "text": "Final race. Japan.",
+  "file": "assets/audio/vo/l16.wav",
+  "speech": 1.827,
+  "dur": 1.92
+ },
+ {
+  "i": 17,
+  "scene": "fuji",
+  "text": "He leads James Hunt by three points.",
+  "file": "assets/audio/vo/l17.wav",
+  "speech": 2.551,
+  "dur": 2.645
+ },
+ {
+  "i": 18,
+  "scene": "fuji",
+  "text": "And the rain is brutal.",
+  "file": "assets/audio/vo/l18.wav",
+  "speech": 1.772,
+  "dur": 1.877
+ },
+ {
+  "i": 19,
+  "scene": "pits",
+  "text": "Lap two. Again.",
+  "file": "assets/audio/vo/l19.wav",
+  "speech": 1.427,
+  "dur": 1.536
+ },
+ {
+  "i": 20,
+  "scene": "pits",
+  "text": "He pulls into the pits...",
+  "file": "assets/audio/vo/l20.wav",
+  "speech": 1.619,
+  "dur": 1.728
+ },
+ {
+  "i": 21,
+  "scene": "pits",
+  "text": "and walks away.",
+  "file": "assets/audio/vo/l21.wav",
+  "speech": 1.065,
+  "dur": 1.173
+ },
+ {
+  "i": 22,
+  "scene": "pits",
+  "text": "Hunt wins the title.",
+  "file": "assets/audio/vo/l22.wav",
+  "speech": 1.769,
+  "dur": 1.856
+ },
+ {
+  "i": 23,
+  "scene": "pits",
+  "text": "By one point.",
+  "file": "assets/audio/vo/l23.wav",
+  "speech": 1.19,
+  "dur": 1.28
+ },
+ {
+  "i": 24,
+  "scene": "end",
+  "text": "His life, he said, was worth more than a title.",
+  "file": "assets/audio/vo/l24.wav",
+  "speech": 3.142,
+  "dur": 3.221
+ },
+ {
+  "i": 25,
+  "scene": "end",
+  "text": "The bravest thing isn't getting back in.",
+  "file": "assets/audio/vo/l25.wav",
+  "speech": 2.456,
+  "dur": 2.539
+ },
+ {
+  "i": 26,
+  "scene": "end",
+  "text": "It's knowing when to get out.",
+  "file": "assets/audio/vo/l26.wav",
+  "speech": 1.848,
+  "dur": 1.941
+ }
+]
