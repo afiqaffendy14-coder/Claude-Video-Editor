@@ -1,0 +1,470 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="portrait"
+  data-composition-variables='[{"id":"accent","type":"color","label":"Hero accent","default":"#d7262b"},{"id":"caption1","type":"string","label":"Shot 1 caption","default":"42 DAYS LATER"},{"id":"caption3","type":"string","label":"Shot 3 caption","default":"HE WAS RACING AGAIN"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="lib/gsap.min.js"></script>
+    <style>
+      :root {
+        --ground: #f2f2f0;
+        --ink: #141414;
+        --accent: #d7262b;
+        --font-display: "Inter", sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        font-family: var(--font-display);
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      #stage-canvas {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      .ui {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+      }
+      .caption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: var(--ink);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .caption span {
+        display: inline-block;
+        white-space: pre;
+      }
+      .caption .hot {
+        color: var(--accent);
+      }
+      #cap-1 {
+        top: 1250px;
+        font-size: 92px;
+      }
+      #cap-3 {
+        top: 300px;
+        font-size: 88px;
+      }
+      #counter {
+        position: absolute;
+        left: 50%;
+        top: 1090px;
+        width: 360px;
+        margin-left: -180px;
+        padding: 26px 0 22px;
+        border-radius: 22px;
+        background: #ffffff;
+        box-shadow: 0 10px 34px rgba(20, 20, 20, 0.14);
+        text-align: center;
+        color: var(--ink);
+        font-weight: 900;
+        font-size: 84px;
+        letter-spacing: -0.02em;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div id="stage" class="clip" data-start="0" data-duration="5" data-track-index="0" data-track-kind="graphics">
+        <canvas id="stage-canvas" width="1080" height="1920"></canvas>
+      </div>
+
+      <!-- Shot 1: top-down, counter ticks to day 42 -->
+      <div id="ui-1" class="ui clip" data-start="0" data-duration="1.9" data-track-index="1" data-track-kind="graphics">
+        <div id="counter">DAY 0</div>
+        <h1 id="cap-1" class="caption" data-var-text="caption1">42 DAYS LATER</h1>
+      </div>
+
+      <!-- Shot 3: launch -->
+      <div id="ui-3" class="ui clip" data-start="3.3" data-duration="1.7" data-track-index="2" data-track-kind="graphics">
+        <h1 id="cap-3" class="caption" data-var-text="caption3">HE WAS RACING AGAIN</h1>
+      </div>
+    </div>
+
+    <script>
+      // Split a caption into words; words containing a digit or "RACING" take the accent.
+      function splitWords(el) {
+        const words = el.textContent.split(/(\s+)/).filter((p) => p.length);
+        el.textContent = "";
+        return words
+          .map((w) => {
+            const s = document.createElement("span");
+            s.textContent = w;
+            if (/\d|RACING/.test(w)) s.className = "hot";
+            el.appendChild(s);
+            return s;
+          })
+          .filter((s) => s.textContent.trim().length);
+      }
+
+      const cap1 = splitWords(document.getElementById("cap-1"));
+      const cap3 = splitWords(document.getElementById("cap-3"));
+      const counter = document.getElementById("counter");
+      const days = { n: 0 };
+
+      const tl = gsap.timeline({ paused: true });
+
+      // Shot 1 (0 – 1.9): counter lands, ticks 0 → 42, caption blurs in word by word
+      tl.fromTo("#counter", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "expo.out" }, 0.1);
+      tl.fromTo(
+        days,
+        { n: 0 },
+        {
+          n: 42,
+          duration: 1.0,
+          ease: "power2.inOut",
+          onUpdate: () => (counter.textContent = "DAY " + Math.round(days.n)),
+        },
+        0.35,
+      );
+      tl.fromTo(
+        cap1,
+        { opacity: 0, filter: "blur(8px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power2.out", stagger: 0.08 },
+        0.75,
+      );
+
+      // Shot 3 (3.3 – 5.0): caption lands as the car launches
+      tl.fromTo(
+        cap3,
+        { opacity: 0, filter: "blur(8px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power2.out", stagger: 0.08 },
+        3.35,
+      );
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady.stage = new Promise((resolve) => (window.__stageBuilt = resolve));
+    </script>
+
+    <script type="module">
+      import * as THREE from "./lib/three.module.js";
+
+      const SHOT2_START = 1.9;
+      const SHOT3_START = 3.3;
+      const GROUND = "#f2f2f0";
+      const ACCENT = "#d7262b";
+      const RIVAL = "#9a9a98";
+
+      const clamp01 = (v) => Math.min(1, Math.max(0, v));
+      const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+      const outExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+      const inOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      const lerp = (a, b, k) => a + (b - a) * k;
+
+      const canvas = document.getElementById("stage-canvas");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(1080, 1920, false);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(GROUND);
+      scene.fog = new THREE.Fog(GROUND, 22, 60);
+
+      const camera = new THREE.PerspectiveCamera(40, 1080 / 1920, 0.05, 200);
+
+      // Soft overcast studio light: big hemisphere fill + one soft key that casts contact shadows.
+      scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d4, 2.1));
+      const key = new THREE.DirectionalLight(0xffffff, 1.6);
+      key.castShadow = true;
+      key.shadow.mapSize.set(2048, 2048);
+      key.shadow.camera.left = -9;
+      key.shadow.camera.right = 9;
+      key.shadow.camera.top = 9;
+      key.shadow.camera.bottom = -9;
+      key.shadow.radius = 6;
+      key.shadow.bias = -0.0005;
+      scene.add(key, key.target);
+
+      const mat = (color, extra = {}) =>
+        new THREE.MeshStandardMaterial({ color, flatShading: true, roughness: 0.85, metalness: 0, ...extra });
+
+      function shadowed(mesh) {
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        return mesh;
+      }
+
+      // Narrow the front (−z) end of a box toward its nose, for the faceted wedge look.
+      function taper(geo, sx, sy) {
+        const p = geo.attributes.position;
+        geo.computeBoundingBox();
+        const { min, max } = geo.boundingBox;
+        for (let i = 0; i < p.count; i++) {
+          const k = (max.z - p.getZ(i)) / (max.z - min.z); // 1 at the front, 0 at the back
+          p.setX(i, p.getX(i) * lerp(1, sx, k));
+          p.setY(i, p.getY(i) * lerp(1, sy, k));
+        }
+        geo.computeVertexNormals();
+        return geo;
+      }
+
+      function numberDecal(text) {
+        const c = document.createElement("canvas");
+        c.width = c.height = 128;
+        const g = c.getContext("2d");
+        g.fillStyle = "#ffffff";
+        g.beginPath();
+        g.arc(64, 64, 60, 0, Math.PI * 2);
+        g.fill();
+        g.fillStyle = "#141414";
+        g.font = "900 76px Inter, sans-serif";
+        g.textAlign = "center";
+        g.textBaseline = "middle";
+        g.fillText(text, 64, 70);
+        const tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        return new THREE.MeshStandardMaterial({ map: tex, transparent: true, roughness: 0.8 });
+      }
+
+      // A 1970s-style F1 car from a handful of faceted primitives. Forward is −z.
+      function buildCar(color, number) {
+        const car = new THREE.Group();
+        const body = mat(color);
+        const dark = mat("#2b2b2b");
+        const mech = mat("#6f6f6c");
+
+        const add = (geo, m, x, y, z) => {
+          const mesh = shadowed(new THREE.Mesh(geo, m));
+          mesh.position.set(x, y, z);
+          car.add(mesh);
+          return mesh;
+        };
+
+        add(taper(new THREE.BoxGeometry(0.72, 0.42, 2.4), 0.8, 0.85), body, 0, 0.42, 0.05); // tub
+        add(taper(new THREE.BoxGeometry(0.62, 0.34, 1.3), 0.35, 0.45), body, 0, 0.36, -1.75); // nose
+        add(new THREE.BoxGeometry(1.95, 0.06, 0.42), body, 0, 0.2, -2.25); // front wing
+        add(new THREE.BoxGeometry(0.05, 0.22, 0.46), body, -0.98, 0.26, -2.25);
+        add(new THREE.BoxGeometry(0.05, 0.22, 0.46), body, 0.98, 0.26, -2.25);
+        for (const sx of [-1, 1]) {
+          add(taper(new THREE.BoxGeometry(0.42, 0.3, 1.35), 0.75, 0.6), body, sx * 0.56, 0.34, 0.3); // sidepods
+        }
+        add(taper(new THREE.BoxGeometry(0.42, 0.55, 0.85), 0.7, 0.55), body, 0, 0.9, 0.72); // airbox
+        add(new THREE.BoxGeometry(0.58, 0.4, 0.95), mech, 0, 0.45, 1.45); // engine / gearbox
+        add(new THREE.BoxGeometry(1.35, 0.05, 0.55), body, 0, 1.1, 1.95); // rear wing
+        add(new THREE.BoxGeometry(0.05, 0.36, 0.6), body, -0.67, 1.02, 1.95);
+        add(new THREE.BoxGeometry(0.05, 0.36, 0.6), body, 0.67, 1.02, 1.95);
+        add(new THREE.BoxGeometry(0.08, 0.5, 0.08), mech, 0, 0.85, 1.85); // wing pillar
+
+        // Driver's helmet peeking out of the cockpit
+        const helmet = add(new THREE.SphereGeometry(0.17, 9, 7), mat(ACCENT), 0, 0.78, 0.15);
+        helmet.material = number === "1" ? mat(ACCENT) : mat("#e9e9e6");
+        add(new THREE.SphereGeometry(0.172, 8, 3, Math.PI / 2 - 0.8, 1.6, 1.3, 0.35), mat("#1b1b1b"), 0, 0.78, 0.15);
+
+        // Wheels: chunky faceted cylinders with a pale sidewall ring, spun about x.
+        car.userData.wheels = [];
+        const wheel = (r, w, x, z) => {
+          const g = new THREE.Group();
+          const tyre = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(r, r, w, 14).rotateZ(Math.PI / 2), dark));
+          const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 0.78, 0.022, 4, 18).rotateY(Math.PI / 2), mat("#e4e4e0"));
+          ring.position.x = Math.sign(x) * (w / 2 + 0.004);
+          const hub = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.35, r * 0.35, w + 0.02, 8).rotateZ(Math.PI / 2), mech);
+          g.add(tyre, ring, hub);
+          g.position.set(x, r, z);
+          g.userData.r = r;
+          car.add(g);
+          car.userData.wheels.push(g);
+          // suspension arm back to the tub
+          add(new THREE.BoxGeometry(Math.abs(x) - 0.3, 0.04, 0.06), mech, x / 2, r, z);
+        };
+        wheel(0.31, 0.28, -0.86, -1.32);
+        wheel(0.31, 0.28, 0.86, -1.32);
+        wheel(0.41, 0.48, -0.88, 1.32);
+        wheel(0.41, 0.48, 0.88, 1.32);
+
+        // Number roundels: nose top and both airbox sides
+        const decal = numberDecal(number);
+        const top = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.34), decal);
+        top.rotation.x = -Math.PI / 2;
+        top.position.set(0, 0.52, -1.45);
+        car.add(top);
+        for (const sx of [-1, 1]) {
+          const side = new THREE.Mesh(new THREE.PlaneGeometry(0.36, 0.36), decal);
+          side.rotation.y = sx * Math.PI / 2;
+          side.position.set(sx * 0.17, 0.95, 0.7);
+          car.add(side);
+        }
+        return car;
+      }
+
+      function spinWheels(car, distance) {
+        for (const w of car.userData.wheels) w.rotation.x = -distance / w.userData.r;
+      }
+
+      // Ground, grid boxes, pit wall and a distant grandstand, all in the clay palette.
+      const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), mat(GROUND, { roughness: 1 }));
+      ground.rotation.x = -Math.PI / 2;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      const lineMat = new THREE.MeshBasicMaterial({ color: "#d4d4d0" });
+      function gridBox(x, z) {
+        const g = new THREE.Group();
+        const bar = (w, d, px, pz) => {
+          const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), lineMat);
+          m.rotation.x = -Math.PI / 2;
+          m.position.set(px, 0.005, pz);
+          g.add(m);
+        };
+        bar(1.9, 0.08, 0, -2.6); // front line
+        bar(0.08, 0.9, -0.95, -2.2);
+        bar(0.08, 0.9, 0.95, -2.2);
+        g.position.set(x, 0, z);
+        scene.add(g);
+      }
+      for (let i = -6; i <= 3; i++) gridBox(i % 2 ? 1.5 : -1.5, i * 7);
+      // Start/finish stripes far down the straight, for speed in the launch shot
+      for (let z = -60; z < 40; z += 4) {
+        const dash = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 1.6), lineMat);
+        dash.rotation.x = -Math.PI / 2;
+        dash.position.set(3.2, 0.004, z);
+        scene.add(dash);
+      }
+
+      const wall = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.0, 140), mat("#e2e2de")));
+      wall.position.set(-3.6, 0.5, -20);
+      scene.add(wall);
+      for (let i = 0; i < 10; i++) {
+        const step = shadowed(new THREE.Mesh(new THREE.BoxGeometry(3, 1.2 + i * 0.9, 140), mat("#dcdcd8")));
+        step.position.set(-12 - i * 2.2, (1.2 + i * 0.9) / 2, -20);
+        scene.add(step);
+      }
+
+      // The cars: Lauda's red #1 on the grid, rivals in grey ahead and behind.
+      const hero = buildCar(ACCENT, "1");
+      hero.position.set(-1.5, 0, 0);
+      scene.add(hero);
+      const rivalAhead = buildCar(RIVAL, "11");
+      rivalAhead.position.set(1.5, 0, -7);
+      scene.add(rivalAhead);
+      const rivalBehind = buildCar(RIVAL, "3");
+      rivalBehind.position.set(1.5, 0, 9.5);
+      scene.add(rivalBehind);
+
+      // Shot 2 set: the driver's shoulders and the helmet that lowers onto them, off to one side.
+      const driver = new THREE.Group();
+      driver.position.set(40, 0, 0);
+      const torso = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.56, 0.9, 9), mat(ACCENT)));
+      torso.scale.set(1.35, 1, 0.75);
+      torso.position.y = 0.55;
+      const collar = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.26, 0.12, 9), mat("#f4f4f2")));
+      collar.position.y = 1.04;
+      const neck = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.26, 8), mat("#3a3a38")));
+      neck.position.y = 1.16;
+      driver.add(torso, collar, neck);
+
+      const bigHelmet = new THREE.Group();
+      const shell = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.33, 12, 9, 0, Math.PI * 2, 0, 2.25), mat(ACCENT, { side: THREE.DoubleSide })));
+      const visor = new THREE.Mesh(
+        new THREE.SphereGeometry(0.337, 10, 3, Math.PI / 2 - 0.85, 1.7, 1.12, 0.48),
+        mat("#1b1b1b", { roughness: 0.35 }),
+      );
+      const stripeF = new THREE.Mesh(new THREE.SphereGeometry(0.334, 2, 8, Math.PI / 2 - 0.13, 0.26, 0.02, 1.08), mat("#f4f4f2"));
+      const stripeB = new THREE.Mesh(new THREE.SphereGeometry(0.334, 2, 8, -Math.PI / 2 - 0.13, 0.26, 0.02, 2.1), mat("#f4f4f2"));
+      bigHelmet.add(shell, visor, stripeF, stripeB);
+      driver.add(bigHelmet);
+      scene.add(driver);
+
+      const target = new THREE.Vector3();
+      function frameKeyLight(x, z) {
+        key.position.set(x + 5, 14, z + 4);
+        key.target.position.set(x, 0, z);
+      }
+
+      function renderAt(t) {
+        if (t < SHOT2_START) {
+          // Shot 1: straight top-down on the grid, slowly descending; car points up the screen.
+          const u = t / SHOT2_START;
+          const h = lerp(18.5, 16.5, inOut(u));
+          camera.fov = 40;
+          camera.up.set(0, 0, -1);
+          camera.position.set(-1.5, h, 2.2);
+          target.set(-1.5, 0, 2.2);
+          rivalAhead.visible = true;
+          camera.lookAt(target);
+          hero.position.z = 0;
+          spinWheels(hero, 0);
+          frameKeyLight(0, 0);
+        } else if (t < SHOT3_START) {
+          // Shot 2: macro on the helmet lowering onto the driver.
+          const u = t - SHOT2_START;
+          const drop = outCubic(clamp01(u / 1.05));
+          bigHelmet.position.set(0, lerp(2.15, 1.27, drop), 0);
+          bigHelmet.rotation.set(lerp(-0.25, 0, drop), lerp(0.7, 0.12, drop), 0);
+          camera.fov = 30;
+          camera.up.set(0, 1, 0);
+          camera.position.set(40 + lerp(1.25, 1.1, u / 1.4), lerp(1.32, 1.26, u / 1.4), lerp(3.1, 2.85, u / 1.4));
+          target.set(40, 1.12, 0);
+          camera.lookAt(target);
+          frameKeyLight(40, 0);
+        } else {
+          // Shot 3: low tracking shot; the car launches and pulls away from the camera.
+          const u = t - SHOT3_START;
+          const s = 0.5 * 11 * u * u; // constant acceleration from rest
+          hero.position.z = -s;
+          spinWheels(hero, s);
+          // Rear three-quarter, low; the car shrinks down the straight, leaving empty white.
+          rivalAhead.visible = false;
+          const c = outCubic(clamp01(u / 1.7));
+          camera.fov = 38;
+          camera.up.set(0, 1, 0);
+          camera.position.set(-0.2, 1.05, lerp(9.0, 6.8, c));
+          target.set(-1.5, 0.5, lerp(-1.0, -6.0, c));
+          camera.lookAt(target);
+          frameKeyLight(-1.5, -s);
+        }
+        camera.updateProjectionMatrix();
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("hf-seek", (e) => renderAt(e.detail.time));
+      document.fonts.ready.then(() => {
+        renderAt(0);
+        window.__stageBuilt();
+      });
+    </script>
+  </body>
+</html>
