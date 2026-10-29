@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fuji Pixel Art</title>
+    <style>
+      html, body { margin: 0; background: #111; }
+      canvas { display: block; width: 540px; height: 960px; image-rendering: pixelated; }
+    </style>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+    <script>
+      // Fuji, 1976, as 16-bit pixel art. Everything is drawn on a 180×320 grid with a fixed
+      // palette, then scaled ×6 with hard edges to 1080×1920.
+      const LW = 180, LH = 320, SCALE = 6;
+      let seed = 1976;
+      const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+
+      const P = {
+        sky0: "#1f2530", sky1: "#262d39", sky2: "#2e3643", sky3: "#37404e", sky4: "#424c5b", sky5: "#4e5969", sky6: "#5b6777",
+        cloud: "#1b2029", cloudHi: "#323a47",
+        fujiL: "#2c3440", fuji: "#353e4b", fujiR: "#414b59", snow: "#c9d1da", snowS: "#8f9aa6", snowD: "#6c7784",
+        trees: "#232b2c", treesHi: "#2d3737",
+        stand: "#2a2f37", standHi: "#3b424c", roof: "#4b535e",
+        asphalt: "#30353d", asphaltHi: "#3b414a", wet: "#272c33", wetHi: "#3a4350", line: "#cdd3d9",
+        wall: "#7d848d", wallHi: "#a2a9b1", wallLo: "#535a63", post: "#1c2026", wire: "#4a515b",
+        out: "#111317", red: "#c41e27", redD: "#86131a", redH: "#ec5248", white: "#e6eaee", whiteD: "#a9b1ba",
+        grey: "#6a727d", greyD: "#3b414a", metal: "#a2aab4", tyre: "#17191d", tyreHi: "#363a41", visor: "#0d0f12",
+        knit: "#e8e6e1", knitD: "#b8b4ad", skin: "#b4876a", coat: "#2a2e34", coatHi: "#3c424a",
+        rain: "#7f8b98", rainHi: "#aab5c1", spray: "#9aa4ae", lamp: "#ff3b2e", lampGlow: "#7a2a28",
+      };
+
+      // ------------------------------------------------------------- pixel buffer helpers
+      const buf = document.createElement("canvas");
+      buf.width = LW; buf.height = LH;
+      const g = buf.getContext("2d");
+      const px = (x, y, c) => { if (x >= 0 && y >= 0 && x < LW && y < LH) { g.fillStyle = c; g.fillRect(x | 0, y | 0, 1, 1); } };
+      const rect = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x | 0, y | 0, w | 0, h | 0); };
+      const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+      const dith = (x, y, t) => (BAYER[y & 3][x & 3] + 0.5) / 16 < t; // true with probability t, ordered
+
+      // Sprite: a small indexed grid drawn with integer shapes, then auto-outlined.
+      class Sprite {
+        constructor(w, h) { this.w = w; this.h = h; this.d = new Array(w * h).fill(null); }
+        set(x, y, c) { x = Math.round(x); y = Math.round(y); if (x >= 0 && y >= 0 && x < this.w && y < this.h) this.d[y * this.w + x] = c; }
+        get(x, y) { return x >= 0 && y >= 0 && x < this.w && y < this.h ? this.d[y * this.w + x] : null; }
+        rect(x, y, w, h, c) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.set(x + i, y + j, c); }
+        circle(cx, cy, r, c) { for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) if (x * x + y * y <= r * r + r * 0.6) this.set(cx + x, cy + y, c); }
+        poly(pts, c) {
+          const ys = pts.map((p) => p[1]);
+          for (let y = Math.floor(Math.min(...ys)); y <= Math.ceil(Math.max(...ys)); y++) {
+            const xs = [];
+            for (let i = 0; i < pts.length; i++) {
+              const [x1, y1] = pts[i], [x2, y2] = pts[(i + 1) % pts.length];
+              if ((y1 <= y + 0.5 && y2 > y + 0.5) || (y2 <= y + 0.5 && y1 > y + 0.5)) xs.push(x1 + ((y + 0.5 - y1) / (y2 - y1)) * (x2 - x1));
+            }
+            xs.sort((a, b) => a - b);
+            for (let k = 0; k + 1 < xs.length; k += 2) for (let x = Math.round(xs[k]); x < Math.round(xs[k + 1]); x++) this.set(x, y, c);
+          }
+        }
+        outline(c) {
+          const add = [];
+          for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) {
+            if (this.get(x, y)) continue;
+            if (this.get(x + 1, y) || this.get(x - 1, y) || this.get(x, y + 1) || this.get(x, y - 1)) add.push([x, y]);
+          }
+          add.forEach(([x, y]) => this.set(x, y, c));
+          return this;
+        }
+        blit(x0, y0, { flipX = false } = {}) {
+          for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) {
+            const c = this.get(flipX ? this.w - 1 - x : x, y);
+            if (c) px(x0 + x, y0 + y, c);
+          }
+        }
+        // Water reflection under the sprite's feet: flipped, darkened toward the ground,
+        // with rippled rows dropped and shifted.
+        reflect(x0, yBase, ground, { strength = 0.55, flipX = false } = {}) {
+          let bottom = this.h - 1; // mirror from the lowest painted row, not the canvas edge
+          while (bottom > 0 && !this.d.slice(bottom * this.w, bottom * this.w + this.w).some(Boolean)) bottom--;
+          yBase -= this.h - 1 - bottom;
+          for (let y = 0; y <= bottom; y++) {
+            const ry = yBase + (bottom - y) + 1;
+            if ((ry - yBase) % 3 === 2) continue;
+            const shift = (ry >> 1) % 2 ? 1 : 0;
+            for (let x = 0; x < this.w; x++) {
+              const c = this.get(flipX ? this.w - 1 - x : x, y);
+              if (!c) continue;
+              const fade = strength * (1 - (ry - yBase) / (this.h * 1.4));
+              if (fade > 0 && dith(x, ry, fade + 0.15)) px(x0 + x + shift, ry, mix(c, ground, 0.45));
+            }
+          }
+        }
+      }
+      function mix(a, b, t) {
+        const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+        const ch = (s) => Math.round(((pa >> s) & 255) * (1 - t) + ((pb >> s) & 255) * t);
+        return "#" + ((1 << 24) | (ch(16) << 16) | (ch(8) << 8) | ch(0)).toString(16).slice(1);
+      }
+
+      // ------------------------------------------------------------- sprites
+      // 1976-style F1 car, side view, nose to the left. s scales the layout.
+      function carSprite(body, bodyD, bodyH, s = 1, driver = null) {
+        const S = (v) => Math.round(v * s);
+        const sp = new Sprite(S(52) + 2, S(18) + 2);
+        const o = 1;
+        // rear wing and endplate, on its pillar
+        sp.rect(o + S(41), o + S(1), S(10), S(2), body);
+        sp.rect(o + S(41), o + S(1), S(10), 1, bodyH);
+        sp.rect(o + S(49), o + S(0), Math.max(1, S(2)), S(7), P.greyD);
+        sp.rect(o + S(44), o + S(3), Math.max(1, S(1)), S(5), P.grey);
+        // body: nose → cockpit → engine cover
+        sp.poly([[o + S(1), o + S(13)], [o + S(12), o + S(10.5)], [o + S(20), o + S(9)], [o + S(23), o + S(7)], [o + S(31), o + S(7)], [o + S(35), o + S(8)], [o + S(42), o + S(8.5)], [o + S(46), o + S(10)], [o + S(46), o + S(14)], [o + S(2), o + S(14.5)]], body);
+        for (let x = S(3); x < S(45); x++) sp.set(o + x, o + S(14), bodyD); // underside shadow
+        for (let x = S(13); x < S(42); x++) { const y = x < S(23) ? o + S(10.5 - (x - S(13)) * 0.15) : o + S(8); if (sp.get(o + x, y + 1)) sp.set(o + x, y + 1, bodyH); }
+        // sidepod with radiator inlet
+        sp.rect(o + S(21), o + S(10), S(16), S(3), body);
+        sp.rect(o + S(21), o + S(10), Math.max(1, S(1.5)), S(3), P.out);
+        // cockpit, windscreen, roll hoop, driver helmet (if seated)
+        sp.rect(o + S(25), o + S(6), S(6), Math.max(1, S(1.5)), P.out);
+        sp.set(o + S(23), o + S(5), P.whiteD); sp.set(o + S(24), o + S(5), P.whiteD); sp.set(o + S(23), o + S(6), P.whiteD);
+        sp.rect(o + S(31), o + S(4), Math.max(1, S(1)), S(3), P.metal);
+        if (driver) { sp.circle(o + S(28), o + S(4.5), Math.max(1, S(2)), driver); sp.set(o + S(26.5), o + S(4.5), P.visor); }
+        // engine block and exhaust
+        sp.rect(o + S(36), o + S(10), S(6), S(2), P.metal);
+        sp.rect(o + S(46), o + S(11), S(3), Math.max(1, S(1)), P.grey);
+        // number roundel "1"
+        sp.circle(o + S(32), o + S(10.5), Math.max(1, S(1.6)), P.white);
+        sp.set(o + S(32), o + S(10), P.out); sp.set(o + S(32), o + S(11), P.out);
+        // front wing and endplate
+        sp.rect(o + S(0), o + S(14), S(9), Math.max(1, S(1.5)), body);
+        sp.rect(o + S(0), o + S(12), Math.max(1, S(1.2)), S(4), P.greyD);
+        // wheels: big rears, smaller fronts, with rim and a wet highlight
+        const wheel = (cx, cy, r) => {
+          sp.circle(o + S(cx), o + S(cy), S(r), P.tyre);
+          sp.circle(o + S(cx), o + S(cy), Math.max(1, S(r * 0.45)), P.grey);
+          sp.set(o + S(cx), o + S(cy), P.metal);
+          sp.set(o + S(cx - r * 0.6), o + S(cy - r * 0.7), P.tyreHi);
+          sp.set(o + S(cx - r * 0.75), o + S(cy - r * 0.45), P.tyreHi);
+        };
+        wheel(41, 12.5, 5.2);
+        wheel(9.5, 13.5, 4.2);
+        return sp.outline(P.out);
+      }
+
+      // Lauda walking left, balaclava on, helmet swinging in his near (right) hand. s scales him.
+      function laudaSprite(s = 1) {
+        const S = (v) => v * s;
+        const sp = new Sprite(Math.ceil(S(16)) + 2, Math.ceil(S(36)) + 2);
+        const R = (x, y, w, h, c) => sp.rect(Math.round(S(x)), Math.round(S(y)), Math.max(1, Math.round(S(w))), Math.max(1, Math.round(S(h))), c);
+        const Pl = (pts, c) => sp.poly(pts.map(([x, y]) => [S(x), S(y)]), c);
+        Pl([[8, 19], [11, 19], [12.5, 31], [9.5, 31]], P.redD); // back leg
+        Pl([[5, 19], [8, 19], [6, 31], [3, 31]], P.red); // front leg
+        R(9.5, 31, 4, 2, P.out); R(2, 31, 4.5, 2, P.out); // boots
+        R(5, 9, 6, 11, P.red); // torso
+        R(5, 9, 1, 11, P.redH); // rim light
+        R(5, 17, 6, 1.2, P.out); // belt
+        R(6.5, 11, 3, 1.2, P.white); // chest patch
+        Pl([[5, 10], [6.5, 10], [4.2, 17], [3, 17]], P.redD); // far arm
+        Pl([[9, 10], [11, 10], [12.2, 19], [10.2, 19]], P.red); // near arm
+        R(11, 11.5, 0.9, 3, P.white); // sleeve stripe
+        R(10, 19, 3, 2, P.coat); // glove
+        sp.circle(Math.round(S(12)), Math.round(S(24)), Math.round(S(3)), P.red); // helmet
+        R(9, 23, 3, 2, P.visor);
+        R(10.5, 21, 3.5, 0.9, P.white);
+        sp.set(Math.round(S(13.5)), Math.round(S(22.5)), P.redH);
+        R(7, 7, 3, 2, P.knit); // neck
+        sp.circle(Math.round(S(8)), Math.round(S(4)), Math.round(S(3)), P.knit); // balaclava
+        R(10, 3, 1, 3, P.knitD);
+        R(5.2, 3, 2, 1, P.skin); // eye slit
+        return sp.outline(P.out);
+      }
+
+      // Mechanic in a dark coat under a black umbrella, facing the car.
+      function mechanicSprite(s = 1) {
+        const S = (v) => v * s;
+        const sp = new Sprite(Math.ceil(S(22)) + 2, Math.ceil(S(34)) + 2);
+        const R = (x, y, w, h, c) => sp.rect(Math.round(S(x)), Math.round(S(y)), Math.max(1, Math.round(S(w))), Math.max(1, Math.round(S(h))), c);
+        sp.poly([[S(2), S(7)], [S(11), S(1)], [S(20), S(7)]], P.coat);
+        R(2, 7, 18, 1, P.post);
+        R(11, 0, 0.8, 15, P.grey);
+        sp.circle(Math.round(S(13)), Math.round(S(11)), Math.round(S(2)), P.skin);
+        R(12, 9.5, 3, 1, P.post);
+        R(10, 14, 6, 10, P.coat);
+        R(10, 14, 1, 10, P.coatHi);
+        R(11, 24, 2, 7, P.greyD); R(13, 24, 2, 7, P.coat);
+        R(10, 31, 3, 2, P.out); R(13, 31, 3, 2, P.out);
+        return sp.outline(P.out);
+      }
+
+      // ------------------------------------------------------------- scene
+      // Sky: dithered bands, darker at the top.
+      const skyBands = [P.sky0, P.sky1, P.sky2, P.sky3, P.sky4, P.sky5, P.sky6];
+      for (let y = 0; y < 160; y++) {
+        const t = Math.min(0.999, y / 150) * (skyBands.length - 1);
+        const i = Math.floor(t), f = t - i;
+        for (let x = 0; x < LW; x++) px(x, y, dith(x, y, f) ? skyBands[Math.min(i + 1, skyBands.length - 1)] : skyBands[i]);
+      }
+      // Storm clouds: dithered horizontal masses.
+      for (let k = 0; k < 9; k++) {
+        const cx = rnd() * LW, cy = 10 + rnd() * 70, rw = 30 + rnd() * 50, rh = 5 + rnd() * 8;
+        for (let y = Math.floor(cy - rh); y <= cy + rh; y++) for (let x = Math.floor(cx - rw); x <= cx + rw; x++) {
+          const d = ((x - cx) / rw) ** 2 + ((y - cy) / rh) ** 2;
+          if (d < 1 && dith(x, y, (1 - d) * 0.8)) px(x, y, y < cy - rh * 0.3 && dith(x + 1, y, 0.3) ? P.cloudHi : P.cloud);
+        }
+      }
+
+      // Mount Fuji: concave volcano profile, snow cap with gullies, haze toward the base.
+      const PEAK_X = 64, TOP = 70, BASE = 152, HALF = 130, H = BASE - TOP;
+      const snowLine = [];
+      for (let x = 0; x < LW; x++) {
+        const d = Math.min(1, Math.abs(x - PEAK_X) / HALF);
+        const top = BASE - H * Math.pow(Math.max(0, 1 - Math.max(0, d - 0.03) / 0.97), 1.7);
+        const gully = (Math.sin(x * 0.9) + Math.sin(x * 2.3)) * 2 + rnd() * 3;
+        snowLine[x] = TOP + 22 + gully + d * 10;
+        for (let y = Math.round(top); y < BASE + 4; y++) {
+          let c = x < PEAK_X ? (dith(x, y, 0.35) ? P.fujiL : P.fuji) : (dith(x, y, 0.4) ? P.fujiR : P.fuji);
+          if (y < snowLine[x] && y >= top) c = x < PEAK_X - 2 ? (dith(x, y, 0.5) ? P.snowS : P.snowD) : (dith(x, y, 0.85) ? P.snow : P.snowS);
+          const haze = Math.max(0, (y - 118) / 36);
+          if (dith(x, y, haze * 0.75)) c = y > 140 ? P.sky6 : P.sky5;
+          px(x, y, c);
+        }
+      }
+      // Tree line on the left, grandstand on the right.
+      for (let x = 0; x < 108; x++) {
+        const top = 150 + Math.round(Math.sin(x * 0.7) * 2 + Math.sin(x * 0.23) * 3 + rnd() * 2);
+        for (let y = top; y < 178; y++) px(x, y, y === top || dith(x, y, 0.15) ? P.treesHi : P.trees);
+      }
+      for (let x = 98; x < LW; x++) {
+        const roofY = Math.round(146 - (x - 98) * 0.12);
+        for (let y = roofY; y < 178; y++) px(x, y, y < roofY + 2 ? P.roof : y < roofY + 5 ? P.stand : P.standHi);
+        if (x % 14 === 0) for (let y = roofY + 2; y < 178; y++) px(x, y, P.stand);
+      }
+      // Crowd under umbrellas: rows of seeded dots.
+      const crowd = ["#1a1e24", "#2c3a52", "#4a5566", "#6d7684", "#c8ccd1", "#3a4a3e", "#b8a24a"];
+      for (let row = 0; row < 9; row++) {
+        const y = 154 + row * 2 + (row % 2);
+        for (let x = 101 + (row % 2); x < LW; x += 2) if (rnd() < 0.82) px(x, y, crowd[Math.floor(rnd() * crowd.length)]);
+      }
+
+      // Track: wet asphalt with sheen, edge lines.
+      for (let y = 178; y < 206; y++) for (let x = 0; x < LW; x++) px(x, y, dith(x, y, 0.18 + 0.15 * Math.sin(x * 0.05 + y)) ? P.asphaltHi : P.asphalt);
+      for (let x = 0; x < LW; x++) { px(x, 179, P.line); if (x % 8 < 5) px(x, 204, P.whiteD); }
+
+      // Rival car blasting past (white, smaller), spray plume trailing to the right.
+      for (let y = 158; y < 205; y++) for (let x = 70; x < LW; x++) {
+        const dx = x - 78, dy = 201 - y;
+        if (dx < 0) continue;
+        const width = 3 + dx * 0.32;
+        const d = dy / width;
+        if (d < 1 && d > -0.15 && dith(x, y, (1 - d * d) * Math.max(0, 1 - dx / 110) * 0.7)) px(x, y, P.spray);
+      }
+      const rival = carSprite(P.white, P.whiteD, "#ffffff", 0.8, P.whiteD);
+      rival.blit(36, 186);
+
+      // Pit wall, debris fence and a hanging pit board.
+      for (let x = 0; x < LW; x++) {
+        if (x % 11 === 3) for (let y = 184; y < 206; y++) px(x, y, P.post);
+        for (const wy of [188, 194, 200]) if ((x + wy) % 2 === 0) px(x, wy, P.wire);
+      }
+      rect(0, 206, LW, 9, P.wall);
+      rect(0, 206, LW, 1, P.wallHi);
+      rect(0, 214, LW, 1, P.wallLo);
+      for (let x = 0; x < LW; x += 16) rect(x, 207, 1, 7, P.wallLo);
+      rect(126, 190, 14, 9, P.out);
+      rect(128, 192, 10, 1, P.white); rect(128, 194, 7, 1, P.white); rect(128, 196, 9, 1, P.white);
+      rect(132, 186, 1, 4, P.post);
+
+      // Pit lane: wet asphalt, sky reflected near the wall, painted line, puddles.
+      for (let y = 215; y < LH; y++) for (let x = 0; x < LW; x++) {
+        const nearWall = Math.max(0, 1 - (y - 215) / 50);
+        px(x, y, dith(x, y, 0.12 + nearWall * 0.5) ? P.wetHi : P.wet);
+      }
+      // reflection of the pit wall in the wet surface
+      for (let y = 215; y < 222; y++) for (let x = 0; x < LW; x++) if (dith(x, y, 0.45 - (y - 215) * 0.06)) px(x + ((y >> 1) & 1), y, mix(P.wall, P.wet, 0.55));
+      for (let x = 0; x < LW; x++) if (x % 10 < 6) { px(x, 232, P.whiteD); px(x, 233, mix(P.whiteD, P.wet, 0.5)); }
+
+      // Pit-exit light on a pole, glowing red in the rain (left foreground).
+      for (let y = 168; y < 300; y++) { px(13, y, P.post); px(14, y, P.greyD); }
+      rect(9, 168, 10, 15, P.out);
+      for (let r = 9; r >= 1; r--) for (let a = 0; a < 64; a++) {
+        const gx = 14 + Math.cos((a / 64) * Math.PI * 2) * r, gy = 175 + Math.sin((a / 64) * Math.PI * 2) * r * 1.2;
+        if (dith(gx | 0, gy | 0, 0.32 * (1 - r / 10))) px(gx, gy, P.lampGlow);
+      }
+      rect(11, 170, 3, 3, P.lamp); rect(15, 170, 3, 3, P.lamp);
+      rect(11, 177, 3, 3, P.lamp); rect(15, 177, 3, 3, P.lamp);
+      px(11, 170, "#ffb2a8"); px(15, 170, "#ffb2a8");
+      // its streak of reflection in the puddle below
+      for (let y = 302; y < 318; y++) if (y % 3 !== 2) { px(13 + ((y >> 1) & 1), y, P.lampGlow); if (y < 310) px(15, y, P.lamp); }
+
+      // Lauda's car parked in the pits, the mechanic, and Lauda walking away.
+      const hero = carSprite(P.red, P.redD, P.redH, 1.55);
+      const heroX = 92, heroY = 226;
+      hero.reflect(heroX, heroY + hero.h - 1, P.wet);
+      hero.blit(heroX, heroY);
+      const mech = mechanicSprite(1.3);
+      const mechY = 256 - mech.h;
+      mech.reflect(150, mechY + mech.h - 1, P.wet, { strength: 0.45 });
+      mech.blit(150, mechY);
+      const lauda = laudaSprite(1.65);
+      const laudaY = 290 - lauda.h;
+      lauda.reflect(46, laudaY + lauda.h - 1, P.wet, { strength: 0.6 });
+      lauda.blit(46, laudaY);
+
+      // Rain: diagonal streaks, brighter and longer in the foreground; splash crowns on the ground.
+      for (let i = 0; i < 560; i++) {
+        const x = Math.floor(rnd() * (LW + 40)), y = Math.floor(rnd() * LH);
+        const near = y > 230 && rnd() < 0.35;
+        const len = near ? 6 : 3 + Math.floor(rnd() * 2);
+        const c = near ? P.rainHi : P.rain;
+        for (let k = 0; k < len; k++) px(x - Math.floor(k / 3), y + k, c);
+      }
+      for (let i = 0; i < 70; i++) {
+        const x = Math.floor(rnd() * LW), y = 182 + Math.floor(rnd() * (LH - 182));
+        if (y > 205 && y < 216) continue;
+        px(x, y, P.rainHi); px(x - 1, y - 1, P.rain); px(x + 1, y - 1, P.rain);
+      }
+
+      // Scale up ×6 with hard pixel edges.
+      const out = document.getElementById("c");
+      out.width = LW * SCALE; out.height = LH * SCALE;
+      const o = out.getContext("2d");
+      o.imageSmoothingEnabled = false;
+      o.drawImage(buf, 0, 0, LW * SCALE, LH * SCALE);
+      window.__done = true;
+    </script>
+  </body>
+</html>
