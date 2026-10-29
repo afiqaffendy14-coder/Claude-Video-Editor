@@ -1,0 +1,469 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[{"id":"title","type":"string","label":"Title","default":"LOW POLY"},{"id":"subtitle","type":"string","label":"Subtitle","default":"Blue and white, in three dimensions"},{"id":"outro","type":"string","label":"Closing line","default":"HyperFrames × Three.js"},{"id":"blue","type":"color","label":"Blue","default":"#1747e0"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="lib/gsap.min.js"></script>
+    <style>
+      :root {
+        --blue: #1747e0;
+        --navy: #0a2472;
+        --ice: #e8efff;
+        --white: #ffffff;
+        --font-display: "Inter", sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--white);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        font-family: var(--font-display);
+      }
+
+      /* Scene 1: motion graphics */
+      #mg {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+      }
+      #mg-ground {
+        position: absolute;
+        inset: 0;
+        background: var(--white);
+      }
+      #mg-grid,
+      #mg-hero {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+      #mg-copy {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+      }
+      #mg-title {
+        color: var(--navy);
+        font-size: 210px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        line-height: 1;
+      }
+      #mg-title span,
+      #mg-sub span {
+        display: inline-block;
+        white-space: pre;
+      }
+      #mg-rule {
+        width: 760px;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--blue);
+      }
+      #mg-sub {
+        color: var(--blue);
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      /* Scene 2: Three.js low-poly world */
+      #world {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+      }
+      #world-canvas {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        opacity: 0;
+      }
+
+      /* Closing line over the world */
+      #outro {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        display: flex;
+        justify-content: center;
+        padding-top: 190px;
+      }
+      #outro-line {
+        color: var(--white);
+        font-size: 92px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        text-shadow: 0 6px 30px rgba(10, 36, 114, 0.45);
+      }
+      #outro-line span {
+        display: inline-block;
+        white-space: pre;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="10"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="mg" class="clip" data-start="0" data-duration="5" data-track-index="0" data-track-kind="graphics">
+        <div id="mg-ground"></div>
+        <svg id="mg-grid" viewBox="0 0 1920 1080" data-layout-ignore></svg>
+        <div id="mg-copy">
+          <h1 id="mg-title" data-var-text="title">LOW POLY</h1>
+          <div id="mg-rule"></div>
+          <p id="mg-sub" data-var-text="subtitle">Blue and white, in three dimensions</p>
+        </div>
+        <svg id="mg-hero" viewBox="0 0 1920 1080" data-layout-ignore data-layout-allow-overflow>
+          <polygon id="mg-tri" points="960,440 1052,600 868,600" fill="var(--blue)" />
+        </svg>
+      </div>
+
+      <div id="world" class="clip" data-start="4" data-duration="6" data-track-index="1" data-track-kind="graphics">
+        <canvas id="world-canvas" width="1920" height="1080"></canvas>
+      </div>
+
+      <div id="outro" class="clip" data-start="7.4" data-duration="2.6" data-track-index="2" data-track-kind="graphics">
+        <h2 id="outro-line" data-var-text="outro">HyperFrames × Three.js</h2>
+      </div>
+    </div>
+
+    <script>
+      // Seeded PRNG: every "random" choice is the same on every render.
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function splitInto(el, unit) {
+        const text = el.textContent;
+        const parts = unit === "word" ? text.split(/(\s+)/) : Array.from(text);
+        el.textContent = "";
+        return parts
+          .filter((p) => p.length)
+          .map((p) => {
+            const s = document.createElement("span");
+            s.textContent = p;
+            el.appendChild(s);
+            return s;
+          })
+          .filter((s) => s.textContent.trim().length);
+      }
+
+      // Triangulated grid of pale blue and white faces behind the title.
+      const SIDE = 150;
+      const H = (SIDE * Math.sqrt(3)) / 2;
+      const tints = ["#ffffff", "#f3f7ff", "#e8efff", "#dbe6ff", "#cddcff"];
+      const rand = mulberry32(7);
+      const grid = document.getElementById("mg-grid");
+      const faces = [];
+      for (let row = -1; row * H < 1080 + H; row++) {
+        for (let col = -2; col * (SIDE / 2) < 1920 + SIDE; col++) {
+          const x = col * (SIDE / 2) + (row % 2 ? SIDE / 2 : 0);
+          const y = row * H;
+          const up = (col + row) % 2 === 0;
+          const pts = up
+            ? [[x, y + H], [x + SIDE / 2, y], [x + SIDE, y + H]]
+            : [[x, y], [x + SIDE, y], [x + SIDE / 2, y + H]];
+          const p = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+          p.setAttribute("points", pts.map((q) => q.join(",")).join(" "));
+          p.setAttribute("fill", tints[Math.floor(rand() * tints.length)]);
+          p.setAttribute("stroke", "#c7d7ff");
+          p.setAttribute("stroke-width", "1");
+          grid.appendChild(p);
+          const cx = (pts[0][0] + pts[1][0] + pts[2][0]) / 3;
+          const cy = (pts[0][1] + pts[1][1] + pts[2][1]) / 3;
+          faces.push({ el: p, d: Math.hypot(cx - 960, cy - 540), cx });
+        }
+      }
+      const maxD = Math.max(...faces.map((f) => f.d));
+
+      const letters = splitInto(document.getElementById("mg-title"), "letter");
+      const subWords = splitInto(document.getElementById("mg-sub"), "word");
+      const outroWords = splitInto(document.getElementById("outro-line"), "word");
+
+      const tl = gsap.timeline({ paused: true });
+
+      // 0.0 – 1.3  grid blooms outward from the centre
+      faces.forEach((f) => {
+        tl.fromTo(
+          f.el,
+          { scale: 0, opacity: 0, transformOrigin: "50% 50%" },
+          { scale: 1, opacity: 1, duration: 0.55, ease: "expo.out" },
+          (f.d / maxD) * 0.8,
+        );
+      });
+
+      // 0.6 – 1.9  title, rule, subtitle
+      tl.fromTo(
+        letters,
+        { opacity: 0.3, filter: "blur(10px)", color: "#9db6ff" },
+        { opacity: 1, filter: "blur(0px)", color: "#0a2472", duration: 0.35, ease: "power4.out", stagger: 0.07 },
+        0.6,
+      );
+      tl.fromTo("#mg-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "expo.out" }, 1.0);
+      tl.fromTo(
+        subWords,
+        { opacity: 0, filter: "blur(6px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.15, ease: "power2.out", stagger: 0.08 },
+        1.45,
+      );
+
+      // 2.0 – 2.9  a blue light sweeps across the grid
+      faces.forEach((f) => {
+        const at = 2.0 + (f.cx / 1920) * 0.6;
+        tl.to(f.el, { fill: "#a9c2ff", duration: 0.18, ease: "power2.inOut" }, at);
+        tl.to(f.el, { fill: f.el.getAttribute("fill"), duration: 0.35, ease: "power2.inOut" }, at + 0.18);
+      });
+
+      // 3.0 – 3.3  copy leaves with a blur, word by word
+      tl.to(subWords, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", stagger: 0.03 }, 3.0);
+      tl.to(letters, { opacity: 0, filter: "blur(10px)", duration: 0.18, ease: "power2.in", stagger: 0.02 }, 3.05);
+      tl.to("#mg-rule", { scaleX: 0, duration: 0.25, ease: "power3.in" }, 3.05);
+
+      // 3.1 – 3.7  grid collapses into the centre, edges first
+      faces.forEach((f) => {
+        tl.to(
+          f.el,
+          { scale: 0, opacity: 0, duration: 0.35, ease: "power3.in" },
+          3.1 + (1 - f.d / maxD) * 0.3,
+        );
+      });
+
+      // 3.2 – 4.5  hero triangle lands, turns, then grows past the frame and becomes the sky
+      tl.fromTo(
+        "#mg-tri",
+        { scale: 0, rotation: -90, transformOrigin: "50% 66.6%" },
+        { scale: 1, rotation: 0, duration: 0.6, ease: "expo.out" },
+        3.2,
+      );
+      tl.to("#mg-tri", { scale: 40, rotation: 30, duration: 0.8, ease: "power3.in" }, 3.7);
+
+      // 4.4 – 4.95  the 3D world fades up while the triangle is still growing
+      tl.fromTo("#world-canvas", { opacity: 0 }, { opacity: 1, duration: 0.55, ease: "power2.inOut" }, 4.4);
+
+      // 7.6 – 10  closing line, held to the end
+      tl.fromTo(
+        outroWords,
+        { opacity: 0, filter: "blur(8px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power3.out", stagger: 0.09 },
+        7.6,
+      );
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+
+      // The Three.js module signals here once its meshes are built.
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady.world = new Promise((resolve) => (window.__worldBuilt = resolve));
+    </script>
+
+    <script type="module">
+      import * as THREE from "./lib/three.module.js";
+
+      const WORLD_START = 4;
+      const BLUE = new THREE.Color("#1747e0");
+
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const clamp01 = (v) => Math.min(1, Math.max(0, v));
+      const smooth = (a, b, v) => {
+        const x = clamp01((v - a) / (b - a));
+        return x * x * (3 - 2 * x);
+      };
+      const inOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+      const lerp = (a, b, k) => a + (b - a) * k;
+
+      // Seeded value noise for the terrain.
+      function hash(x, z) {
+        const s = Math.sin(x * 127.1 + z * 311.7) * 43758.5453;
+        return s - Math.floor(s);
+      }
+      function noise(x, z) {
+        const xi = Math.floor(x), zi = Math.floor(z);
+        const xf = x - xi, zf = z - zi;
+        const u = xf * xf * (3 - 2 * xf), v = zf * zf * (3 - 2 * zf);
+        const a = hash(xi, zi), b = hash(xi + 1, zi), c = hash(xi, zi + 1), d = hash(xi + 1, zi + 1);
+        return lerp(lerp(a, b, u), lerp(c, d, u), v);
+      }
+      function fbm(x, z) {
+        let sum = 0, amp = 0.5, f = 1;
+        for (let i = 0; i < 4; i++) {
+          sum += amp * noise(x * f, z * f);
+          f *= 2.1;
+          amp *= 0.5;
+        }
+        return sum / 0.9375;
+      }
+      function heightAt(x, z) {
+        const n = fbm(x * 0.045 + 10, z * 0.045 + 3);
+        const valley = smooth(5, 34, Math.abs(x));
+        return Math.pow(n, 1.6) * 30 * valley + n * 2.2 - 1.2;
+      }
+
+      const canvas = document.getElementById("world-canvas");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(1920, 1080, false);
+
+      const scene = new THREE.Scene();
+      scene.background = BLUE;
+      scene.fog = new THREE.Fog(BLUE, 0, 10);
+
+      const camera = new THREE.PerspectiveCamera(50, 1920 / 1080, 0.1, 400);
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x1747e0, 1.4));
+      const sun = new THREE.DirectionalLight(0xffffff, 2.6);
+      sun.position.set(-30, 40, 20);
+      scene.add(sun);
+
+      // Terrain: flat-shaded faces coloured by height, blue valleys to white peaks.
+      const terrainGeo = new THREE.PlaneGeometry(240, 240, 90, 90).toNonIndexed();
+      terrainGeo.rotateX(-Math.PI / 2);
+      const pos = terrainGeo.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        pos.setY(i, heightAt(pos.getX(i), pos.getZ(i)));
+      }
+      const palette = ["#2c62f0", "#5d8bff", "#9fbcff", "#d5e2ff", "#ffffff"].map((c) => new THREE.Color(c));
+      const colors = new Float32Array(pos.count * 3);
+      const jitter = mulberry32(11);
+      for (let f = 0; f < pos.count; f += 3) {
+        const h = (pos.getY(f) + pos.getY(f + 1) + pos.getY(f + 2)) / 3 + (jitter() - 0.5) * 1.6;
+        const idx = h < 0.8 ? 0 : h < 3 ? 1 : h < 6.5 ? 2 : h < 10 ? 3 : 4;
+        const c = palette[idx];
+        for (let k = 0; k < 3; k++) colors.set([c.r, c.g, c.b], (f + k) * 3);
+      }
+      terrainGeo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+      terrainGeo.computeVertexNormals();
+      scene.add(
+        new THREE.Mesh(
+          terrainGeo,
+          new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 0.95 }),
+        ),
+      );
+
+      // Water: a low-poly sheet whose ripple is a function of time alone.
+      const waterGeo = new THREE.PlaneGeometry(240, 240, 48, 48);
+      waterGeo.rotateX(-Math.PI / 2);
+      const waterBase = Float32Array.from(waterGeo.attributes.position.array);
+      const water = new THREE.Mesh(
+        waterGeo,
+        new THREE.MeshStandardMaterial({ color: "#3d74ff", flatShading: true, roughness: 0.4, metalness: 0.1 }),
+      );
+      water.position.y = 0.4;
+      scene.add(water);
+
+      // Hero: a white icosahedron with blue edges, floating in the valley.
+      const hero = new THREE.Group();
+      const heroGeo = new THREE.IcosahedronGeometry(2.6, 0);
+      hero.add(new THREE.Mesh(heroGeo, new THREE.MeshStandardMaterial({ color: "#ffffff", flatShading: true, roughness: 0.6 })));
+      hero.add(new THREE.LineSegments(new THREE.EdgesGeometry(heroGeo), new THREE.LineBasicMaterial({ color: "#1747e0" })));
+      hero.position.set(0, 6.5, -14);
+      scene.add(hero);
+
+      // Shards: small white and pale-blue polyhedra drifting around the hero.
+      const shardRand = mulberry32(23);
+      const shards = [];
+      const shardMats = [
+        new THREE.MeshStandardMaterial({ color: "#ffffff", flatShading: true }),
+        new THREE.MeshStandardMaterial({ color: "#b8cdff", flatShading: true }),
+      ];
+      for (let i = 0; i < 70; i++) {
+        const geo = i % 2 ? new THREE.TetrahedronGeometry(0.35 + shardRand() * 0.5) : new THREE.OctahedronGeometry(0.3 + shardRand() * 0.4);
+        const m = new THREE.Mesh(geo, shardMats[i % 3 === 0 ? 1 : 0]);
+        const s = {
+          mesh: m,
+          base: new THREE.Vector3((shardRand() - 0.5) * 50, 3 + shardRand() * 14, -50 + shardRand() * 60),
+          spin: new THREE.Vector3(shardRand() * 1.5, shardRand() * 1.5, shardRand()),
+          phase: shardRand() * Math.PI * 2,
+        };
+        shards.push(s);
+        scene.add(m);
+      }
+
+      const camFrom = new THREE.Vector3(0, 70, 26);
+      const camLow = new THREE.Vector3(0, 8, 24);
+      const camEnd = new THREE.Vector3(2.5, 7.2, 8);
+      const lookFrom = new THREE.Vector3(0, 0, -6);
+      const lookAt = new THREE.Vector3();
+
+      function renderAt(t) {
+        const u = Math.max(0, t - WORLD_START);
+
+        // Descent out of the blue: the camera drops from overhead into the valley as the fog lifts.
+        const d = inOut(clamp01((u - 0.1) / 2.8));
+        const p = clamp01((u - 2.9) / 3.1);
+        camera.position.lerpVectors(camFrom, camLow, d);
+        camera.position.lerp(camEnd, inOut(p) * 0.85 + p * 0.15);
+        camera.position.x += Math.sin(u * 0.7) * 0.6 * d;
+        lookAt.lerpVectors(lookFrom, hero.position, d);
+        camera.lookAt(lookAt);
+
+        const f = outCubic(clamp01((u - 0.2) / 3.2));
+        scene.fog.near = lerp(0, 18, f);
+        scene.fog.far = lerp(8, 150, f);
+
+        hero.rotation.set(0.35 + u * 0.15, u * 0.55, 0);
+        hero.position.y = 6.5 + Math.sin(u * 1.4) * 0.25;
+
+        for (const s of shards) {
+          s.mesh.position.set(s.base.x, s.base.y + Math.sin(u * 0.9 + s.phase) * 0.6, s.base.z);
+          s.mesh.rotation.set(s.spin.x * u + s.phase, s.spin.y * u, s.spin.z * u);
+        }
+
+        const wp = waterGeo.attributes.position;
+        for (let i = 0; i < wp.count; i++) {
+          const x = waterBase[i * 3], z = waterBase[i * 3 + 2];
+          wp.setY(i, Math.sin(x * 0.35 + u * 1.6) * 0.18 + Math.cos(z * 0.3 + u * 1.2) * 0.18);
+        }
+        wp.needsUpdate = true;
+        waterGeo.computeVertexNormals();
+
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("hf-seek", (e) => renderAt(e.detail.time));
+      renderAt(0);
+      window.__worldBuilt();
+    </script>
+  </body>
+</html>
