@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="lib/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #1f2530; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #stage { position: absolute; inset: 0; }
+      #pixels { position: absolute; inset: 0; width: 1080px; height: 1920px; image-rendering: pixelated; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1080" data-height="1920">
+      <div id="stage" class="clip" data-start="0" data-duration="10" data-track-index="0" data-track-kind="graphics">
+        <canvas id="pixels" width="1080" height="1920"></canvas>
+      </div>
+
+      <!-- Voiceover (Kokoro bm_george, script lines from the Lauda short) -->
+      <audio id="vo-1" class="clip" src="assets/audio/vo-1.wav" data-start="0.1" data-duration="1.7" data-track-index="10" data-volume="1.4"></audio>
+      <audio id="vo-2" class="clip" src="assets/audio/vo-2.wav" data-start="1.82" data-duration="2.3" data-track-index="11" data-volume="1.4"></audio>
+      <audio id="vo-3" class="clip" src="assets/audio/vo-3.wav" data-start="4.6" data-duration="1.5" data-track-index="12" data-volume="1.4"></audio>
+      <audio id="vo-4" class="clip" src="assets/audio/vo-4.wav" data-start="6.25" data-duration="1.0" data-track-index="13" data-volume="1.4"></audio>
+      <audio id="vo-5" class="clip" src="assets/audio/vo-5.wav" data-start="7.32" data-duration="1.55" data-track-index="14" data-volume="1.4"></audio>
+      <audio id="vo-6" class="clip" src="assets/audio/vo-6.wav" data-start="8.9" data-duration="1.1" data-track-index="15" data-volume="1.4"></audio>
+
+      <!-- Music bed and sound effects (tools/make_audio.py) -->
+      <audio id="music" class="clip" src="assets/audio/music-bed.wav" data-start="0" data-duration="10" data-track-index="16" data-volume="0.16"></audio>
+      <audio id="sfx-rain" class="clip" src="assets/audio/sfx-rain.wav" data-start="0" data-duration="10" data-track-index="17" data-volume="0.19"></audio>
+      <audio id="sfx-pass-1" class="clip" src="assets/audio/sfx-pass-a.wav" data-start="1.55" data-duration="1.9" data-track-index="18" data-volume="0.2"></audio>
+      <audio id="sfx-arrive" class="clip" src="assets/audio/sfx-arrive.wav" data-start="4.3" data-duration="2.0" data-track-index="19" data-volume="0.3"></audio>
+      <audio id="sfx-steps" class="clip" src="assets/audio/sfx-steps.wav" data-start="6.4" data-duration="3.6" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="sfx-pass-2" class="clip" src="assets/audio/sfx-pass-b.wav" data-start="6.9" data-duration="1.9" data-track-index="21" data-volume="0.2"></audio>
+      <audio id="sfx-impact" class="clip" src="assets/audio/sfx-impact.wav" data-start="8.88" data-duration="1.12" data-track-index="22" data-volume="0.45"></audio>
+    </div>
+
+    <script>
+      // The pixel scene is drawn entirely from time in scene/fuji.js; this timeline exists so
+      // the runtime has a clock to seek.
+      const tl = gsap.timeline({ paused: true });
+      tl.to({}, { duration: 10 });
+      window.__timelines["main"] = tl;
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady.pixels = new Promise((resolve) => (window.__pixelsBuilt = resolve));
+    </script>
+    <script type="module">
+      import { createScene } from "./scene/fuji.js";
+      const renderAt = createScene(document.getElementById("pixels"));
+      window.addEventListener("hf-seek", (e) => renderAt(e.detail.time));
+      renderAt(0);
+      window.__pixelsBuilt();
+    </script>
+  </body>
+</html>
