@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "remotion": "remotion",
-    "hyperframes": "hyperframes"
+    "hyperframes": "hyperframes",
+    "studio": "remotion studio src/index.jsx",
+    "render": "remotion render src/index.jsx SampleVideo out/sample.mp4"
   },
   "repository": {
     "type": "git",
