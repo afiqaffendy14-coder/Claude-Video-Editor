@@ -189,7 +189,8 @@
       import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
       import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
       import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-      import { GROUND, ACCENT, RIVAL, buildCar, buildDriver, buildPerson, buildTrack, buildGarage, spinWheels } from "./scene/models.js";
+      import { GROUND, ACCENT, RIVAL, buildCar, buildTrack, buildGarage, spinWheels } from "./scene/models.js";
+      import { buildDriver, buildPerson } from "./scene/humans.js";
 
       const SHOT2_START = 1.9;
       const SHOT3_START = 3.3;
@@ -244,9 +245,9 @@
       rivalBehind.position.set(1.5, 0, 9.5);
       scene.add(hero, rivalAhead, rivalBehind);
       const crew = [
-        [buildPerson("#3b3d40", { forearm: -1.1 }), -2.95, -1.6, 1.2],
-        [buildPerson("#4a4c50", { forearm: -0.2 }), -2.75, 0.7, Math.PI / 2],
-        [buildPerson("#2f3134", { forearm: -0.9, spread: 0.3 }), -0.15, 2.3, -2.3],
+        [buildPerson("#3b3d40", { reach: 0.5, bend: 1.0 }), -2.95, -1.6, 1.2],
+        [buildPerson("#4a4c50", { reach: 0.15, bend: 0.3 }), -2.75, 0.7, Math.PI / 2],
+        [buildPerson("#2f3134", { reach: 0.3, bend: 1.3, spread: 0.25 }), -0.15, 2.3, -2.3],
         [buildPerson("#55575b"), 2.9, -4.6, -1.2],
       ].map(([p, x, z, ry]) => {
         p.position.set(x, 0, z);
