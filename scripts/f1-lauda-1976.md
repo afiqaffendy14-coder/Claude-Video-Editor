@@ -21,7 +21,7 @@
 
 ## Why it holds attention
 
-- **Hook (0–3 s):** visual + text + voice all say the same shocking thing at once. Nobody expects "last rites" in an F1 video.
+- **Hook (0–3 s):** visual + text + voice all say the same shocking thing at once. A man nobody expected to live is back in the car seconds later.
 - **Open loop (7 s):** "not the bravest thing he did" keeps the question open until the last 10 seconds.
 - **Paid-off promise:** the hook promises "42 days later" and Monza delivers it. The opening question is answered by the walk-away.
 - **Echo:** "Lap two. Again." links the crash to the decision, so the ending lands harder.
