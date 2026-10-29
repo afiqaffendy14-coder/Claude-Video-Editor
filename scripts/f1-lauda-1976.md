@@ -1,23 +1,23 @@
 # F1 Short: "The Bravest Thing Lauda Ever Did"
 
-**Format:** 9:16 vertical (Shorts / Reels / TikTok), low-poly animation
+**Format:** 9:16 vertical (Shorts / Reels / TikTok), low-poly animation. Visual style: [`style-guide.md`](style-guide.md)
 **Runtime:** 57.8 s at 150 wpm (133 spoken words). Read at 145–155 wpm and it stays inside 56–60 s (59.6 s / 56.1 s).
 **Topic:** Niki Lauda, 1976. Doctors feared he wouldn't survive; he was back racing 42 days later, then he walks away from the title decider in the rain and loses by one point.
 
 ## Script
 
-| Time | Visual (low-poly) | On-screen text | Voiceover |
+| Time | Visual (low-poly, see style guide) | On-screen text | Voiceover |
 |---|---|---|---|
-| 0.0–3.0 | Dark hospital room. A burnt red helmet on a bedside table, one cold light. Slow push in. | DOCTORS THOUGHT HE WOULD DIE | Doctors didn't think this man would survive. |
-| 3.0–7.0 | Hard cut: the same helmet, clean, being pulled on. Red #1 car on the grid, engine shaking. | 42 DAYS LATER | Forty-two days later... he was racing again. |
-| 7.0–10.8 | Camera whips away from the car to black. A single question mark made of polygons. | THAT'S NOT THE BRAVEST PART | But that's not the bravest thing he did. |
-| 10.8–15.8 | Low-poly forest track winding through dark green hills, the red car tiny in it. Title card "1976". | 1976 · NÜRBURGRING · "THE GREEN HELL" | Niki Lauda. World champion. At the track drivers call the Green Hell. |
-| 15.8–22.1 | Car twitches, hits the barrier. Fire shown as orange and yellow polygon shards, abstract, no injuries. Other cars stop; small figures run in. | LAP 2 | Lap two. His car hits the barrier and erupts in flames. Drivers drag him out. |
-| 22.1–27.6 | Back in the hospital room. A heart-monitor line in white polygons, flickering. | FIGHTING FOR HIS LIFE | Burned. Toxic fumes in his lungs. For days, he fights for his life. |
-| 27.6–34.1 | Monza straight, sunny. Close-up of the helmet going on, a small red stain on the white padding. The car crosses the line, "P4" flips up. | DAY 42 · MONZA · P4 | Then, at Monza, he pulls a helmet over still-bleeding wounds... and finishes fourth. |
-| 34.1–40.4 | Mount Fuji in low-poly, storm clouds, heavy rain streaks. A points graphic: LAUDA 68 vs HUNT 65. | FINAL RACE · JAPAN · +3 POINTS | Final race. Japan. He leads James Hunt by three points. And the rain is brutal. |
-| 40.4–48.6 | Red car peels off into the pit lane. Lauda climbs out and walks away in the rain. The white #11 car keeps racing. Scoreboard flips: HUNT 69, LAUDA 68. | LAP 2. AGAIN. · LOST BY 1 POINT | Lap two. Again. He pulls into the pits... and walks away. Hunt wins the title. By one point. |
-| 48.6–57.8 | Rain on the pit wall. The helmet is set down and the camera holds on it. The last frame matches the first frame's helmet, so the video loops. | "MY LIFE IS WORTH MORE THAN A TITLE" → then: FOLLOW FOR THE F1 STORIES BEHIND THE STATS | His life, he said, was worth more than a title. The bravest thing isn't getting back in. It's knowing when to get out. |
+| 0.0–3.0 | **Top-down shot**, white void. A low-poly hospital bed with a red helmet on the table beside it. The camera drifts down slowly. | DOCTORS THOUGHT HE WOULD DIE | Doctors didn't think this man would survive. |
+| 3.0–7.0 | Same top-down framing, but now it's the red #1 car on a white grid. A white **counter box** under it ticks DAY 0 → DAY 42, like the reference's pit-stop timer. | 42 DAYS LATER | Forty-two days later... he was racing again. |
+| 7.0–10.8 | Low tracking shot alongside the car. It accelerates out of frame and leaves empty white space. | THAT'S NOT THE BRAVEST PART | But that's not the bravest thing he did. |
+| 10.8–15.8 | High wide shot: the grey track winds through low-poly forest. Only the trees are green, the one place the palette breaks. The red car is tiny. | 1976 · NÜRBURGRING · "THE GREEN HELL" | Niki Lauda. World champion. At the track drivers call the Green Hell. |
+| 15.8–22.1 | Close-up, shallow focus: the rear wheel twitches. Cut wide: the car hits the barrier and bursts into orange polygon shards. Grey figures run in. No injuries shown. | LAP 2 | Lap two. His car hits the barrier and erupts in flames. Drivers drag him out. |
+| 22.1–27.6 | Back to the white hospital, side-on. A thin red heart-monitor line pulses across the frame. | FIGHTING FOR HIS LIFE | Burned. Toxic fumes in his lungs. For days, he fights for his life. |
+| 27.6–34.1 | Macro shot: gloved hands lower the red helmet, a small red stain on the white padding. Cut to a top-down of the car crossing the line; the counter box flips to P4. | DAY 42 · MONZA · P4 | Then, at Monza, he pulls a helmet over still-bleeding wounds... and finishes fourth. |
+| 34.1–40.4 | The palette drops to darker grey: low-poly Mount Fuji, mist, rain streaks. Two counter boxes: LAUDA 68 / HUNT 65. | FINAL RACE · JAPAN · +3 POINTS | Final race. Japan. He leads James Hunt by three points. And the rain is brutal. |
+| 40.4–48.6 | The red car peels into the pit lane, past a pit light board turning red. The driver climbs out and walks off in the rain. A grey #11 car keeps racing. The boxes flip: HUNT 69 / LAUDA 68. | LAP 2. AGAIN. · LOST BY 1 POINT | Lap two. Again. He pulls into the pits... and walks away. Hunt wins the title. By one point. |
+| 48.6–57.8 | Close-up: the helmet set down on a wet pit wall. The camera rises into a top-down that matches the opening frame, so the video loops. | "MY LIFE IS WORTH MORE THAN A TITLE" → then: FOLLOW FOR THE F1 STORIES BEHIND THE STATS | His life, he said, was worth more than a title. The bravest thing isn't getting back in. It's knowing when to get out. |
 
 ## Why it holds attention
 
