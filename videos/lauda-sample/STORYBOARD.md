@@ -24,7 +24,7 @@ audience: F1 Shorts viewers
 - duration: 1.4s
 - transition_in: cut
 - poster: 3.2
-- scene: Macro: red helmet lowers onto the driver's shoulders
+- scene: Gloved hands pull the red helmet down over the driver's balaclava
 - reads: helmet lands (1.9-2.95s)
 - sound: muffled thud as it seats; engine swells
 
@@ -35,6 +35,6 @@ audience: F1 Shorts viewers
 - duration: 1.7s
 - transition_in: cut
 - poster: 4.9
-- scene: Low rear three-quarter; the car launches and shrinks down the straight
+- scene: Low from behind; tyre smoke at launch, the car shrinks down the straight
 - reads: launch (3.3-4.0s); "HE WAS RACING AGAIN" (3.35-5.0s)
 - sound: engine roar on the launch, fading with distance

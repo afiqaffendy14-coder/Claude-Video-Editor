@@ -180,16 +180,13 @@
 
     <script type="module">
       import * as THREE from "./lib/three.module.js";
+      import { GROUND, ACCENT, RIVAL, buildCar, buildDriver, buildTrack, spinWheels, mat } from "./scene/models.js";
 
       const SHOT2_START = 1.9;
       const SHOT3_START = 3.3;
-      const GROUND = "#f2f2f0";
-      const ACCENT = "#d7262b";
-      const RIVAL = "#9a9a98";
 
       const clamp01 = (v) => Math.min(1, Math.max(0, v));
       const outCubic = (x) => 1 - Math.pow(1 - x, 3);
-      const outExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
       const inOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
       const lerp = (a, b, k) => a + (b - a) * k;
 
@@ -202,211 +199,50 @@
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(GROUND);
-      scene.fog = new THREE.Fog(GROUND, 22, 60);
+      scene.fog = new THREE.Fog(GROUND, 24, 70);
 
-      const camera = new THREE.PerspectiveCamera(40, 1080 / 1920, 0.05, 200);
+      const camera = new THREE.PerspectiveCamera(40, 1080 / 1920, 0.02, 250);
 
-      // Soft overcast studio light: big hemisphere fill + one soft key that casts contact shadows.
-      scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d4, 2.1));
-      const key = new THREE.DirectionalLight(0xffffff, 1.6);
+      // Soft overcast studio light: big hemisphere fill + one soft key for contact shadows.
+      scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d4, 2.0));
+      const key = new THREE.DirectionalLight(0xffffff, 1.7);
       key.castShadow = true;
       key.shadow.mapSize.set(2048, 2048);
-      key.shadow.camera.left = -9;
-      key.shadow.camera.right = 9;
-      key.shadow.camera.top = 9;
-      key.shadow.camera.bottom = -9;
-      key.shadow.radius = 6;
-      key.shadow.bias = -0.0005;
+      Object.assign(key.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near: 1, far: 40 });
+      key.shadow.radius = 5;
+      key.shadow.bias = -0.0004;
+      key.shadow.normalBias = 0.02;
       scene.add(key, key.target);
 
-      const mat = (color, extra = {}) =>
-        new THREE.MeshStandardMaterial({ color, flatShading: true, roughness: 0.85, metalness: 0, ...extra });
+      buildTrack(scene);
 
-      function shadowed(mesh) {
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        return mesh;
-      }
-
-      // Narrow the front (−z) end of a box toward its nose, for the faceted wedge look.
-      function taper(geo, sx, sy) {
-        const p = geo.attributes.position;
-        geo.computeBoundingBox();
-        const { min, max } = geo.boundingBox;
-        for (let i = 0; i < p.count; i++) {
-          const k = (max.z - p.getZ(i)) / (max.z - min.z); // 1 at the front, 0 at the back
-          p.setX(i, p.getX(i) * lerp(1, sx, k));
-          p.setY(i, p.getY(i) * lerp(1, sy, k));
-        }
-        geo.computeVertexNormals();
-        return geo;
-      }
-
-      function numberDecal(text) {
-        const c = document.createElement("canvas");
-        c.width = c.height = 128;
-        const g = c.getContext("2d");
-        g.fillStyle = "#ffffff";
-        g.beginPath();
-        g.arc(64, 64, 60, 0, Math.PI * 2);
-        g.fill();
-        g.fillStyle = "#141414";
-        g.font = "900 76px Inter, sans-serif";
-        g.textAlign = "center";
-        g.textBaseline = "middle";
-        g.fillText(text, 64, 70);
-        const tex = new THREE.CanvasTexture(c);
-        tex.colorSpace = THREE.SRGBColorSpace;
-        return new THREE.MeshStandardMaterial({ map: tex, transparent: true, roughness: 0.8 });
-      }
-
-      // A 1970s-style F1 car from a handful of faceted primitives. Forward is −z.
-      function buildCar(color, number) {
-        const car = new THREE.Group();
-        const body = mat(color);
-        const dark = mat("#2b2b2b");
-        const mech = mat("#6f6f6c");
-
-        const add = (geo, m, x, y, z) => {
-          const mesh = shadowed(new THREE.Mesh(geo, m));
-          mesh.position.set(x, y, z);
-          car.add(mesh);
-          return mesh;
-        };
-
-        add(taper(new THREE.BoxGeometry(0.72, 0.42, 2.4), 0.8, 0.85), body, 0, 0.42, 0.05); // tub
-        add(taper(new THREE.BoxGeometry(0.62, 0.34, 1.3), 0.35, 0.45), body, 0, 0.36, -1.75); // nose
-        add(new THREE.BoxGeometry(1.95, 0.06, 0.42), body, 0, 0.2, -2.25); // front wing
-        add(new THREE.BoxGeometry(0.05, 0.22, 0.46), body, -0.98, 0.26, -2.25);
-        add(new THREE.BoxGeometry(0.05, 0.22, 0.46), body, 0.98, 0.26, -2.25);
-        for (const sx of [-1, 1]) {
-          add(taper(new THREE.BoxGeometry(0.42, 0.3, 1.35), 0.75, 0.6), body, sx * 0.56, 0.34, 0.3); // sidepods
-        }
-        add(taper(new THREE.BoxGeometry(0.42, 0.55, 0.85), 0.7, 0.55), body, 0, 0.9, 0.72); // airbox
-        add(new THREE.BoxGeometry(0.58, 0.4, 0.95), mech, 0, 0.45, 1.45); // engine / gearbox
-        add(new THREE.BoxGeometry(1.35, 0.05, 0.55), body, 0, 1.1, 1.95); // rear wing
-        add(new THREE.BoxGeometry(0.05, 0.36, 0.6), body, -0.67, 1.02, 1.95);
-        add(new THREE.BoxGeometry(0.05, 0.36, 0.6), body, 0.67, 1.02, 1.95);
-        add(new THREE.BoxGeometry(0.08, 0.5, 0.08), mech, 0, 0.85, 1.85); // wing pillar
-
-        // Driver's helmet peeking out of the cockpit
-        const helmet = add(new THREE.SphereGeometry(0.17, 9, 7), mat(ACCENT), 0, 0.78, 0.15);
-        helmet.material = number === "1" ? mat(ACCENT) : mat("#e9e9e6");
-        add(new THREE.SphereGeometry(0.172, 8, 3, Math.PI / 2 - 0.8, 1.6, 1.3, 0.35), mat("#1b1b1b"), 0, 0.78, 0.15);
-
-        // Wheels: chunky faceted cylinders with a pale sidewall ring, spun about x.
-        car.userData.wheels = [];
-        const wheel = (r, w, x, z) => {
-          const g = new THREE.Group();
-          const tyre = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(r, r, w, 14).rotateZ(Math.PI / 2), dark));
-          const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 0.78, 0.022, 4, 18).rotateY(Math.PI / 2), mat("#e4e4e0"));
-          ring.position.x = Math.sign(x) * (w / 2 + 0.004);
-          const hub = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.35, r * 0.35, w + 0.02, 8).rotateZ(Math.PI / 2), mech);
-          g.add(tyre, ring, hub);
-          g.position.set(x, r, z);
-          g.userData.r = r;
-          car.add(g);
-          car.userData.wheels.push(g);
-          // suspension arm back to the tub
-          add(new THREE.BoxGeometry(Math.abs(x) - 0.3, 0.04, 0.06), mech, x / 2, r, z);
-        };
-        wheel(0.31, 0.28, -0.86, -1.32);
-        wheel(0.31, 0.28, 0.86, -1.32);
-        wheel(0.41, 0.48, -0.88, 1.32);
-        wheel(0.41, 0.48, 0.88, 1.32);
-
-        // Number roundels: nose top and both airbox sides
-        const decal = numberDecal(number);
-        const top = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.34), decal);
-        top.rotation.x = -Math.PI / 2;
-        top.position.set(0, 0.52, -1.45);
-        car.add(top);
-        for (const sx of [-1, 1]) {
-          const side = new THREE.Mesh(new THREE.PlaneGeometry(0.36, 0.36), decal);
-          side.rotation.y = sx * Math.PI / 2;
-          side.position.set(sx * 0.17, 0.95, 0.7);
-          car.add(side);
-        }
-        return car;
-      }
-
-      function spinWheels(car, distance) {
-        for (const w of car.userData.wheels) w.rotation.x = -distance / w.userData.r;
-      }
-
-      // Ground, grid boxes, pit wall and a distant grandstand, all in the clay palette.
-      const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), mat(GROUND, { roughness: 1 }));
-      ground.rotation.x = -Math.PI / 2;
-      ground.receiveShadow = true;
-      scene.add(ground);
-
-      const lineMat = new THREE.MeshBasicMaterial({ color: "#d4d4d0" });
-      function gridBox(x, z) {
-        const g = new THREE.Group();
-        const bar = (w, d, px, pz) => {
-          const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), lineMat);
-          m.rotation.x = -Math.PI / 2;
-          m.position.set(px, 0.005, pz);
-          g.add(m);
-        };
-        bar(1.9, 0.08, 0, -2.6); // front line
-        bar(0.08, 0.9, -0.95, -2.2);
-        bar(0.08, 0.9, 0.95, -2.2);
-        g.position.set(x, 0, z);
-        scene.add(g);
-      }
-      for (let i = -6; i <= 3; i++) gridBox(i % 2 ? 1.5 : -1.5, i * 7);
-      // Start/finish stripes far down the straight, for speed in the launch shot
-      for (let z = -60; z < 40; z += 4) {
-        const dash = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 1.6), lineMat);
-        dash.rotation.x = -Math.PI / 2;
-        dash.position.set(3.2, 0.004, z);
-        scene.add(dash);
-      }
-
-      const wall = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.0, 140), mat("#e2e2de")));
-      wall.position.set(-3.6, 0.5, -20);
-      scene.add(wall);
-      for (let i = 0; i < 10; i++) {
-        const step = shadowed(new THREE.Mesh(new THREE.BoxGeometry(3, 1.2 + i * 0.9, 140), mat("#dcdcd8")));
-        step.position.set(-12 - i * 2.2, (1.2 + i * 0.9) / 2, -20);
-        scene.add(step);
-      }
-
-      // The cars: Lauda's red #1 on the grid, rivals in grey ahead and behind.
+      // Lauda's red #1 on the grid, rivals in grey ahead and behind.
       const hero = buildCar(ACCENT, "1");
       hero.position.set(-1.5, 0, 0);
-      scene.add(hero);
       const rivalAhead = buildCar(RIVAL, "11");
       rivalAhead.position.set(1.5, 0, -7);
-      scene.add(rivalAhead);
       const rivalBehind = buildCar(RIVAL, "3");
       rivalBehind.position.set(1.5, 0, 9.5);
-      scene.add(rivalBehind);
+      scene.add(hero, rivalAhead, rivalBehind);
 
-      // Shot 2 set: the driver's shoulders and the helmet that lowers onto them, off to one side.
-      const driver = new THREE.Group();
+      // Shot 2 set: the driver pulling his helmet on, off to one side of the world.
+      const driver = buildDriver();
       driver.position.set(40, 0, 0);
-      const torso = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.56, 0.9, 9), mat(ACCENT)));
-      torso.scale.set(1.35, 1, 0.75);
-      torso.position.y = 0.55;
-      const collar = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.26, 0.12, 9), mat("#f4f4f2")));
-      collar.position.y = 1.04;
-      const neck = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.26, 8), mat("#3a3a38")));
-      neck.position.y = 1.16;
-      driver.add(torso, collar, neck);
-
-      const bigHelmet = new THREE.Group();
-      const shell = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.33, 12, 9, 0, Math.PI * 2, 0, 2.25), mat(ACCENT, { side: THREE.DoubleSide })));
-      const visor = new THREE.Mesh(
-        new THREE.SphereGeometry(0.337, 10, 3, Math.PI / 2 - 0.85, 1.7, 1.12, 0.48),
-        mat("#1b1b1b", { roughness: 0.35 }),
-      );
-      const stripeF = new THREE.Mesh(new THREE.SphereGeometry(0.334, 2, 8, Math.PI / 2 - 0.13, 0.26, 0.02, 1.08), mat("#f4f4f2"));
-      const stripeB = new THREE.Mesh(new THREE.SphereGeometry(0.334, 2, 8, -Math.PI / 2 - 0.13, 0.26, 0.02, 2.1), mat("#f4f4f2"));
-      bigHelmet.add(shell, visor, stripeF, stripeB);
-      driver.add(bigHelmet);
       scene.add(driver);
+
+      // Shot 3: wheelspin smoke, puffs born at fixed times so any frame can be drawn alone.
+      const puffs = [];
+      for (let i = 0; i < 48; i++) {
+        const m = new THREE.Mesh(
+          new THREE.IcosahedronGeometry(0.16, 0),
+          new THREE.MeshStandardMaterial({ color: "#ffffff", flatShading: true, transparent: true, roughness: 1 }),
+        );
+        m.userData = { born: (i >> 1) * 0.028, side: i % 2 ? 1 : -1, spin: 0.7 + (i % 5) * 0.31, drift: ((i * 37) % 11) / 11 - 0.5 };
+        m.visible = false;
+        scene.add(m);
+        puffs.push(m);
+      }
+      const launchDistance = (u) => 0.5 * 11 * u * u; // constant acceleration from rest
 
       const target = new THREE.Vector3();
       function frameKeyLight(x, z) {
@@ -415,39 +251,49 @@
       }
 
       function renderAt(t) {
+        puffs.forEach((p) => (p.visible = false));
         if (t < SHOT2_START) {
-          // Shot 1: straight top-down on the grid, slowly descending; car points up the screen.
+          // Shot 1: straight top-down on the grid, slowly sinking; the car points up the screen.
           const u = t / SHOT2_START;
           const h = lerp(18.5, 16.5, inOut(u));
           camera.fov = 40;
           camera.up.set(0, 0, -1);
           camera.position.set(-1.5, h, 2.2);
           target.set(-1.5, 0, 2.2);
-          rivalAhead.visible = true;
           camera.lookAt(target);
+          rivalAhead.visible = true;
           hero.position.z = 0;
           spinWheels(hero, 0);
-          frameKeyLight(0, 0);
+          frameKeyLight(-1.5, 0);
         } else if (t < SHOT3_START) {
-          // Shot 2: macro on the helmet lowering onto the driver.
+          // Shot 2: the gloves pull the helmet down over the balaclava.
           const u = t - SHOT2_START;
-          const drop = outCubic(clamp01(u / 1.05));
-          bigHelmet.position.set(0, lerp(2.15, 1.27, drop), 0);
-          bigHelmet.rotation.set(lerp(-0.25, 0, drop), lerp(0.7, 0.12, drop), 0);
-          camera.fov = 30;
+          const k = outCubic(clamp01(u / 1.1));
+          driver.userData.pose(lerp(1.0, 0.645, k), lerp(0.35, 0, k));
+          camera.fov = 32;
           camera.up.set(0, 1, 0);
-          camera.position.set(40 + lerp(1.25, 1.1, u / 1.4), lerp(1.32, 1.26, u / 1.4), lerp(3.1, 2.85, u / 1.4));
-          target.set(40, 1.12, 0);
+          camera.position.set(40 + lerp(0.62, 0.55, u / 1.4), lerp(0.86, 0.8, u / 1.4), lerp(1.45, 1.32, u / 1.4));
+          target.set(40, lerp(0.74, 0.68, k), 0);
           camera.lookAt(target);
           frameKeyLight(40, 0);
         } else {
-          // Shot 3: low tracking shot; the car launches and pulls away from the camera.
+          // Shot 3: rear three-quarter, low; the car launches and shrinks down the straight.
           const u = t - SHOT3_START;
-          const s = 0.5 * 11 * u * u; // constant acceleration from rest
+          const s = launchDistance(u);
           hero.position.z = -s;
-          spinWheels(hero, s);
-          // Rear three-quarter, low; the car shrinks down the straight, leaving empty white.
+          spinWheels(hero, s * 1.25);
           rivalAhead.visible = false;
+          for (const p of puffs) {
+            const age = u - p.userData.born;
+            if (age < 0 || p.userData.born > 0.6) continue;
+            const sz = launchDistance(p.userData.born);
+            p.visible = true;
+            p.position.set(-1.5 + p.userData.side * (0.95 + age * 0.6) + p.userData.drift * 0.3, 0.18 + age * 0.45, -sz + 1.75 + age * 1.6);
+            const sc = 0.35 + age * 1.5;
+            p.scale.setScalar(sc);
+            p.rotation.set(age * p.userData.spin, age * 1.3, 0);
+            p.material.opacity = Math.max(0, 0.5 - age * 0.45);
+          }
           const c = outCubic(clamp01(u / 1.7));
           camera.fov = 38;
           camera.up.set(0, 1, 0);
@@ -461,10 +307,8 @@
       }
 
       window.addEventListener("hf-seek", (e) => renderAt(e.detail.time));
-      document.fonts.ready.then(() => {
-        renderAt(0);
-        window.__stageBuilt();
-      });
+      renderAt(0);
+      window.__stageBuilt();
     </script>
   </body>
 </html>
