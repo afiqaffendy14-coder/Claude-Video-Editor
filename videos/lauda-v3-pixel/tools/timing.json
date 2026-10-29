@@ -1,0 +1,793 @@
+{
+ "duration": 58.233,
+ "lines": [
+  {
+   "i": 1,
+   "text": "This man just walked away from the world championship.",
+   "start": 0.0,
+   "end": 3.142,
+   "words": [
+    {
+     "w": "This",
+     "start": 0.0
+    },
+    {
+     "w": "man",
+     "start": 0.283
+    },
+    {
+     "w": "just",
+     "start": 0.515
+    },
+    {
+     "w": "walked",
+     "start": 0.798
+    },
+    {
+     "w": "away",
+     "start": 1.185
+    },
+    {
+     "w": "from",
+     "start": 1.468
+    },
+    {
+     "w": "the",
+     "start": 1.751
+    },
+    {
+     "w": "world",
+     "start": 1.983
+    },
+    {
+     "w": "championship.",
+     "start": 2.318
+    }
+   ]
+  },
+  {
+   "i": 2,
+   "text": "On purpose.",
+   "start": 3.172,
+   "end": 4.147,
+   "words": [
+    {
+     "w": "On",
+     "start": 3.172
+    },
+    {
+     "w": "purpose.",
+     "start": 3.407
+    }
+   ]
+  },
+  {
+   "i": 3,
+   "text": "Japan, 1976. Final race.",
+   "start": 4.177,
+   "end": 7.954,
+   "words": [
+    {
+     "w": "Japan,",
+     "start": 4.177
+    },
+    {
+     "w": "1976.",
+     "start": 4.924
+    },
+    {
+     "w": "Final",
+     "start": 6.75
+    },
+    {
+     "w": "race.",
+     "start": 7.29
+    }
+   ]
+  },
+  {
+   "i": 4,
+   "text": "He leads James Hunt by three points.",
+   "start": 7.984,
+   "end": 10.329,
+   "words": [
+    {
+     "w": "He",
+     "start": 7.984
+    },
+    {
+     "w": "leads",
+     "start": 8.179
+    },
+    {
+     "w": "James",
+     "start": 8.542
+    },
+    {
+     "w": "Hunt",
+     "start": 8.905
+    },
+    {
+     "w": "by",
+     "start": 9.212
+    },
+    {
+     "w": "three",
+     "start": 9.408
+    },
+    {
+     "w": "points.",
+     "start": 9.77
+    }
+   ]
+  },
+  {
+   "i": 5,
+   "text": "On lap two, he pulls in and climbs out.",
+   "start": 10.359,
+   "end": 13.059,
+   "words": [
+    {
+     "w": "On",
+     "start": 10.359
+    },
+    {
+     "w": "lap",
+     "start": 10.558
+    },
+    {
+     "w": "two,",
+     "start": 10.814
+    },
+    {
+     "w": "he",
+     "start": 11.212
+    },
+    {
+     "w": "pulls",
+     "start": 11.411
+    },
+    {
+     "w": "in",
+     "start": 11.78
+    },
+    {
+     "w": "and",
+     "start": 11.979
+    },
+    {
+     "w": "climbs",
+     "start": 12.235
+    },
+    {
+     "w": "out.",
+     "start": 12.661
+    }
+   ]
+  },
+  {
+   "i": 6,
+   "text": "To understand why, rewind eighty-four days.",
+   "start": 13.089,
+   "end": 16.221,
+   "words": [
+    {
+     "w": "To",
+     "start": 13.089
+    },
+    {
+     "w": "understand",
+     "start": 13.313
+    },
+    {
+     "w": "why,",
+     "start": 14.048
+    },
+    {
+     "w": "rewind",
+     "start": 14.495
+    },
+    {
+     "w": "eighty-four",
+     "start": 14.975
+    },
+    {
+     "w": "days.",
+     "start": 15.709
+    }
+   ]
+  },
+  {
+   "i": 7,
+   "text": "Germany. The N\u00fcrburgring. The track drivers call the Green Hell.",
+   "start": 16.251,
+   "end": 20.209,
+   "words": [
+    {
+     "w": "Germany.",
+     "start": 16.251
+    },
+    {
+     "w": "The",
+     "start": 16.835
+    },
+    {
+     "w": "N\u00fcrburgring.",
+     "start": 17.074
+    },
+    {
+     "w": "The",
+     "start": 17.871
+    },
+    {
+     "w": "track",
+     "start": 18.11
+    },
+    {
+     "w": "drivers",
+     "start": 18.455
+    },
+    {
+     "w": "call",
+     "start": 18.907
+    },
+    {
+     "w": "the",
+     "start": 19.199
+    },
+    {
+     "w": "Green",
+     "start": 19.438
+    },
+    {
+     "w": "Hell.",
+     "start": 19.783
+    }
+   ]
+  },
+  {
+   "i": 8,
+   "text": "Lap two. His car snaps into the barrier and bursts into flames.",
+   "start": 20.239,
+   "end": 24.23,
+   "words": [
+    {
+     "w": "Lap",
+     "start": 20.239
+    },
+    {
+     "w": "two.",
+     "start": 20.485
+    },
+    {
+     "w": "His",
+     "start": 20.867
+    },
+    {
+     "w": "car",
+     "start": 21.113
+    },
+    {
+     "w": "snaps",
+     "start": 21.359
+    },
+    {
+     "w": "into",
+     "start": 21.715
+    },
+    {
+     "w": "the",
+     "start": 22.016
+    },
+    {
+     "w": "barrier",
+     "start": 22.262
+    },
+    {
+     "w": "and",
+     "start": 22.726
+    },
+    {
+     "w": "bursts",
+     "start": 22.972
+    },
+    {
+     "w": "into",
+     "start": 23.382
+    },
+    {
+     "w": "flames.",
+     "start": 23.683
+    }
+   ]
+  },
+  {
+   "i": 9,
+   "text": "Trapped in the fire until other drivers drag him out.",
+   "start": 24.26,
+   "end": 27.592,
+   "words": [
+    {
+     "w": "Trapped",
+     "start": 24.26
+    },
+    {
+     "w": "in",
+     "start": 24.728
+    },
+    {
+     "w": "the",
+     "start": 24.921
+    },
+    {
+     "w": "fire",
+     "start": 25.169
+    },
+    {
+     "w": "until",
+     "start": 25.472
+    },
+    {
+     "w": "other",
+     "start": 25.83
+    },
+    {
+     "w": "drivers",
+     "start": 26.188
+    },
+    {
+     "w": "drag",
+     "start": 26.656
+    },
+    {
+     "w": "him",
+     "start": 26.959
+    },
+    {
+     "w": "out.",
+     "start": 27.207
+    }
+   ]
+  },
+  {
+   "i": 10,
+   "text": "Burned. Lungs full of toxic smoke.",
+   "start": 27.622,
+   "end": 30.033,
+   "words": [
+    {
+     "w": "Burned.",
+     "start": 27.622
+    },
+    {
+     "w": "Lungs",
+     "start": 28.21
+    },
+    {
+     "w": "full",
+     "start": 28.593
+    },
+    {
+     "w": "of",
+     "start": 28.916
+    },
+    {
+     "w": "toxic",
+     "start": 29.122
+    },
+    {
+     "w": "smoke.",
+     "start": 29.504
+    }
+   ]
+  },
+  {
+   "i": 11,
+   "text": "Doctors don't think he'll survive.",
+   "start": 30.063,
+   "end": 32.162,
+   "words": [
+    {
+     "w": "Doctors",
+     "start": 30.063
+    },
+    {
+     "w": "don't",
+     "start": 30.52
+    },
+    {
+     "w": "think",
+     "start": 30.87
+    },
+    {
+     "w": "he'll",
+     "start": 31.22
+    },
+    {
+     "w": "survive.",
+     "start": 31.57
+    }
+   ]
+  },
+  {
+   "i": 12,
+   "text": "Forty-two days later, he's racing again.",
+   "start": 32.192,
+   "end": 35.036,
+   "words": [
+    {
+     "w": "Forty-two",
+     "start": 32.192
+    },
+    {
+     "w": "days",
+     "start": 32.779
+    },
+    {
+     "w": "later,",
+     "start": 33.119
+    },
+    {
+     "w": "he's",
+     "start": 33.676
+    },
+    {
+     "w": "racing",
+     "start": 34.016
+    },
+    {
+     "w": "again.",
+     "start": 34.48
+    }
+   ]
+  },
+  {
+   "i": 13,
+   "text": "Wounds still bleeding under his helmet. He finishes fourth.",
+   "start": 35.066,
+   "end": 38.507,
+   "words": [
+    {
+     "w": "Wounds",
+     "start": 35.066
+    },
+    {
+     "w": "still",
+     "start": 35.448
+    },
+    {
+     "w": "bleeding",
+     "start": 35.78
+    },
+    {
+     "w": "under",
+     "start": 36.264
+    },
+    {
+     "w": "his",
+     "start": 36.595
+    },
+    {
+     "w": "helmet.",
+     "start": 36.825
+    },
+    {
+     "w": "He",
+     "start": 37.335
+    },
+    {
+     "w": "finishes",
+     "start": 37.513
+    },
+    {
+     "w": "fourth.",
+     "start": 37.997
+    }
+   ]
+  },
+  {
+   "i": 14,
+   "text": "Back to Japan.",
+   "start": 38.537,
+   "end": 39.727,
+   "words": [
+    {
+     "w": "Back",
+     "start": 38.537
+    },
+    {
+     "w": "to",
+     "start": 38.901
+    },
+    {
+     "w": "Japan.",
+     "start": 39.132
+    }
+   ]
+  },
+  {
+   "i": 15,
+   "text": "The rain is so heavy, drivers can barely see.",
+   "start": 39.757,
+   "end": 42.749,
+   "words": [
+    {
+     "w": "The",
+     "start": 39.757
+    },
+    {
+     "w": "rain",
+     "start": 40.008
+    },
+    {
+     "w": "is",
+     "start": 40.316
+    },
+    {
+     "w": "so",
+     "start": 40.512
+    },
+    {
+     "w": "heavy,",
+     "start": 40.707
+    },
+    {
+     "w": "drivers",
+     "start": 41.211
+    },
+    {
+     "w": "can",
+     "start": 41.686
+    },
+    {
+     "w": "barely",
+     "start": 41.938
+    },
+    {
+     "w": "see.",
+     "start": 42.357
+    }
+   ]
+  },
+  {
+   "i": 16,
+   "text": "He's already been through fire once.",
+   "start": 42.779,
+   "end": 44.807,
+   "words": [
+    {
+     "w": "He's",
+     "start": 42.779
+    },
+    {
+     "w": "already",
+     "start": 43.047
+    },
+    {
+     "w": "been",
+     "start": 43.463
+    },
+    {
+     "w": "through",
+     "start": 43.732
+    },
+    {
+     "w": "fire",
+     "start": 44.147
+    },
+    {
+     "w": "once.",
+     "start": 44.416
+    }
+   ]
+  },
+  {
+   "i": 17,
+   "text": "So he parks, and walks away.",
+   "start": 44.837,
+   "end": 46.801,
+   "words": [
+    {
+     "w": "So",
+     "start": 44.837
+    },
+    {
+     "w": "he",
+     "start": 45.034
+    },
+    {
+     "w": "parks,",
+     "start": 45.23
+    },
+    {
+     "w": "and",
+     "start": 45.735
+    },
+    {
+     "w": "walks",
+     "start": 45.988
+    },
+    {
+     "w": "away.",
+     "start": 46.352
+    }
+   ]
+  },
+  {
+   "i": 18,
+   "text": "Hunt takes the title. By one point.",
+   "start": 46.831,
+   "end": 49.317,
+   "words": [
+    {
+     "w": "Hunt",
+     "start": 46.831
+    },
+    {
+     "w": "takes",
+     "start": 47.153
+    },
+    {
+     "w": "the",
+     "start": 47.533
+    },
+    {
+     "w": "title.",
+     "start": 47.796
+    },
+    {
+     "w": "By",
+     "start": 48.323
+    },
+    {
+     "w": "one",
+     "start": 48.528
+    },
+    {
+     "w": "point.",
+     "start": 48.791
+    }
+   ]
+  },
+  {
+   "i": 19,
+   "text": "He said his life was worth more than a title.",
+   "start": 49.347,
+   "end": 52.31,
+   "words": [
+    {
+     "w": "He",
+     "start": 49.347
+    },
+    {
+     "w": "said",
+     "start": 49.545
+    },
+    {
+     "w": "his",
+     "start": 49.855
+    },
+    {
+     "w": "life",
+     "start": 50.109
+    },
+    {
+     "w": "was",
+     "start": 50.419
+    },
+    {
+     "w": "worth",
+     "start": 50.673
+    },
+    {
+     "w": "more",
+     "start": 51.04
+    },
+    {
+     "w": "than",
+     "start": 51.35
+    },
+    {
+     "w": "a",
+     "start": 51.661
+    },
+    {
+     "w": "title.",
+     "start": 51.802
+    }
+   ]
+  },
+  {
+   "i": 20,
+   "text": "The bravest thing he ever did wasn't coming back.",
+   "start": 52.34,
+   "end": 55.367,
+   "words": [
+    {
+     "w": "The",
+     "start": 52.34
+    },
+    {
+     "w": "bravest",
+     "start": 52.583
+    },
+    {
+     "w": "thing",
+     "start": 53.042
+    },
+    {
+     "w": "he",
+     "start": 53.394
+    },
+    {
+     "w": "ever",
+     "start": 53.583
+    },
+    {
+     "w": "did",
+     "start": 53.88
+    },
+    {
+     "w": "wasn't",
+     "start": 54.124
+    },
+    {
+     "w": "coming",
+     "start": 54.529
+    },
+    {
+     "w": "back.",
+     "start": 54.934
+    }
+   ]
+  },
+  {
+   "i": 21,
+   "text": "It was knowing when to stop.",
+   "start": 55.397,
+   "end": 57.276,
+   "words": [
+    {
+     "w": "It",
+     "start": 55.397
+    },
+    {
+     "w": "was",
+     "start": 55.593
+    },
+    {
+     "w": "knowing",
+     "start": 55.846
+    },
+    {
+     "w": "when",
+     "start": 56.322
+    },
+    {
+     "w": "to",
+     "start": 56.631
+    },
+    {
+     "w": "stop.",
+     "start": 56.827
+    }
+   ]
+  },
+  {
+   "i": 22,
+   "text": "That's why...",
+   "start": 57.306,
+   "end": 58.203,
+   "words": [
+    {
+     "w": "That's",
+     "start": 57.306
+    },
+    {
+     "w": "why...",
+     "start": 57.77
+    }
+   ]
+  }
+ ]
+}

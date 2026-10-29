@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="lib/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #101215; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #stage { position: absolute; inset: 0; }
+      #pixels { position: absolute; inset: 0; width: 1080px; height: 1920px; image-rendering: pixelated; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="58.28" data-width="1080" data-height="1920">
+      <div id="stage" class="clip" data-start="0" data-duration="58.28" data-track-index="0" data-track-kind="graphics">
+        <canvas id="pixels" width="1080" height="1920"></canvas>
+      </div>
+      <!-- Continuous voiceover: Kokoro bm_george, lines butt-joined by tools/join_vo.py -->
+      <audio id="vo" class="clip" src="assets/audio/vo.wav" data-start="0" data-duration="58.23" data-track-index="10" data-volume="1.4"></audio>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.to({}, { duration: 58.28 });
+      window.__timelines["main"] = tl;
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady.pixels = new Promise((resolve) => (window.__pixelsBuilt = resolve));
+    </script>
+    <script type="module">
+      import { createFilm } from "./scene/film.js";
+      const renderAt = await createFilm(document.getElementById("pixels"));
+      window.addEventListener("hf-seek", (e) => renderAt(e.detail.time));
+      renderAt(0);
+      window.__pixelsBuilt();
+    </script>
+  </body>
+</html>
