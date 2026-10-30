@@ -5,7 +5,8 @@
 //
 //   node tools/render-canvas.mjs <project-dir> <canvas-id> <out.mp4> [pages=2] [fps=30] [query]
 import { createServer } from "node:http";
-import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
+import { readFile, writeFile, mkdir, rename } from "node:fs/promises";
+import { existsSync, readFileSync } from "node:fs";
 import { extname, join, normalize, resolve } from "node:path";
 import { createRequire } from "node:module";
 import { execSync, spawn } from "node:child_process";
@@ -30,8 +31,11 @@ const server = createServer(async (req, res) => {
 const url = `http://localhost:${server.address().port}/index.html${query ? "?" + query : ""}`;
 
 const tmp = join(root, ".hyperframes", "canvas-frames");
-await rm(tmp, { recursive: true, force: true });
-await mkdir(tmp, { recursive: true });
+await mkdir(tmp, { recursive: true }); // resumable: frames already on disk (complete JPEGs) are skipped
+const frameFile = (f) => join(tmp, `f${String(f).padStart(5, "0")}.jpg`);
+const complete = (f) => { if (!existsSync(frameFile(f))) return false; const b = readFileSync(frameFile(f)); return b.length > 4 && b[b.length - 2] === 0xff && b[b.length - 1] === 0xd9; };
+const todo = Array.from({ length: FRAMES }, (_, f) => f).filter((f) => !complete(f));
+console.log(`${FRAMES - todo.length} frames already rendered, ${todo.length} to go`);
 const browser = await chromium.launch({ args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
 const t0 = Date.now();
 let done = 0;
@@ -42,15 +46,17 @@ async function worker(w) {
   await page.addInitScript(() => { window.__timelines = {}; });
   await page.goto(url);
   await page.waitForFunction(() => window.__filmBuilt || window.__pixelsBuilt, null, { timeout: 300000 });
-  for (let f = w; f < FRAMES; f += PAGES) {
+  for (let i = w; i < todo.length; i += PAGES) {
+    const f = todo[i];
     const b64 = await page.evaluate(([t, id]) => {
       window.dispatchEvent(new CustomEvent("hf-seek", { detail: { time: t } }));
       return document.getElementById(id).toDataURL("image/jpeg", 0.95).split(",")[1];
     }, [f / FPS, canvasId]);
-    await writeFile(join(tmp, `f${String(f).padStart(5, "0")}.jpg`), Buffer.from(b64, "base64"));
+    await writeFile(frameFile(f) + ".part", Buffer.from(b64, "base64"));
+    await rename(frameFile(f) + ".part", frameFile(f)); // atomic: a restart never leaves a half frame
     if (++done % 60 === 0) {
       const rate = done / ((Date.now() - t0) / 1000);
-      console.log(`${done}/${FRAMES} frames, ${rate.toFixed(2)} fps, ~${Math.round((FRAMES - done) / rate / 60)} min left`);
+      console.log(`${done}/${todo.length} frames, ${rate.toFixed(2)} fps, ~${Math.round((todo.length - done) / rate / 60)} min left`);
     }
   }
   await page.close();
