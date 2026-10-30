@@ -75,6 +75,10 @@ def oriented(ob, rot3, loc):
 
 def person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scale=1.0, parent=None):
     """Build a dressed mannequin; returns the root empty (place/rotate that)."""
+    import lib
+    if lib.STYLE.get("voxel"):
+        from voxel import block_person
+        return block_person(name, loc, rot, pose, outfit, scale, parent)
     M = palette()
     o = OUTFITS[outfit]
     J = joints(pose or {})

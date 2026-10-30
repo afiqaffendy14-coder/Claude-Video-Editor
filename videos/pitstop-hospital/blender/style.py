@@ -11,16 +11,24 @@ OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
 os.makedirs(OUT, exist_ok=True)
 FRAMES = {
     "pit": (lambda: S.pit_set(), ((5.2, 7.6, 3.6), (0, 0.4, 0.2), 32)),
+    "pitv": (lambda: S.pit_set(crew_skip=("FR", "RR", "RL", "jacks", "stab", "wing")), ((-3.4, 6.0, 1.25), (0, 0.5, 0.45), 30)),
+    "icuv": (lambda: S.icu_set("order"), ((0.35, 1.95, 2.85), (0, -0.5, 0.7), 18)),
     "icu": (lambda: S.icu_set("order"), ((0.6, 1.9, 1.5), (0, -0.4, 0.95), 30)),
 }
-for lv in [int(a) for a in sys.argv[1:]] or (1, 2):
+for lv in [a for a in sys.argv[1:]] or ("1", "2"):
     for key, (build, (loc, tgt, lens)) in FRAMES.items():
-        if os.environ.get("KEYS") and key not in os.environ["KEYS"]:
+        if os.environ.get("KEYS") and key not in os.environ["KEYS"].split():
             continue
         reset()
-        lib.STYLE["low"] = lv
+        lib.STYLE["voxel"] = lv == "vox"
+        lib.STYLE["low"] = 0 if lv == "vox" else int(lv)
         setup_render(720, 1280, 32, os.path.join(OUT, f"{key}_low{lv}.png"))
         build()
+        if lv == "vox":
+            import time, voxel
+            t = time.time()
+            voxel.voxelize_scene()
+            print("voxelized in", round(time.time() - t, 1), "s", flush=True)
         camera(V(loc), V(tgt), lens)
         render()
         print("STYLE", key, lv, flush=True)

@@ -34,6 +34,9 @@ def wheel(name, r=0.36, w=0.36, side=1, nut="yellow"):
 
 
 def f1car(name="car", body="red", driver=True):
+    import lib
+    if lib.STYLE.get("voxel"):
+        return f1car_block(name, body, driver)
     M = palette()
     B = M[body]
     C = M["dark"]  # carbon parts
@@ -163,7 +166,18 @@ def cot(name, baby=True, tubes=True):
             P.append(cyl(name + f"_castor{sx}{sy}", 0.05, 0.035, (sx * 0.32, sy * 0.48, 0.06), M["dark"], rot=(0, math.pi / 2, 0)))
             P.append(cyl(name + f"_post{sx}{sy}", 0.018, 0.22, (sx * 0.3, sy * 0.45, 0.2), M["steel"]))
     P.append(box(name + "_shelf", (0.6, 0.9, 0.03), (0, 0, 0.12), M["white"], bev=0.01))
-    if baby:
+    import lib
+    if baby and lib.STYLE.get("voxel"):  # block baby: cube head, closed eyes, knitted hat, blanket slab
+        warm = mat("babyblanket", (0.92, 0.5, 0.08), 0.85)
+        px = 0.045
+        P.append(box(name + "_head", (3 * px, 3 * px, 3 * px), (0, 0.29, 0.78), M["babyskin"]))
+        P.append(box(name + "_hat", (3 * px + 0.01, 2 * px, 3 * px + 0.01), (0, 0.33, 0.79), mat("babyhat", (0.98, 0.9, 0.75), 0.9)))
+        for s in (1, -1):
+            P.append(box(name + f"_eye{s}", (0.7 * px, 0.01, 0.25 * px), (s * 0.7 * px, 0.29 - 1.5 * px - 0.004, 0.78), M["dark"],
+                         rot=(math.pi / 2, 0, 0)))
+        P.append(box(name + "_body", (6 * px, 7 * px, 2 * px), (0, 0.06, 0.74), warm))
+        P.append(box(name + "_fold", (6 * px + 0.01, 1 * px, 2 * px + 0.01), (0, 0.2, 0.745), mat("babyhat", (0.98, 0.9, 0.75), 0.9)))
+    elif baby:
         warm = mat("babyblanket", (0.92, 0.5, 0.08), 0.85)
         P.append(sphere(name + "_head", 0.072, (0, 0.27, 0.76), M["babyskin"], scale=(1, 1.05, 0.95)))
         P.append(sphere(name + "_hat", 0.074, (0, 0.29, 0.785), mat("babyhat", (0.98, 0.9, 0.75), 0.9), scale=(1.02, 0.8, 0.75)))
@@ -249,4 +263,59 @@ def clipboard(name, ticks=0, rows=5):
         P.append(box(name + f"_line{i}", (0.12, 0.008, 0.003), (0.02, y - 0.01, 0.011), M["clay2"]))
         if i < ticks:
             P.append(box(name + f"_tick{i}", (0.026, 0.026, 0.006), (-0.075, y - 0.01, 0.013), M["red"], bev=0.004))
+    return group(name, P)
+
+
+def f1car_block(name="car", body="red", driver=True):
+    """The car built from blocks on purpose (blocky style): stepped nose, slab sidepods, plank wings, voxel wheels."""
+    M = palette()
+    B, C, W = M[body], M["dark"], M["white"]
+    P = []
+
+    def b(n, size, loc, m=B, rot=(0, 0, 0)):
+        P.append(box(name + "_" + n, size, loc, m, rot=rot))
+
+    b("floor", (1.4, 3.7, 0.05), (0, -0.3, 0.07), C)
+    # monocoque: stepped blocks from nose to tail
+    for i, (w, l, h, y, z) in enumerate([(0.16, 0.5, 0.1, 2.55, 0.27), (0.24, 0.5, 0.16, 2.1, 0.31),
+                                         (0.34, 0.6, 0.22, 1.55, 0.36), (0.46, 0.7, 0.28, 0.95, 0.41),
+                                         (0.58, 1.2, 0.3, 0.1, 0.45), (0.5, 0.9, 0.34, -0.9, 0.48),
+                                         (0.34, 0.6, 0.26, -1.6, 0.43), (0.2, 0.45, 0.18, -2.1, 0.38)]):
+        b(f"mono{i}", (w, l, h), (0, y, z))
+    b("nose_stripe", (0.245, 0.5, 0.012), (0, 2.1, 0.395), W)
+    b("cockpit", (0.36, 0.62, 0.02), (0, 0.3, 0.605), C)
+    b("airbox", (0.24, 0.7, 0.22), (0, -0.45, 0.76))
+    b("intake", (0.14, 0.02, 0.12), (0, -0.09, 0.79), C)
+    b("fin", (0.03, 1.0, 0.16), (0, -1.15, 0.72))
+    if driver:
+        b("helmet", (0.22, 0.24, 0.2), (0, 0.12, 0.7), M["yellow"])
+        b("hvisor", (0.18, 0.02, 0.06), (0, 0.245, 0.72), C)
+    # halo: three bars and a pillar
+    b("halo_pillar", (0.05, 0.05, 0.22), (0, 0.78, 0.68), C)
+    b("halo_top", (0.05, 0.35, 0.05), (0, 0.6, 0.81), C)
+    for s in (1, -1):
+        b(f"halo_side{s}", (0.05, 0.55, 0.05), (s * 0.24, 0.18, 0.81), C)
+    b("halo_back", (0.53, 0.05, 0.05), (0, -0.08, 0.81), C)
+    for s in (1, -1):
+        b(f"pod{s}", (0.4, 1.5, 0.3), (s * 0.48, -0.05, 0.37))
+        b(f"podtail{s}", (0.26, 0.6, 0.2), (s * 0.4, -1.05, 0.32))
+        b(f"inlet{s}", (0.3, 0.03, 0.18), (s * 0.48, 0.71, 0.38), C)
+        b(f"mirror{s}", (0.14, 0.05, 0.07), (s * 0.45, 0.62, 0.66))
+        b(f"mstalk{s}", (0.12, 0.03, 0.03), (s * 0.34, 0.62, 0.6), C)
+        b(f"fwep{s}", (0.04, 0.5, 0.2), (s * 0.94, 2.66, 0.17), C)
+        b(f"rwep{s}", (0.05, 0.62, 0.56), (s * 0.52, -2.42, 0.72))
+        for nm, y in (("f", 1.8), ("r", -1.78)):  # suspension arms as flat dark planks
+            b(f"arm{nm}{s}", (0.5, 0.06, 0.04), (s * 0.5, y, 0.36), C)
+    b("fw_main", (1.9, 0.36, 0.04), (0, 2.76, 0.11), C)
+    b("fw_flap", (1.7, 0.18, 0.04), (0, 2.6, 0.19))
+    b("fw_flap2", (1.5, 0.12, 0.04), (0, 2.49, 0.25))
+    b("rw_main", (1.04, 0.32, 0.05), (0, -2.42, 0.84), C)
+    b("rw_flap", (1.04, 0.2, 0.05), (0, -2.55, 0.97))
+    b("rw_pillar", (0.04, 0.12, 0.4), (0, -2.3, 0.6), C)
+    b("beam", (0.8, 0.14, 0.04), (0, -2.35, 0.4), C)
+    for (y, x, w, r, nm) in [(1.8, 0.8, 0.31, 0.36, "f"), (-1.78, 0.78, 0.41, 0.37, "r")]:
+        for s in (1, -1):
+            wh = wheel(name + f"_w{nm}{s}", r, w, s)
+            wh.location = (s * x, y, r)
+            P.append(wh)
     return group(name, P)

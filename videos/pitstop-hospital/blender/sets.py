@@ -36,7 +36,7 @@ def P(name, x, y, rot, pose, outfit, **kw):
 
 
 # ---------------------------------------------------------------- pit lane
-def pit_set(car_y=0.0, crew=True, wheels_off=False, lit=True, car=True):
+def pit_set(car_y=0.0, crew=True, wheels_off=False, lit=True, car=True, crew_skip=()):
     """Car faces +Y in its box at the origin; garage on -X; pit wall on +X."""
     M = palette()
     world(0.55, (0.93, 0.94, 0.96))
@@ -78,7 +78,7 @@ def pit_set(car_y=0.0, crew=True, wheels_off=False, lit=True, car=True):
             for nm in ("car_wf1", "car_wf-1"):
                 bpy.data.objects[nm].location.x *= 1.6
     if crew:
-        pit_crew()
+        pit_crew(crew_skip)
     if lit:
         bg = bpy.context.scene.world.node_tree.nodes["Background"]
         bg.inputs[0].default_value = (0.45, 0.65, 1.0, 1)
@@ -112,8 +112,10 @@ def pit_crew(skip=()):
         j2 = jack("rjack_eq")
         j2.location = (0, -2.85, 0)
     for s in (1, -1):
-        cast.append(P(f"stab{s}", s * 1.3, 0.1, -90 * s, "brace", "crew"))
-        cast.append(P(f"wing{s}", s * 1.2, 2.95, 180 + s * 30, "brace", "crew"))
+        if "stab" not in skip:
+            cast.append(P(f"stab{s}", s * 1.3, 0.1, -90 * s, "brace", "crew"))
+        if "wing" not in skip:
+            cast.append(P(f"wing{s}", s * 1.2, 2.95, 180 + s * 30, "brace", "crew"))
     if "lolli" not in skip:
         cast.append(P("lolliman", -0.9, 4.6, 180, "lolli", "crew"))
         l = lollipop("lolli_eq")
