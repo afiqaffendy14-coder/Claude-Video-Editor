@@ -1,0 +1,251 @@
+"""Props: the generic modern F1 car (no logos), pit equipment, hospital equipment.
+
+Every builder returns a root empty; place it with .location / .rotation_euler. Cars face +Y.
+"""
+import math
+import bpy
+from mathutils import Vector, Matrix
+from lib import (V, link, box, cyl, sphere, torus, loft, superellipse, tube, subsurf, smooth, bevel,
+                 autosmooth, mesh_obj, palette, group)
+
+
+# ---------------------------------------------------------------- F1 car
+def wheel(name, r=0.36, w=0.36, side=1, nut="yellow"):
+    M = palette()
+    parts = []
+    # tyre: rounded cylinder, axis X
+    t = cyl(name + "_tyre", r, w, material=M["rubber"], seg=48, rot=(0, math.pi / 2, 0), bev=0.07)
+    parts.append(t)
+    # coloured sidewall band (outer face), the only tyre colour (style guide)
+    band = torus(name + "_band", r * 0.8, 0.012, material=M[nut], rot=(0, math.pi / 2, 0))
+    band.location = (side * (w / 2 + 0.002), 0, 0)
+    band.scale = (1, 1, 0.6)
+    parts.append(band)
+    rim = cyl(name + "_rim", r * 0.62, w * 0.9, material=M["dark"], seg=36, rot=(0, math.pi / 2, 0))
+    rim.location = (side * 0.01, 0, 0)
+    parts.append(rim)
+    cover = cyl(name + "_cover", r * 0.6, 0.02, material=M["grey"], seg=36, rot=(0, math.pi / 2, 0), bev=0.008)
+    cover.location = (side * (w / 2 - 0.02), 0, 0)
+    parts.append(cover)
+    n = cyl(name + "_nut", 0.045, 0.06, material=M["red"], seg=6, rot=(0, math.pi / 2, 0), bev=0.006)
+    n.location = (side * (w / 2 + 0.01), 0, 0)
+    parts.append(n)
+    return group(name, parts)
+
+
+def f1car(name="car", body="red", driver=True):
+    M = palette()
+    B = M[body]
+    C = M["dark"]  # carbon parts
+    P = []
+    # nose + monocoque + engine cover, one loft along Y: (y, z, half-width, half-height, squareness)
+    S = [(2.72, 0.25, 0.05, 0.035, 2.2), (2.45, 0.29, 0.1, 0.06, 2.4), (2.0, 0.34, 0.15, 0.1, 2.6),
+         (1.45, 0.38, 0.22, 0.15, 2.8), (0.95, 0.43, 0.27, 0.19, 3.0), (0.5, 0.45, 0.32, 0.21, 3.2),
+         (0.0, 0.45, 0.36, 0.21, 3.2), (-0.45, 0.5, 0.34, 0.27, 3.0), (-1.0, 0.5, 0.26, 0.25, 2.8),
+         (-1.6, 0.44, 0.17, 0.18, 2.6), (-2.05, 0.38, 0.09, 0.1, 2.4), (-2.3, 0.34, 0.045, 0.05, 2.2)]
+    mono = loft(name + "_mono", [superellipse(0, y, z, w, h, 28, p, "XZ") for y, z, w, h, p in S], B)
+    subsurf(mono, 2)
+    P.append(mono)
+    # cockpit opening (dark) and the driver's helmet
+    cp = sphere(name + "_cockpit", 1, (0, 0.18, 0.62), C, scale=(0.24, 0.5, 0.06))
+    P.append(cp)
+    if driver:
+        P.append(sphere(name + "_helmet", 0.135, (0, 0.05, 0.72), M["yellow"], scale=(0.95, 1.05, 1)))
+        P.append(sphere(name + "_hvisor", 0.1, (0, 0.14, 0.74), C, scale=(1.05, 0.5, 0.42)))
+    # halo
+    P.append(tube(name + "_halo", [V((0, 0.82, 0.6)), V((0, 0.66, 0.8)), V((0.25, 0.25, 0.84)), V((0.29, -0.1, 0.8)),
+                                   V((0.27, -0.28, 0.66))], 0.03, C))
+    P.append(tube(name + "_haloL", [V((0, 0.66, 0.8)), V((-0.25, 0.25, 0.84)), V((-0.29, -0.1, 0.8)),
+                                    V((-0.27, -0.28, 0.66))], 0.03, C))
+    # airbox above the driver's head
+    ab = loft(name + "_airbox", [superellipse(0, y, z, w, h, 20, 2.6, "XZ") for y, z, w, h in
+                                 [(-0.12, 0.86, 0.09, 0.08), (-0.3, 0.87, 0.11, 0.1), (-0.7, 0.78, 0.09, 0.1),
+                                  (-1.2, 0.66, 0.04, 0.06)]], B)
+    subsurf(ab, 2)
+    P.append(ab)
+    P.append(sphere(name + "_intake", 1, (0, -0.1, 0.87), C, scale=(0.07, 0.03, 0.06)))
+    # sidepods
+    for s in (1, -1):
+        sp = loft(name + f"_pod{s}", [superellipse(s * x, y, z, w, h, 24, p, "XZ") for x, y, z, w, h, p in
+                                      [(0.36, 0.74, 0.37, 0.05, 0.1, 2.4), (0.44, 0.58, 0.37, 0.16, 0.15, 3.4),
+                                       (0.46, 0.0, 0.35, 0.2, 0.16, 3.4), (0.38, -0.75, 0.32, 0.15, 0.13, 3.0),
+                                       (0.24, -1.4, 0.28, 0.07, 0.08, 2.4)]], B)
+        subsurf(sp, 2)
+        P.append(sp)
+        P.append(box(name + f"_inlet{s}", (0.2, 0.04, 0.16), (s * 0.46, 0.68, 0.38), C, bev=0.03))
+        # mirrors
+        P.append(box(name + f"_mirror{s}", (0.14, 0.05, 0.06), (s * 0.48, 0.62, 0.66), B, bev=0.02))
+        P.append(tube(name + f"_mstalk{s}", [V((s * 0.3, 0.62, 0.55)), V((s * 0.42, 0.62, 0.64))], 0.012, C))
+    # engine cover fin
+    P.append(box(name + "_fin", (0.02, 1.2, 0.16), (0, -1.15, 0.72), B, bev=0.008, rot=(math.radians(-6), 0, 0)))
+    # floor (carbon), with a slight taper
+    fl = mesh_obj(name + "_floor", [V((-0.25, 1.4, 0.06)), V((0.25, 1.4, 0.06)), V((0.68, 0.85, 0.06)), V((0.7, -1.2, 0.06)),
+                                   V((0.45, -2.05, 0.06)), V((-0.45, -2.05, 0.06)), V((-0.7, -1.2, 0.06)), V((-0.68, 0.85, 0.06))],
+                  [tuple(range(8))], C)
+    sol = fl.modifiers.new("thick", "SOLIDIFY")
+    sol.thickness = 0.02
+    bevel(fl, 0.008, 2)
+    P.append(fl)
+    # front wing: three stacked elements + endplates
+    for i, (y, z, d) in enumerate([(2.82, 0.1, 0.3), (2.62, 0.16, 0.2), (2.48, 0.22, 0.14)]):
+        P.append(box(name + f"_fw{i}", (1.86 - i * 0.12, d, 0.014), (0, y, z), C if i == 0 else B, bev=0.006,
+                     rot=(math.radians(-8 - i * 6), 0, 0)))
+    for s in (1, -1):
+        P.append(box(name + f"_fwep{s}", (0.018, 0.5, 0.17), (s * 0.93, 2.66, 0.16), C, bev=0.008))
+    # nose pylons
+    for s in (1, -1):
+        P.append(box(name + f"_pylon{s}", (0.02, 0.18, 0.1), (s * 0.06, 2.55, 0.17), C, bev=0.005))
+    # rear wing: two elements, endplates, swan-neck pillar
+    P.append(box(name + "_rw0", (1.0, 0.36, 0.03), (0, -2.42, 0.86), C, bev=0.01, rot=(math.radians(-10), 0, 0)))
+    P.append(box(name + "_rw1", (1.0, 0.2, 0.025), (0, -2.58, 0.98), B, bev=0.01, rot=(math.radians(-24), 0, 0)))
+    for s in (1, -1):
+        P.append(box(name + f"_rwep{s}", (0.025, 0.62, 0.5), (s * 0.51, -2.45, 0.8), B, bev=0.012))
+    P.append(box(name + "_rwpillar", (0.03, 0.12, 0.45), (0, -2.3, 0.62), C, bev=0.01))
+    # diffuser / beam wing
+    P.append(box(name + "_beam", (0.8, 0.14, 0.025), (0, -2.35, 0.4), C, bev=0.008, rot=(math.radians(-12), 0, 0)))
+    # wheels and suspension
+    for (y, x, w, r, nm) in [(1.8, 0.8, 0.31, 0.36, "f"), (-1.78, 0.78, 0.41, 0.37, "r")]:
+        for s in (1, -1):
+            wh = wheel(name + f"_w{nm}{s}", r, w, s)
+            wh.location = (s * x, y, r)
+            P.append(wh)
+            for dz, dy in ((0.14, 0.1), (-0.04, -0.1)):
+                P.append(tube(name + f"_arm{nm}{s}{dz}", [V((s * 0.2, y + dy, 0.3 + dz)), V((s * (x - 0.12), y, r + dz * 0.6))],
+                              0.018, C))
+    return group(name, P)
+
+
+# ---------------------------------------------------------------- pit equipment
+def wheel_gun(name):
+    M = palette()
+    P = [cyl(name + "_body", 0.06, 0.38, material=M["grey"], rot=(math.pi / 2, 0, 0), bev=0.01),
+         cyl(name + "_nose", 0.045, 0.1, (0, 0.22, 0), M["chrome"], rot=(math.pi / 2, 0, 0)),
+         box(name + "_grip", (0.04, 0.06, 0.18), (0, -0.05, -0.12), M["dark"], bev=0.015),
+         box(name + "_handle", (0.04, 0.12, 0.05), (0, 0.06, 0.09), M["dark"], bev=0.015)]
+    return group(name, P)
+
+
+def lollipop(name):
+    M = palette()
+    P = [cyl(name + "_pole", 0.018, 1.6, (0, 0, 0.8), M["grey"]),
+         cyl(name + "_disc", 0.26, 0.03, (0, 0, 1.55), M["red"], rot=(math.pi / 2, 0, 0), bev=0.01)]
+    return group(name, P)
+
+
+def jack(name, length=1.4):
+    M = palette()
+    P = [box(name + "_bar", (0.08, length, 0.08), (0, -length / 2, 0.12), M["grey"], bev=0.02),
+         box(name + "_head", (0.5, 0.12, 0.1), (0, 0.02, 0.16), M["dark"], bev=0.02),
+         box(name + "_handle", (0.5, 0.06, 0.05), (0, -length, 0.14), M["dark"], bev=0.02)]
+    for s in (1, -1):
+        P.append(cyl(name + f"_wheel{s}", 0.06, 0.04, (s * 0.12, -0.15, 0.06), M["rubber"], rot=(0, math.pi / 2, 0)))
+    return group(name, P)
+
+
+def tyre_loose(name, r=0.36, w=0.36):
+    return wheel(name, r, w, 1)
+
+
+# ---------------------------------------------------------------- hospital equipment
+def cot(name, baby=True, tubes=True):
+    """Intensive-care transport cot: wheeled base, mattress, clear side panels, a tiny swaddled baby."""
+    M = palette()
+    P = []
+    P.append(box(name + "_base", (0.75, 1.1, 0.08), (0, 0, 0.32), M["white"], bev=0.03))
+    P.append(box(name + "_mattress", (0.62, 0.95, 0.09), (0, 0, 0.66), M["blanket"], bev=0.04))
+    P.append(box(name + "_tray", (0.7, 1.05, 0.06), (0, 0, 0.6), M["white"], bev=0.025))
+    for s in (1, -1):
+        P.append(box(name + f"_side{s}", (0.015, 1.0, 0.22), (s * 0.34, 0, 0.75), M["glass"], bev=0.007))
+        P.append(box(name + f"_end{s}", (0.68, 0.015, 0.22), (0, s * 0.51, 0.75), M["glass"], bev=0.007))
+    for sx in (1, -1):
+        for sy in (1, -1):
+            P.append(cyl(name + f"_leg{sx}{sy}", 0.022, 0.3, (sx * 0.3, sy * 0.45, 0.45), M["steel"]))
+            P.append(cyl(name + f"_castor{sx}{sy}", 0.05, 0.035, (sx * 0.32, sy * 0.48, 0.06), M["dark"], rot=(0, math.pi / 2, 0)))
+            P.append(cyl(name + f"_post{sx}{sy}", 0.018, 0.22, (sx * 0.3, sy * 0.45, 0.2), M["steel"]))
+    P.append(box(name + "_shelf", (0.6, 0.9, 0.03), (0, 0, 0.12), M["white"], bev=0.01))
+    if baby:
+        P.append(sphere(name + "_head", 0.06, (0, 0.27, 0.75), M["babyskin"], scale=(1, 1.05, 0.95)))
+        P.append(sphere(name + "_hat", 0.062, (0, 0.29, 0.77), M["white"], scale=(1.02, 0.8, 0.8)))
+        P.append(sphere(name + "_body", 1, (0, 0.08, 0.74), M["blanket"], scale=(0.12, 0.2, 0.06)))
+        P.append(sphere(name + "_blanket", 1, (0, 0.0, 0.71), M["white"], scale=(0.24, 0.3, 0.05)))
+    if tubes:
+        P.append(tube(name + "_et", [V((0, 0.33, 0.74)), V((0.05, 0.45, 0.8)), V((0.2, 0.5, 0.95))], 0.008, M["tube"]))
+        P.append(tube(name + "_line1", [V((-0.05, 0.1, 0.76)), V((-0.2, 0.2, 0.85)), V((-0.33, 0.35, 1.0))], 0.004, M["tube"]))
+        P.append(tube(name + "_line2", [V((0.06, 0.05, 0.76)), V((0.22, 0.0, 0.88)), V((0.33, -0.2, 1.05))], 0.004, M["red"]))
+    return group(name, P)
+
+
+def monitor(name, w=0.42, h=0.3, wave=True):
+    M = palette()
+    P = [box(name + "_case", (w, 0.06, h), (0, 0, 0), M["white"], bev=0.02),
+         box(name + "_screen", (w * 0.86, 0.01, h * 0.78), (0, 0.031, 0), M["screen"], bev=0.004)]
+    if wave:
+        pts = []
+        for i in range(25):
+            x = -w * 0.38 + i * w * 0.76 / 24
+            z = 0.06 * h / 0.3 if i in (9, 19) else (-0.03 if i in (10, 20) else 0)
+            pts.append(V((x, 0.038, h * 0.12 + z)))
+        P.append(tube(name + "_ecg", pts, 0.0025, M["green"], res=2))
+        P.append(box(name + "_line2", (w * 0.6, 0.004, 0.004), (0, 0.038, -h * 0.15), M["green"]))
+    return group(name, P)
+
+
+def iv_pole(name, h=1.9):
+    M = palette()
+    P = [cyl(name + "_pole", 0.012, h, (0, 0, h / 2), M["steel"]),
+         box(name + "_hook", (0.25, 0.012, 0.012), (0, 0, h), M["steel"]),
+         box(name + "_bag", (0.09, 0.03, 0.15), (0.1, 0, h - 0.12), M["tube"], bev=0.015)]
+    for i in range(5):
+        a = 2 * math.pi * i / 5
+        P.append(box(name + f"_foot{i}", (0.28, 0.025, 0.02), (0.14 * math.cos(a), 0.14 * math.sin(a), 0.05), M["steel"],
+                     rot=(0, 0, a)))
+    return group(name, P)
+
+
+def vent(name):
+    """Ventilator cart: wheeled body with a screen and hose."""
+    M = palette()
+    P = [box(name + "_body", (0.4, 0.35, 0.9), (0, 0, 0.6), M["white"], bev=0.03),
+         box(name + "_screen", (0.3, 0.02, 0.22), (0, 0.18, 1.0), M["screen"], bev=0.01),
+         box(name + "_panel", (0.3, 0.02, 0.1), (0, 0.18, 0.75), M["clay2"], bev=0.01)]
+    for sx in (1, -1):
+        for sy in (1, -1):
+            P.append(cyl(name + f"_c{sx}{sy}", 0.04, 0.03, (sx * 0.15, sy * 0.13, 0.05), M["dark"], rot=(0, math.pi / 2, 0)))
+    return group(name, P)
+
+
+def op_table(name):
+    M = palette()
+    P = [box(name + "_top", (0.6, 1.9, 0.1), (0, 0, 0.95), M["clay2"], bev=0.04),
+         box(name + "_pad", (0.56, 1.85, 0.06), (0, 0, 1.02), M["dark"], bev=0.03),
+         cyl(name + "_column", 0.12, 0.8, (0, 0, 0.5), M["white"]),
+         box(name + "_foot", (0.55, 0.9, 0.1), (0, 0, 0.05), M["white"], bev=0.04)]
+    return group(name, P)
+
+
+def surgical_lamp(name, arm_len=1.0):
+    M = palette()
+    P = [cyl(name + "_dish", 0.38, 0.12, (0, 0, 0), M["white"], r2=0.3, bev=0.02),
+         cyl(name + "_glow", 0.3, 0.02, (0, 0, -0.065), M["lamp"]),
+         cyl(name + "_arm", 0.03, arm_len, (0, 0, 0.06 + arm_len / 2), M["white"])]
+    return group(name, P)
+
+
+def drapes(name, l=1.6, w=0.95):
+    M = palette()
+    d = box(name, (w, l, 0.06), (0, 0, 0), M["gown"], bev=0.025)
+    return d
+
+
+def clipboard(name, ticks=0, rows=5):
+    M = palette()
+    P = [box(name + "_board", (0.24, 0.32, 0.012), (0, 0, 0), M["clay2"], bev=0.004),
+         box(name + "_paper", (0.21, 0.28, 0.004), (0, -0.01, 0.008), M["white"]),
+         box(name + "_clip", (0.09, 0.03, 0.02), (0, 0.15, 0.012), M["steel"], bev=0.005)]
+    for i in range(rows):
+        y = 0.09 - i * 0.05
+        P.append(box(name + f"_box{i}", (0.022, 0.022, 0.004), (-0.075, y - 0.01, 0.011), M["grey"]))
+        P.append(box(name + f"_line{i}", (0.12, 0.008, 0.003), (0.02, y - 0.01, 0.011), M["clay2"]))
+        if i < ticks:
+            P.append(box(name + f"_tick{i}", (0.026, 0.026, 0.006), (-0.075, y - 0.01, 0.013), M["red"], bev=0.004))
+    return group(name, P)
