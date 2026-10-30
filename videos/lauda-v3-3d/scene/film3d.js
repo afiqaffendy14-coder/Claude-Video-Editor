@@ -35,8 +35,12 @@ export async function createFilm(out) {
   out.width = W; out.height = H;
   const octx = out.getContext("2d");
 
+  // ?scale=0.75&ao=0 renders the 3D at a lower internal resolution without ambient occlusion
+  // (for long software-GPU renders); the frame is upscaled and the captions stay full-res.
+  const q = new URLSearchParams(location.search);
+  const SCALE = +(q.get("scale") || 1), RW = Math.round(W * SCALE), RH = Math.round(H * SCALE);
   const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-  renderer.setPixelRatio(1); renderer.setSize(W, H, false);
+  renderer.setPixelRatio(1); renderer.setSize(RW, RH, false);
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   const scene = new THREE.Scene();
@@ -69,17 +73,19 @@ export async function createFilm(out) {
   };
 
   const composer = new EffectComposer(renderer);
-  composer.setPixelRatio(1); composer.setSize(W, H);
+  composer.setPixelRatio(1); composer.setSize(RW, RH);
   composer.addPass(new RenderPass(scene, camera));
   const random = Math.random; let seed = 7;
   Math.random = () => ((seed = (seed * 16807) % 2147483647) / 2147483647); // seeded GTAO noise
-  const gtao = new GTAOPass(scene, camera, W, H);
+  const gtao = new GTAOPass(scene, camera, RW, RH);
   Math.random = random;
   gtao.updateGtaoMaterial({ radius: 0.5, distanceExponent: 1.5, thickness: 1.2, scale: 1.0 });
   composer.addPass(gtao);
+  gtao.enabled = q.get("ao") !== "0";
   const bokeh = new BokehPass(scene, camera, { focus: 5, aperture: 0.002, maxblur: 0.008 });
   composer.addPass(bokeh);
   composer.addPass(new OutputPass());
+  window.__film = { renderer, composer, gtao, bokeh, key }; // exposed for render profiling
 
   // ---------------------------------------------------------------- animation helpers
   const PARK = V(-1.55, 0, -1.4);
@@ -237,6 +243,7 @@ export async function createFilm(out) {
     bokeh.enabled = !!cam.focus;
     if (cam.focus) { bokeh.uniforms.focus.value = cam.pos.distanceTo(cam.look); bokeh.uniforms.aperture.value = cam.aperture || 0.003; }
     composer.render();
+    octx.imageSmoothingEnabled = true; octx.imageSmoothingQuality = "high";
     octx.drawImage(renderer.domElement, 0, 0, W, H);
     if (overlay) overlays[overlay](u, t);
     drawCaption(octx, t);
