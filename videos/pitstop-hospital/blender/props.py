@@ -5,7 +5,7 @@ Every builder returns a root empty; place it with .location / .rotation_euler. C
 import math
 import bpy
 from mathutils import Vector, Matrix
-from lib import (V, link, box, cyl, sphere, torus, loft, superellipse, tube, subsurf, smooth, bevel,
+from lib import (V, link, mat, box, cyl, sphere, torus, loft, superellipse, tube, subsurf, smooth, bevel,
                  autosmooth, mesh_obj, palette, group)
 
 
@@ -164,10 +164,11 @@ def cot(name, baby=True, tubes=True):
             P.append(cyl(name + f"_post{sx}{sy}", 0.018, 0.22, (sx * 0.3, sy * 0.45, 0.2), M["steel"]))
     P.append(box(name + "_shelf", (0.6, 0.9, 0.03), (0, 0, 0.12), M["white"], bev=0.01))
     if baby:
-        P.append(sphere(name + "_head", 0.06, (0, 0.27, 0.75), M["babyskin"], scale=(1, 1.05, 0.95)))
-        P.append(sphere(name + "_hat", 0.062, (0, 0.29, 0.77), M["white"], scale=(1.02, 0.8, 0.8)))
-        P.append(sphere(name + "_body", 1, (0, 0.08, 0.74), M["blanket"], scale=(0.12, 0.2, 0.06)))
-        P.append(sphere(name + "_blanket", 1, (0, 0.0, 0.71), M["white"], scale=(0.24, 0.3, 0.05)))
+        warm = mat("babyblanket", (0.92, 0.5, 0.08), 0.85)
+        P.append(sphere(name + "_head", 0.072, (0, 0.27, 0.76), M["babyskin"], scale=(1, 1.05, 0.95)))
+        P.append(sphere(name + "_hat", 0.074, (0, 0.29, 0.785), mat("babyhat", (0.98, 0.9, 0.75), 0.9), scale=(1.02, 0.8, 0.75)))
+        P.append(sphere(name + "_body", 1, (0, 0.06, 0.75), warm, scale=(0.13, 0.21, 0.065)))
+        P.append(sphere(name + "_blanket", 1, (0, -0.02, 0.72), warm, scale=(0.24, 0.3, 0.05)))
     if tubes:
         P.append(tube(name + "_et", [V((0, 0.33, 0.74)), V((0.05, 0.45, 0.8)), V((0.2, 0.5, 0.95))], 0.008, M["tube"]))
         P.append(tube(name + "_line1", [V((-0.05, 0.1, 0.76)), V((-0.2, 0.2, 0.85)), V((-0.33, 0.35, 1.0))], 0.004, M["tube"]))

@@ -3,7 +3,7 @@ viewing room, Ferrari engineering room, chart stage. A shot builds exactly one s
 import math
 import bpy
 from mathutils import Vector
-from lib import (V, box, cyl, sphere, torus, tube, mesh_obj, palette, area, world, cyclorama, mat, group, link)
+from lib import (V, box, cyl, sphere, torus, tube, mesh_obj, palette, area, world, cyclorama, mat, group, link, sun)
 from people import person
 from props import (f1car, wheel, wheel_gun, lollipop, jack, cot, monitor, iv_pole, vent, op_table,
                    surgical_lamp, drapes, clipboard)
@@ -80,8 +80,10 @@ def pit_set(car_y=0.0, crew=True, wheels_off=False, lit=True, car=True):
     if crew:
         pit_crew()
     if lit:
-        area("pit_key", (6, -6, 12), (0, 0, 0), 3500, 12)
-        area("pit_fill", (-3, 8, 5), (0, 0, 0.5), 600, 8)
+        bg = bpy.context.scene.world.node_tree.nodes["Background"]
+        bg.inputs[0].default_value = (0.45, 0.65, 1.0, 1)
+        bg.inputs[1].default_value = 0.7
+        sun("pit_sun", (42, 0, -50), 4.5, 2.0, (1.0, 0.93, 0.82))
     return M
 
 
@@ -200,14 +202,17 @@ def corridor_set(cot_y=0.0, team=True, dim=False):
 def icu_set(mode="chaos", baby=True):
     """mode: 'chaos' (crowded, everyone at once) | 'order' (roles, one leader) | 'empty'."""
     M = palette()
-    world(0.3, (0.88, 0.92, 0.95))
-    wall = mat("icu_wall", (0.72, 0.78, 0.8), 0.7)
-    box("icu_floor", (8, 8, 0.1), (0, 0, -0.05), M["clay2"])
+    world(0.05, (0.6, 0.8, 0.9))
+    wall = mat("icu_wall", (0.38, 0.55, 0.56), 0.75)
+    box("icu_floor", (8, 8, 0.1), (0, 0, -0.05), mat("icu_floor", (0.42, 0.47, 0.5), 0.6))
     box("icu_back", (8, 0.2, 3.2), (0, 2.2, 1.6), wall)
     for s in (1, -1):
         box("icu_side", (0.2, 6, 3.2), (s * 3.2, -0.8, 1.6), wall)
     box("icu_ceiling", (8, 8, 0.1), (0, 0, 3.2), M["clay"])
-    box("icu_light", (1.6, 1.0, 0.04), (0, 0, 3.14), M["panel"])
+    box("icu_front", (8, 0.2, 3.2), (0, -3.8, 1.6), wall)
+    box("icu_window", (2.4, 0.1, 1.2), (-1.2, -3.68, 1.6), mat("icu_win", (0.8, 0.9, 1.0), 0.2, emit=(0.75, 0.88, 1.0), emit_strength=1.5))
+    box("icu_door", (1.2, 0.1, 2.2), (1.6, -3.68, 1.1), M["white"], bev=0.02)
+    box("icu_light", (0.9, 0.5, 0.04), (0, 0.2, 3.14), mat("icu_glow", (1, 1, 1), 0.3, emit=(1.0, 0.85, 0.65), emit_strength=3))
     box("gas_rail", (3.0, 0.1, 0.25), (0, 2.08, 1.45), M["white"], bev=0.03)
     for i in range(6):
         cyl("outlet", 0.035, 0.05, (-1.2 + i * 0.48, 2.02, 1.45), M["grey"] if i % 2 else M["yellow"], rot=(math.pi / 2, 0, 0))
@@ -218,8 +223,8 @@ def icu_set(mode="chaos", baby=True):
     box("mon_arm", (0.6, 0.06, 0.06), (0.7, 2.0, 1.9), M["white"], bev=0.02)
     v = vent("icu_vent")
     v.location = (-1.0, 1.55, 0)
-    iv_pole("icu_iv1").location = (1.05, 1.2, 0)
-    iv_pole("icu_iv2").location = (-1.45, 0.6, 0)
+    iv_pole("icu_iv1").location = (1.55, 0.9, 0)
+    iv_pole("icu_iv2").location = (-1.55, 1.4, 0)
     # cables from the cot to the wall
     tube("cab1", [V((0.25, 0.7, 0.8)), V((0.6, 1.3, 0.7)), V((0.9, 1.9, 1.7))], 0.006, M["dark"])
     tube("cab2", [V((-0.2, 0.75, 0.8)), V((-0.6, 1.2, 1.0)), V((-0.95, 1.6, 1.1))], 0.012, M["tube"])
@@ -236,8 +241,9 @@ def icu_set(mode="chaos", baby=True):
         P("o2", -0.75, 0.45, -90, "work", "scrubs")
         P("o3", 0.85, -0.3, 75, "watch", "scrubs")
         P("o4", -0.85, -0.3, -75, "watch", "surgeon")
-    area("icu_key", (2.5, -3, 3), (0, 0.3, 0.8), 700, 3)
-    area("icu_top", (0, 0.2, 3.0), (0, 0.2, 0), 400, 2)
+    area("icu_key", (0.3, 0.1, 2.6), (0, 0.3, 0.7), 260, 0.9, color=(1.0, 0.86, 0.68))
+    area("icu_rim", (-2.6, 1.8, 2.4), (0, 0.2, 1.0), 220, 1.5, color=(0.55, 0.8, 1.0))
+    area("icu_fill", (2.5, -3, 2.0), (0, 0.3, 1.0), 60, 3, color=(0.7, 0.85, 1.0))
 
 
 # ---------------------------------------------------------------- hospital exterior (London)

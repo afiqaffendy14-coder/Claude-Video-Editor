@@ -10,6 +10,15 @@ from mathutils import Vector, Matrix, Euler
 
 V = Vector
 
+# Look switch. LOW = 0: smooth clay. LOW = 1: low poly, game-like but not choppy. LOW = 2: chunkier low poly.
+# Every primitive below reads it, so the whole film changes style from one place.
+STYLE = {"low": 0}
+DECIMATE = {1: 0.45, 2: 0.55}  # level 2 skips the subdivision, so it starts from far fewer faces
+
+
+def low():
+    return STYLE["low"]
+
 
 def reset():
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -53,8 +62,8 @@ def palette():
         rubber=mat("rubber", (0.02, 0.02, 0.022), 0.8),
         red=mat("red", (0.62, 0.012, 0.012), 0.32, coat=0.6),
         redm=mat("redm", (0.55, 0.02, 0.02), 0.6),  # matte red: fire suits
-        scrubs=mat("scrubs", (0.16, 0.36, 0.42), 0.75),
-        gown=mat("gown", (0.30, 0.47, 0.54), 0.8),
+        scrubs=mat("scrubs", (0.06, 0.32, 0.38), 0.75),
+        gown=mat("gown", (0.14, 0.40, 0.50), 0.8),
         glove=mat("glove", (0.72, 0.80, 0.84), 0.45),
         skin=mat("skin", (0.74, 0.56, 0.45), 0.55),
         babyskin=mat("babyskin", (0.80, 0.60, 0.50), 0.5),
@@ -87,29 +96,35 @@ def mesh_obj(name, verts, faces, material=None, smooth=False, coll=None):
         me.materials.append(material)
     if smooth:
         for p in me.polygons:
-            p.use_smooth = True
+            p.use_smooth = not low()
     return ob
 
 
 def bevel(ob, width=0.01, segments=3, limit="ANGLE"):
     m = ob.modifiers.new("bevel", "BEVEL")
     m.width = width
-    m.segments = segments
+    m.segments = 1 if low() else segments
     m.limit_method = limit
     m.harden_normals = False
     return ob
 
 
 def subsurf(ob, levels=2):
+    """Smooth look: subdivide. Low poly: one subdivision then collapse-decimate into flat facets."""
     m = ob.modifiers.new("subsurf", "SUBSURF")
-    m.levels = levels
-    m.render_levels = levels
+    m.levels = m.render_levels = (1 if low() == 1 else 0) if low() else levels
+    if low():
+        d = ob.modifiers.new("decimate", "DECIMATE")
+        d.decimate_type = "COLLAPSE"
+        d.ratio = DECIMATE[low()]
+        smooth(ob)
     return ob
 
 
 def smooth(ob):
+    """Smooth shading, or flat facets in low-poly mode."""
     for p in ob.data.polygons:
-        p.use_smooth = True
+        p.use_smooth = not low()
     return ob
 
 
@@ -131,6 +146,7 @@ def box(name, size, loc=(0, 0, 0), material=None, bev=0.0, rot=(0, 0, 0), coll=N
 def cyl(name, r, h, loc=(0, 0, 0), material=None, seg=32, rot=(0, 0, 0), bev=0.0, r2=None, coll=None, cap=True):
     """Cylinder (or cone frustum with r2) along local Z, base at -h/2."""
     r2 = r if r2 is None else r2
+    seg = lowseg(seg, 14, 10)
     v, f = [], []
     for i in range(seg):
         a = 2 * math.pi * i / seg
@@ -151,7 +167,16 @@ def cyl(name, r, h, loc=(0, 0, 0), material=None, seg=32, rot=(0, 0, 0), bev=0.0
     return ob
 
 
+def lowseg(seg, lo1=12, lo2=8, floor=6):
+    """Segment count for round things: unchanged when smooth, capped when low poly."""
+    if not low():
+        return seg
+    return max(floor if seg >= floor else seg, min(seg, lo1 if low() == 1 else lo2))
+
+
 def sphere(name, r, loc=(0, 0, 0), material=None, scale=(1, 1, 1), seg=32, rings=16, coll=None, rot=(0, 0, 0)):
+    if low():
+        seg, rings = (14, 8) if low() == 1 else (10, 6)
     bm = bmesh.new()
     bmesh.ops.create_uvsphere(bm, u_segments=seg, v_segments=rings, radius=r)
     me = bpy.data.meshes.new(name)
@@ -168,6 +193,8 @@ def sphere(name, r, loc=(0, 0, 0), material=None, scale=(1, 1, 1), seg=32, rings
 
 
 def torus(name, R, r, loc=(0, 0, 0), material=None, rot=(0, 0, 0), seg=48, rseg=16, coll=None):
+    if low():
+        seg, rseg = (18, 6) if low() == 1 else (12, 4)
     v, f = [], []
     for i in range(seg):
         a = 2 * math.pi * i / seg
@@ -186,7 +213,9 @@ def torus(name, R, r, loc=(0, 0, 0), material=None, rot=(0, 0, 0), seg=48, rseg=
 
 
 def autosmooth(ob, angle=40):
-    """Smooth shading with sharp edges kept above `angle` degrees."""
+    """Smooth shading with sharp edges kept above `angle` degrees (flat facets in low-poly mode)."""
+    if low():
+        return smooth(ob)
     try:
         with bpy.context.temp_override(object=ob, selected_editable_objects=[ob], active_object=ob):
             bpy.ops.object.shade_smooth_by_angle(angle=math.radians(angle))
@@ -243,8 +272,8 @@ def tube(name, points, r=0.01, material=None, coll=None, res=6):
     cu = bpy.data.curves.new(name, "CURVE")
     cu.dimensions = "3D"
     cu.bevel_depth = r
-    cu.bevel_resolution = 3
-    cu.resolution_u = res
+    cu.bevel_resolution = 3 if not low() else (1 if low() == 1 else 0)
+    cu.resolution_u = res if not low() else max(2, res // 2)
     sp = cu.splines.new("BEZIER")
     sp.bezier_points.add(len(points) - 1)
     for bp, p in zip(sp.bezier_points, points):
@@ -288,8 +317,8 @@ def setup_render(w=540, h=960, samples=32, path="/tmp/out.png"):
     r.filepath = path
     r.image_settings.file_format = "PNG"
     sc.view_settings.view_transform = "AgX"
-    sc.view_settings.look = "AgX - Punchy"
-    sc.view_settings.exposure = -0.6
+    sc.view_settings.look = "AgX - High Contrast"
+    sc.view_settings.exposure = -0.3
     return sc
 
 
@@ -369,4 +398,15 @@ def cyclorama(name="cyc", size=60, height=25, radius=6, material=None, loc=(0, 0
     ob = mesh_obj(name, v, f, material, smooth=True)
     ob.location = loc
     ob.rotation_euler = (0, 0, rot)
+    return ob
+
+
+def sun(name="sun", rot=(50, 0, -35), energy=3.5, angle=3.0, color=(1.0, 0.97, 0.92)):
+    """Directional key light with crisp, slightly soft shadows (the game look)."""
+    d = bpy.data.lights.new(name, "SUN")
+    d.energy = energy
+    d.angle = math.radians(angle)
+    d.color = color
+    ob = link(bpy.data.objects.new(name, d))
+    ob.rotation_euler = tuple(math.radians(a) for a in rot)
     return ob

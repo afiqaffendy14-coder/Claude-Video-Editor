@@ -149,10 +149,10 @@ def person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scale=1.0,
         Rf = J["Rf" + k]
         hd = sphere(name + "_hand" + k, 1, material=M[o["hands"]])
         hd.scale = (0.026, 0.04, 0.064)
-        oriented(hd, Rf, J["wr" + k] + Rf @ V((0, 0.005, -0.065)))
+        oriented(hd, Rf, J["wr" + k] + Rf @ V((0, 0.005, -0.048)))
         th = sphere(name + "_thumb" + k, 1, material=M[o["hands"]])
         th.scale = (0.014, 0.014, 0.03)
-        oriented(th, Rf, J["wr" + k] + Rf @ V((0, 0.035, -0.04)))
+        oriented(th, Rf, J["wr" + k] + Rf @ V((0, 0.03, -0.03)))
         parts += [hd, th]
         # shoes: follow the shin's heading but stay flat-ish
         Rs = J["Rs" + k]
