@@ -467,11 +467,14 @@ export function makeScenes() {
       const finish = cue(1) - 0.15;
       if (u < finish) {
         // close-up: balaclava, a fresh stain at the temple, gloves pulling the helmet down
-        for (let y = 0; y < LH; y++) for (let x = 0; x < LW; x++) S.px(x, y, dith(x, y, y / 260) ? P.blue2 : P.blue1);
+        blitBg(S, monza); // the Monza paddock behind him, softened so he stands out
+        S.dithRect(0, 0, LW, LH, P.blue1, 0.35);
         const bust = new Sprite(LW, LH);
-        bust.poly([[34, 212], [52, 146], [128, 146], [146, 212]], P.red);
+        bust.poly([[2, 320], [4, 196], [22, 164], [52, 146], [128, 146], [158, 164], [176, 196], [178, 320]], P.red); // shoulders and chest, running off the bottom of frame
         bust.poly([[52, 146], [72, 140], [108, 140], [128, 146], [124, 154], [56, 154]], P.redH);
-        bust.rect(84, 150, 2, 60, P.redD);
+        bust.rect(89, 150, 2, 170, P.redD); // zip
+        bust.rect(30, 170, 18, 4, P.white); bust.rect(132, 170, 18, 4, P.white); // epaulettes
+        bust.rect(106, 196, 16, 7, P.white); // chest patch
         bust.rect(70, 168, 12, 5, P.white);
         bust.rect(78, 126, 24, 16, P.knit);
         bust.ellipse(90, 104, 19, 22, P.knit);

@@ -277,11 +277,11 @@ export function buildHospitalSet() {
   for (const [x, z] of [[-0.45, -1], [0.45, -1], [-0.45, 1], [0.45, 1]]) bed.add(shadowed(rod(new THREE.Vector3(x, 0, z), new THREE.Vector3(x, 0.62, z), 0.02, metal)));
   bed.add(shadowed(at(new THREE.Mesh(crease(rbox(1.0, 0.5, 0.05, 0.02)), metal), 0, 0.95, -1.05)));
   const sheetM = new THREE.MeshPhysicalMaterial({ color: "#dfe5ea", roughness: 0.85, sheen: 0.4 });
-  const sheet = new THREE.Mesh(new THREE.BoxGeometry(1.04, 0.16, 1.5, 20, 2, 40), sheetM);
+  const sheet = new THREE.Mesh(new THREE.BoxGeometry(1.04, 0.16, 1.67, 20, 2, 40), sheetM);
   const sp = sheet.geometry.attributes.position;
   for (let i = 0; i < sp.count; i++) if (sp.getY(i) > 0) sp.setY(i, sp.getY(i) + 0.08 * Math.exp(-(((sp.getZ(i) + 0.3) / 0.35) ** 2)) * Math.exp(-((sp.getX(i) / 0.3) ** 2)) + 0.01 * Math.sin(sp.getZ(i) * 18));
   sheet.geometry.computeVertexNormals();
-  bed.add(shadowed(at(sheet, 0, 0.78, 0.25)));
+  bed.add(shadowed(at(sheet, 0, 0.78, 0.215)));
   const pillow = at(new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 16), sheetM), 0, 0.78, -0.82); pillow.scale.set(1.3, 0.35, 0.75); bed.add(shadowed(pillow));
   // the patient: burned face under an oxygen mask, crown bandaged with blood seeping through
   const burnColor = (x, y, z) => {
@@ -299,6 +299,10 @@ export function buildHospitalSet() {
   const mask = at(new THREE.Mesh(new THREE.SphereGeometry(0.055, 24, 12, 0, Math.PI * 2, 0, 1.5), new THREE.MeshPhysicalMaterial({ color: "#a8cfc4", transparent: true, opacity: 0.6, roughness: 0.2 })), 0, 1.02, -0.72);
   bed.add(mask);
   bed.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0, 1.05, -0.72), new THREE.Vector3(0.2, 1.2, -0.9), new THREE.Vector3(0.5, 1.6, -1.2), new THREE.Vector3(0.7, 2.1, -2.9)]), 40, 0.008, 8), new THREE.MeshPhysicalMaterial({ color: "#c9e2db", transparent: true, opacity: 0.7 })));
+  // neck and shoulders joining the head to the body under the sheet, in a hospital gown
+  const gown = new THREE.MeshPhysicalMaterial({ color: "#9fb7c4", roughness: 0.9, sheen: 0.3 });
+  const shoulders = at(new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), gown), 0, 0.87, -0.6); shoulders.scale.set(0.26, 0.075, 0.1); bed.add(shadowed(shoulders));
+  const neck = at(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.12, 20), gauze), 0, 0.9, -0.67); neck.rotation.x = Math.PI / 2; bed.add(shadowed(neck));
   const arm = at(new THREE.Mesh(new THREE.CapsuleGeometry(0.045, 0.5, 6, 16), gauze), 0.32, 0.88, -0.2); arm.rotation.x = Math.PI / 2; bed.add(shadowed(arm));
   const hand = at(new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 12), new THREE.MeshStandardMaterial({ color: "#8e2a1f", roughness: 0.6 })), 0.32, 0.88, 0.1); hand.scale.set(1, 0.6, 1.4); bed.add(hand);
   bed.position.set(0.6, 0, -1.4); set.add(bed);

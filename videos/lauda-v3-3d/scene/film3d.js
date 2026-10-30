@@ -156,7 +156,7 @@ export async function createFilm(out) {
       ring.runners.forEach((p, i) => { p.visible = true; const k = clamp01(u / 1.6 + i * 0.12); p.position.set(lerp(1 + i, -2.4 + i * 0.6, k), 0, lerp(212 + i * 2, 202 + i * 0.8, k)); p.rotation.y = Math.atan2(-3.4, -10) + Math.PI; p.position.y = Math.abs(Math.sin(t * 9 + i)) * 0.05; });
       return hold(V(RING_X + 6.5, 2.1, 214), V(RING_X - 2.2, 0.8, 202), 40);
     }],
-    burned: ["hosp", (u, t) => { drawECG(0, t, 52); const h = V(HOSP_X + 0.6, 0.95, -2.18); return { pos: h.clone().add(V(0.85 - u * 0.05, 0.75, 1.0)), look: h.clone().add(V(0, -0.05, 0.25)), fov: 36, focus: true, aperture: 0.003 }; }],
+    burned: ["hosp", (u, t) => { drawECG(0, t, 52); const h = V(HOSP_X + 0.6, 0.95, -2.18); return { pos: h.clone().add(V(-0.85 + u * 0.04, 0.62, 0.95)), look: h.clone().add(V(0.12, -0.06, 0.12)), fov: 40, focus: true, aperture: 0.002 }; }],
     lungs: ["hosp", (u, t) => { drawECG(0, t, 108, 0.9); return { pos: V(HOSP_X - 2.25 - u * 0.15, 2.0, -0.45), look: V(HOSP_X - 3.95, 2.0, -0.5), fov: 40, focus: false }; }],
     doctors: ["hosp", (u, t) => { drawECG(0, t, 118, 1.0); hosp.alarm.intensity = Math.floor(t * 4) % 2 ? 20 : 2; hosp.doctors.forEach((d) => (d.visible = true)); return hold(V(HOSP_X + 3.6, 1.9, 1.4), V(HOSP_X + 0.7, 0.95, -1.6), 40); }],
     fortyTwo: ["hosp", (u, t) => { drawECG(0, t, 72); hosp.daylight.material.opacity = (Math.sin(t * 22) * 0.5 + 0.5) * 0.85; return hold(V(HOSP_X - 0.1, 1.35, 0.6), V(HOSP_X - 2.2, 1.6, -2.9), 40); }, "days"],
