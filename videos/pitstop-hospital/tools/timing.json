@@ -1,0 +1,789 @@
+{
+ "duration": 59.985,
+ "lines": [
+  {
+   "i": 1,
+   "text": "How did a Ferrari pit crew make a children's hospital safer?",
+   "start": 0.0,
+   "end": 3.655,
+   "words": [
+    {
+     "w": "How",
+     "start": 0.0
+    },
+    {
+     "w": "did",
+     "start": 0.251
+    },
+    {
+     "w": "a",
+     "start": 0.502
+    },
+    {
+     "w": "Ferrari",
+     "start": 0.642
+    },
+    {
+     "w": "pit",
+     "start": 1.116
+    },
+    {
+     "w": "crew",
+     "start": 1.367
+    },
+    {
+     "w": "make",
+     "start": 1.674
+    },
+    {
+     "w": "a",
+     "start": 1.981
+    },
+    {
+     "w": "children's",
+     "start": 2.121
+    },
+    {
+     "w": "hospital",
+     "start": 2.762
+    },
+    {
+     "w": "safer?",
+     "start": 3.292
+    }
+   ]
+  },
+  {
+   "i": 2,
+   "text": "Great Ormond Street, London.",
+   "start": 3.68,
+   "end": 5.484,
+   "words": [
+    {
+     "w": "Great",
+     "start": 3.68
+    },
+    {
+     "w": "Ormond",
+     "start": 4.025
+    },
+    {
+     "w": "Street,",
+     "start": 4.423
+    },
+    {
+     "w": "London.",
+     "start": 4.953
+    }
+   ]
+  },
+  {
+   "i": 3,
+   "text": "A baby has just survived heart surgery.",
+   "start": 5.509,
+   "end": 8.154,
+   "words": [
+    {
+     "w": "A",
+     "start": 5.509
+    },
+    {
+     "w": "baby",
+     "start": 5.656
+    },
+    {
+     "w": "has",
+     "start": 5.979
+    },
+    {
+     "w": "just",
+     "start": 6.243
+    },
+    {
+     "w": "survived",
+     "start": 6.567
+    },
+    {
+     "w": "heart",
+     "start": 7.125
+    },
+    {
+     "w": "surgery.",
+     "start": 7.507
+    }
+   ]
+  },
+  {
+   "i": 4,
+   "text": "But one of the riskiest moments is still ahead.",
+   "start": 8.179,
+   "end": 10.854,
+   "words": [
+    {
+     "w": "But",
+     "start": 8.179
+    },
+    {
+     "w": "one",
+     "start": 8.401
+    },
+    {
+     "w": "of",
+     "start": 8.624
+    },
+    {
+     "w": "the",
+     "start": 8.798
+    },
+    {
+     "w": "riskiest",
+     "start": 9.021
+    },
+    {
+     "w": "moments",
+     "start": 9.491
+    },
+    {
+     "w": "is",
+     "start": 9.912
+    },
+    {
+     "w": "still",
+     "start": 10.086
+    },
+    {
+     "w": "ahead.",
+     "start": 10.408
+    }
+   ]
+  },
+  {
+   "i": 5,
+   "text": "The move from the operating theatre to intensive care.",
+   "start": 10.879,
+   "end": 14.167,
+   "words": [
+    {
+     "w": "The",
+     "start": 10.879
+    },
+    {
+     "w": "move",
+     "start": 11.121
+    },
+    {
+     "w": "from",
+     "start": 11.418
+    },
+    {
+     "w": "the",
+     "start": 11.714
+    },
+    {
+     "w": "operating",
+     "start": 11.957
+    },
+    {
+     "w": "theatre",
+     "start": 12.523
+    },
+    {
+     "w": "to",
+     "start": 12.981
+    },
+    {
+     "w": "intensive",
+     "start": 13.169
+    },
+    {
+     "w": "care.",
+     "start": 13.735
+    }
+   ]
+  },
+  {
+   "i": 6,
+   "text": "Breathing tube, drips, monitors, all unplugged, moved, plugged back in.",
+   "start": 14.192,
+   "end": 18.677,
+   "words": [
+    {
+     "w": "Breathing",
+     "start": 14.192
+    },
+    {
+     "w": "tube,",
+     "start": 14.739
+    },
+    {
+     "w": "drips,",
+     "start": 15.156
+    },
+    {
+     "w": "monitors,",
+     "start": 15.626
+    },
+    {
+     "w": "all",
+     "start": 16.252
+    },
+    {
+     "w": "unplugged,",
+     "start": 16.486
+    },
+    {
+     "w": "moved,",
+     "start": 17.164
+    },
+    {
+     "w": "plugged",
+     "start": 17.634
+    },
+    {
+     "w": "back",
+     "start": 18.077
+    },
+    {
+     "w": "in.",
+     "start": 18.364
+    }
+   ]
+  },
+  {
+   "i": 7,
+   "text": "Several teams, one tiny patient. Details get lost.",
+   "start": 18.702,
+   "end": 22.278,
+   "words": [
+    {
+     "w": "Several",
+     "start": 18.702
+    },
+    {
+     "w": "teams,",
+     "start": 19.213
+    },
+    {
+     "w": "one",
+     "start": 19.754
+    },
+    {
+     "w": "tiny",
+     "start": 20.024
+    },
+    {
+     "w": "patient.",
+     "start": 20.355
+    },
+    {
+     "w": "Details",
+     "start": 21.016
+    },
+    {
+     "w": "get",
+     "start": 21.527
+    },
+    {
+     "w": "lost.",
+     "start": 21.797
+    }
+   ]
+  },
+  {
+   "i": 8,
+   "text": "Then two of its doctors studied a Ferrari pit stop.",
+   "start": 22.303,
+   "end": 25.54,
+   "words": [
+    {
+     "w": "Then",
+     "start": 22.303
+    },
+    {
+     "w": "two",
+     "start": 22.607
+    },
+    {
+     "w": "of",
+     "start": 22.856
+    },
+    {
+     "w": "its",
+     "start": 23.05
+    },
+    {
+     "w": "doctors",
+     "start": 23.299
+    },
+    {
+     "w": "studied",
+     "start": 23.769
+    },
+    {
+     "w": "a",
+     "start": 24.24
+    },
+    {
+     "w": "Ferrari",
+     "start": 24.378
+    },
+    {
+     "w": "pit",
+     "start": 24.848
+    },
+    {
+     "w": "stop.",
+     "start": 25.097
+    }
+   ]
+  },
+  {
+   "i": 9,
+   "text": "Twenty mechanics. One car. Done in seconds.",
+   "start": 25.565,
+   "end": 28.56,
+   "words": [
+    {
+     "w": "Twenty",
+     "start": 25.565
+    },
+    {
+     "w": "mechanics.",
+     "start": 25.997
+    },
+    {
+     "w": "One",
+     "start": 26.746
+    },
+    {
+     "w": "car.",
+     "start": 27.005
+    },
+    {
+     "w": "Done",
+     "start": 27.408
+    },
+    {
+     "w": "in",
+     "start": 27.725
+    },
+    {
+     "w": "seconds.",
+     "start": 27.927
+    }
+   ]
+  },
+  {
+   "i": 10,
+   "text": "Nobody in anyone's way. Everyone with one job.",
+   "start": 28.585,
+   "end": 31.919,
+   "words": [
+    {
+     "w": "Nobody",
+     "start": 28.585
+    },
+    {
+     "w": "in",
+     "start": 29.048
+    },
+    {
+     "w": "anyone's",
+     "start": 29.265
+    },
+    {
+     "w": "way.",
+     "start": 29.851
+    },
+    {
+     "w": "Everyone",
+     "start": 30.283
+    },
+    {
+     "w": "with",
+     "start": 30.87
+    },
+    {
+     "w": "one",
+     "start": 31.209
+    },
+    {
+     "w": "job.",
+     "start": 31.487
+    }
+   ]
+  },
+  {
+   "i": 11,
+   "text": "So they asked Ferrari for help.",
+   "start": 31.944,
+   "end": 33.777,
+   "words": [
+    {
+     "w": "So",
+     "start": 31.944
+    },
+    {
+     "w": "they",
+     "start": 32.12
+    },
+    {
+     "w": "asked",
+     "start": 32.396
+    },
+    {
+     "w": "Ferrari",
+     "start": 32.722
+    },
+    {
+     "w": "for",
+     "start": 33.149
+    },
+    {
+     "w": "help.",
+     "start": 33.375
+    }
+   ]
+  },
+  {
+   "i": 12,
+   "text": "Ferrari studied videos of the hospital's handovers.",
+   "start": 33.802,
+   "end": 37.103,
+   "words": [
+    {
+     "w": "Ferrari",
+     "start": 33.802
+    },
+    {
+     "w": "studied",
+     "start": 34.294
+    },
+    {
+     "w": "videos",
+     "start": 34.786
+    },
+    {
+     "w": "of",
+     "start": 35.22
+    },
+    {
+     "w": "the",
+     "start": 35.423
+    },
+    {
+     "w": "hospital's",
+     "start": 35.684
+    },
+    {
+     "w": "handovers.",
+     "start": 36.35
+    }
+   ]
+  },
+  {
+   "i": 13,
+   "text": "The fix came straight from the pits.",
+   "start": 37.128,
+   "end": 39.075,
+   "words": [
+    {
+     "w": "The",
+     "start": 37.128
+    },
+    {
+     "w": "fix",
+     "start": 37.336
+    },
+    {
+     "w": "came",
+     "start": 37.545
+    },
+    {
+     "w": "straight",
+     "start": 37.8
+    },
+    {
+     "w": "from",
+     "start": 38.241
+    },
+    {
+     "w": "the",
+     "start": 38.496
+    },
+    {
+     "w": "pits.",
+     "start": 38.704
+    }
+   ]
+  },
+  {
+   "i": 14,
+   "text": "One leader, like the lollipop man, runs everything.",
+   "start": 39.1,
+   "end": 42.358,
+   "words": [
+    {
+     "w": "One",
+     "start": 39.1
+    },
+    {
+     "w": "leader,",
+     "start": 39.342
+    },
+    {
+     "w": "like",
+     "start": 39.881
+    },
+    {
+     "w": "the",
+     "start": 40.177
+    },
+    {
+     "w": "lollipop",
+     "start": 40.419
+    },
+    {
+     "w": "man,",
+     "start": 40.931
+    },
+    {
+     "w": "runs",
+     "start": 41.308
+    },
+    {
+     "w": "everything.",
+     "start": 41.604
+    }
+   ]
+  },
+  {
+   "i": 15,
+   "text": "Everyone gets one task, in a fixed order.",
+   "start": 42.383,
+   "end": 45.178,
+   "words": [
+    {
+     "w": "Everyone",
+     "start": 42.383
+    },
+    {
+     "w": "gets",
+     "start": 42.925
+    },
+    {
+     "w": "one",
+     "start": 43.239
+    },
+    {
+     "w": "task,",
+     "start": 43.495
+    },
+    {
+     "w": "in",
+     "start": 43.952
+    },
+    {
+     "w": "a",
+     "start": 44.151
+    },
+    {
+     "w": "fixed",
+     "start": 44.294
+    },
+    {
+     "w": "order.",
+     "start": 44.665
+    }
+   ]
+  },
+  {
+   "i": 16,
+   "text": "A checklist, so nothing is forgotten.",
+   "start": 45.203,
+   "end": 47.536,
+   "words": [
+    {
+     "w": "A",
+     "start": 45.203
+    },
+    {
+     "w": "checklist,",
+     "start": 45.336
+    },
+    {
+     "w": "so",
+     "start": 46.025
+    },
+    {
+     "w": "nothing",
+     "start": 46.211
+    },
+    {
+     "w": "is",
+     "start": 46.661
+    },
+    {
+     "w": "forgotten.",
+     "start": 46.847
+    }
+   ]
+  },
+  {
+   "i": 17,
+   "text": "Technical errors fell by forty-two percent.",
+   "start": 47.561,
+   "end": 50.35,
+   "words": [
+    {
+     "w": "Technical",
+     "start": 47.561
+    },
+    {
+     "w": "errors",
+     "start": 48.178
+    },
+    {
+     "w": "fell",
+     "start": 48.618
+    },
+    {
+     "w": "by",
+     "start": 48.941
+    },
+    {
+     "w": "forty-two",
+     "start": 49.147
+    },
+    {
+     "w": "percent.",
+     "start": 49.704
+    }
+   ]
+  },
+  {
+   "i": 18,
+   "text": "Missing information, almost cut in half.",
+   "start": 50.375,
+   "end": 53.024,
+   "words": [
+    {
+     "w": "Missing",
+     "start": 50.375
+    },
+    {
+     "w": "information,",
+     "start": 50.854
+    },
+    {
+     "w": "almost",
+     "start": 51.699
+    },
+    {
+     "w": "cut",
+     "start": 52.122
+    },
+    {
+     "w": "in",
+     "start": 52.376
+    },
+    {
+     "w": "half.",
+     "start": 52.573
+    }
+   ]
+  },
+  {
+   "i": 19,
+   "text": "A sport chasing tenths of a second taught doctors to protect what matters most.",
+   "start": 53.049,
+   "end": 58.102,
+   "words": [
+    {
+     "w": "A",
+     "start": 53.049
+    },
+    {
+     "w": "sport",
+     "start": 53.191
+    },
+    {
+     "w": "chasing",
+     "start": 53.563
+    },
+    {
+     "w": "tenths",
+     "start": 54.048
+    },
+    {
+     "w": "of",
+     "start": 54.476
+    },
+    {
+     "w": "a",
+     "start": 54.676
+    },
+    {
+     "w": "second",
+     "start": 54.819
+    },
+    {
+     "w": "taught",
+     "start": 55.247
+    },
+    {
+     "w": "doctors",
+     "start": 55.675
+    },
+    {
+     "w": "to",
+     "start": 56.161
+    },
+    {
+     "w": "protect",
+     "start": 56.361
+    },
+    {
+     "w": "what",
+     "start": 56.846
+    },
+    {
+     "w": "matters",
+     "start": 57.16
+    },
+    {
+     "w": "most.",
+     "start": 57.646
+    }
+   ]
+  },
+  {
+   "i": 20,
+   "text": "So next time someone asks...",
+   "start": 58.127,
+   "end": 59.96,
+   "words": [
+    {
+     "w": "So",
+     "start": 58.127
+    },
+    {
+     "w": "next",
+     "start": 58.334
+    },
+    {
+     "w": "time",
+     "start": 58.659
+    },
+    {
+     "w": "someone",
+     "start": 58.985
+    },
+    {
+     "w": "asks...",
+     "start": 59.487
+    }
+   ]
+  }
+ ]
+}
