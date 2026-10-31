@@ -2,33 +2,34 @@
 
 Broad-audience short, exactly 60 s, continuous voiceover, looped ending (the last line runs straight into the first).
 
-## Script v5: v2 rewritten to flow (current, awaiting approval before voiceover)
+## Script v6: smooth transitions (current, awaiting approval before voiceover)
 
-Based on v2. Filler cut, each step joined to the next so it reads as one continuous story, and sharper images
-("saw the same problem, solved", "picked them apart", "their smallest patients"). 181 words: at the
-F1 Narrator's natural pace that is about 60 s of continuous speech with only breaths between sentences, so no speed-up.
+v5 with every scene change carried by the idea itself instead of sequence words (no "then", "next"):
+the surgery hands over to the transfer ("still has to move"), the transfer's rush is named ("In that rush"),
+the rush links hospital to pit lane ("recognised that rush"), the pit stop is the contrast ("Except there"),
+cause links to Ferrari ("So"), the fix is introduced by where it came from, the payoff by "And it worked."
+184 words, about 60 s of continuous speech at the narrator's natural pace.
 
 1. Why would a children's heart surgeon ask Ferrari for help?
 2. At Great Ormond Street Hospital in London, a baby has just survived heart surgery.
 3. But the danger isn't over.
-4. Next: the move from surgery to intensive care.
-5. Every tube, wire and monitor gets unplugged, moved, and plugged back in.
-6. Several teams crowd one tiny bed, and small details slip through.
-7. Then two of its doctors watched a Formula One pit stop and saw the same problem, solved.
-8. Twenty mechanics. One car. Four new tyres in seconds, and nobody gets in anyone's way.
+4. The baby still has to move from the operating theatre to intensive care.
+5. Every tube, wire and monitor is unplugged, moved and plugged back in, with several teams around one tiny bed.
+6. In that rush, small details slip through.
+7. Two of its doctors recognised that rush from a Formula One pit stop.
+8. Except there, twenty mechanics change four tyres in seconds without getting in each other's way.
 9. So they called Ferrari.
 10. Ferrari's crew studied videos of the hospital's handovers and picked them apart.
-11. The fix came straight from the pit lane.
-12. One leader runs the handover, just like the lollipop man.
-13. Everyone gets one job, done in a fixed order.
-14. And a checklist makes sure nothing gets forgotten.
-15. The result? Technical errors dropped by forty-two percent, and missing information was almost cut in half.
-16. A sport obsessed with saving tenths of a second taught doctors to protect their smallest patients.
-17. So next time someone asks you...
+11. The fix came straight from the pit lane: one leader runs the handover, like the lollipop man.
+12. Everyone gets one job in a fixed order, and a checklist makes sure nothing is forgotten.
+13. And it worked.
+14. Technical errors dropped by forty-two percent, and missing information was almost cut in half.
+15. A sport obsessed with saving tenths of a second taught doctors to protect their smallest patients.
+16. So next time someone asks you...
 
 (loops to line 1: "So next time someone asks you... Why would a children's heart surgeon ask Ferrari for help?")
 
-Earlier versions: tools/lines.v1.json ... lines.v4.json.
+Earlier versions: tools/lines.v1.json ... lines.v5.json.
 
 ## Facts and sources
 
