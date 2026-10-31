@@ -80,7 +80,7 @@ def obstacles():
             "_side", "_end", "_head", "_hat", "_body", "_blanket", "_fold", "table_top", "table_pad", "op_baby")
     out = []
     for ob in bpy.data.objects:
-        if ob.type != "MESH" or ob.get("person") or any(p.get("person") for p in ob.parent_recursive):
+        if ob.type != "MESH" or voxel._under_person(ob):
             continue
         if not any(k in ob.name for k in keys) or ob.name.startswith(("wg", "newtyre", "fjack", "rjack", "lolli")):
             continue
