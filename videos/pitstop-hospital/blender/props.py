@@ -350,3 +350,29 @@ def f1car_block(name="car", body="red", driver=True):
             wh.location = (s * x, y, r)
             P.append(wh)
     return group(name, P)
+
+
+def bar_between(name, a, b, t, material):
+    """A square bar (t x t) from point a to point b: jack levers, handles."""
+    from mathutils import Matrix
+    a, b = Vector(a), Vector(b)
+    d = b - a
+    ob = box(name, (t, t, d.length), (0, 0, 0), material)
+    ob.matrix_world = Matrix.Translation((a + b) / 2) @ d.to_track_quat("Z", "Y").to_matrix().to_4x4()
+    return ob
+
+
+def jack_between(name, head, grip):
+    """Pit jack: lifting head under the car, two small wheels, a lever up to the jack man's hands."""
+    M = palette()
+    head, grip = Vector(head), Vector(grip)
+    flat = Vector((grip.x - head.x, grip.y - head.y, 0)).normalized()
+    side = Vector((-flat.y, flat.x, 0))
+    P = [box(name + "_head", (0.5, 0.14, 0.1), tuple(head), M["dark"], rot=(0, 0, math.atan2(-flat.x, flat.y))),
+         bar_between(name + "_lever", head + flat * 0.05, grip, 0.07, M["grey"]),
+         bar_between(name + "_grip", grip - side * 0.25, grip + side * 0.25, 0.06, M["dark"])]
+    for s in (1, -1):
+        w = cyl(name + f"_wheel{s}", 0.06, 0.04, tuple(head + flat * 0.25 + side * (s * 0.14) + Vector((0, 0, -0.06))), M["rubber"],
+                rot=(0, math.pi / 2, math.atan2(-flat.x, flat.y)))
+        P.append(w)
+    return group(name, P)

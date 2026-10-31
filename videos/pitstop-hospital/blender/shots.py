@@ -152,7 +152,7 @@ def leaving():
     car = bpy.data.objects["car"]
     car.location = (2.4, 5.4, 0)
     car.rotation_euler = (0, 0, math.radians(-35))
-    cam((-1.3, -1.2, 0.65), (2.0, 5.2, 0.6), 26, None, 2.8, -6)
+    cam((-1.3, -1.2, 0.65), (2.0, 5.2, 0.6), 26, 7.2, 4.0, -6)
 
 
 def phone_call():
@@ -209,7 +209,7 @@ def tiny_hand():
 
 SHOTS = [  # n, start, end, builder, description
     (1, 0.00, 1.60, surgeon(((0.18, 1.05, 1.2), (0, -0.4, 1.42), 42, 1.55, 2.2)), "A masked children's heart surgeon leans over a tiny baby in its cot. Cold open."),
-    (2, 1.60, 3.40, pit(((0.9, 6.4, 1.7), (0, 1.4, 0.45), 26, None, 2.8, -6), phase="swap"), "...ask Ferrari? Head-on: the front jack lifts the nose, every wheel coming off at once."),
+    (2, 1.60, 3.40, pit(((0.9, 6.4, 1.7), (0, 1.4, 0.45), 26, 4.6, 4.0, -6), phase="swap"), "...ask Ferrari? Head-on: the front jack lifts the nose, every wheel coming off at once."),
     (3, 3.40, 5.60, exterior, "Street level, London: the hospital facade, a clock tower in the haze."),
     (4, 5.60, 7.84, theatre_top, "From the foot of the table: the surgical team, the baby's head and cap at the far end."),
     (5, 7.84, 9.44, theatre_monitor, "Close: the heart monitor's green trace. The danger isn't over."),
@@ -222,10 +222,10 @@ SHOTS = [  # n, start, end, builder, description
     (12, 20.10, 21.40, icu("chaos", ((0.15, -0.35, 2.15), (0, 0.35, 0.8), 26, None, 2.8, 6)), "High angle: many hands at once. In that rush..."),
     (13, 21.40, 22.70, falling, "Mid-handover, everyone busy at the cot: a syringe tumbles off the edge and a line tugged loose falls to the floor."),
     (14, 22.70, 24.40, viewing, "From behind: two doctors watch a pit stop on the staff-room screen."),
-    (15, 24.40, 26.20, pit(((-2.4, 5.6, 0.55), (0, -1.0, 0.6), 24, None, 2.8, 6), phase="arrive", car_y=-2.6), "Low behind the lollipop man: the car rolls in, twenty crew poised."),
-    (16, 26.20, 27.60, pit(((5.2, 5.6, 2.4), (0.2, 0.5, 0.4), 22, None, 2.8, -4), phase="swap"), "Wide and high: car on the jacks, four tyres off at once (counter overlay: 20)."),
-    (17, 27.60, 29.00, pit(((0.5, 3.4, 1.35), (1.6, 2.35, 0.6), 30, 1.65, 2.8, -6), phase="swap", drop=("wing1", "fjack", "fjack_eq")), "Close: the old front-left tyre comes away in the tyre-off man's hands."),
-    (18, 29.00, 30.20, pit(((0.6, 0.0, 1.35), (1.4, 1.3, 0.55), 30, 1.65, 2.8, 5), phase="swap", drop=("stab1",)), "Low: the new tyre swings onto the hub, the gunner waiting with the wheel gun."),
+    (15, 24.40, 26.20, pit(((-2.4, 5.6, 0.55), (0, -1.0, 0.6), 24, 2.2, 3.2, 6), phase="arrive", car_y=-2.6), "Low behind the lollipop man: the car rolls in, twenty crew poised."),
+    (16, 26.20, 27.60, pit(((5.2, 5.6, 2.4), (0.2, 0.5, 0.4), 22, 7.0, 5.6, -4), phase="swap"), "Wide and high: car on the jacks, four tyres off at once (counter overlay: 20)."),
+    (17, 27.60, 29.00, pit(((0.3, 3.85, 1.55), (1.6, 2.35, 0.7), 26, 2.05, 3.2, -6), phase="swap", drop=("wing1", "fjack", "fjack_eq")), "Close: the old front-left tyre comes away in the tyre-off man's hands."),
+    (18, 29.00, 30.20, pit(((0.45, -0.4, 1.5), (1.45, 1.3, 0.7), 26, 2.05, 3.2, 5), phase="swap", drop=("stab1",)), "Low: the new tyre swings onto the hub, the gunner waiting with the wheel gun."),
     (19, 30.20, 31.37, pit_top(8, 24, phase="swap"), "Top-down: every mechanic in a fixed spot, nobody in anyone's way."),
     (20, 31.37, 32.92, phone_call, "Close: the doctor's hand reaches for the phone (overlay: calling Ferrari)."),
     (21, 32.92, 34.90, ferrari(((0.1, -2.3, 1.6), (0, 3.0, 1.55), 30)), "Ferrari's engineers study the hospital's handover footage."),
@@ -240,7 +240,7 @@ SHOTS = [  # n, start, end, builder, description
     (30, 47.64, 50.10, chart(5.42, 3.15), "Block chart: errors per handover, 5.42 blocks to 3.15 (overlay: -42%)."),
     (31, 50.10, 52.60, chart(2.09, 1.07), "Block chart: missing information, 2.09 to 1.07, almost half."),
     (32, 52.60, 54.30, leaving, "From behind the crew: board up, the car pulls out of the box and away toward the fast lane."),
-    (33, 54.30, 56.30, pit(((1.6, 8.5, 1.6), (0, 0, 1.0), 32, None, 2.8, 4), car=False, phase="go"), "The empty box: crew stepping back, old tyres on the ground, the board up."),
+    (33, 54.30, 56.30, pit(((1.6, 8.5, 1.6), (0, 0, 1.0), 32, 7.0, 4.0, 4), car=False, phase="go"), "The empty box: crew stepping back, old tyres on the ground, the board up."),
     (34, 56.30, 58.10, tiny_hand, "Macro: the baby's hand around a gloved finger."),
     (35, 58.10, 60.00, surgeon(((0.25, 1.4, 1.25), (0, -0.4, 1.42), 36, 1.95, 2.2)), "Back on the surgeon, pushing in: the loop back to the opening question."),
 ]

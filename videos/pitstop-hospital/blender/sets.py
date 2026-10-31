@@ -6,7 +6,7 @@ from mathutils import Vector
 from lib import (V, box, cyl, sphere, torus, tube, mesh_obj, palette, area, world, cyclorama, mat, group, link, sun)
 from people import person
 from props import (f1car, wheel, wheel_gun, lollipop, jack, cot, monitor, iv_pole, vent, op_table,
-                   surgical_lamp, drapes, clipboard)
+                   surgical_lamp, drapes, clipboard, jack_between)
 
 # reusable poses ------------------------------------------------------------------
 POSE = dict(
@@ -43,6 +43,23 @@ def hand_world(root, k="R"):
         return None
     bpy.context.view_layer.update()
     return root.matrix_world @ Vector(root["hand" + k])
+
+
+def hands_mid(root):
+    """Midpoint between a block person's hands, in world space (None for the smooth mannequins)."""
+    l, r = hand_world(root, "L"), hand_world(root, "R")
+    return None if l is None else (l + r) / 2
+
+
+def hold(obj, root, fallback):
+    """Put a wheel between a person's hands, its axle along the line from hand to hand."""
+    l, r = hand_world(root, "L"), hand_world(root, "R")
+    if l is None:
+        obj.location = fallback
+        return
+    d = r - l
+    obj.location = (l + r) / 2
+    obj.rotation_euler = (0, 0, math.atan2(d.y, d.x))
 
 
 def P(name, x, y, rot, pose, outfit, **kw):
@@ -120,39 +137,42 @@ def pit_crew(skip=(), phase="ready", car=True):
             continue
         rot = 90 if side == 1 else -90  # face the car (people face +Y at rot 0)
         out = side * (0.5 if go else 0.0)  # step back from the car when it goes
-        cast.append(P(f"gun{tag}", side * 1.45 + out, y, rot, "step_back" if go else "gun", "crew"))
+        gun = P(f"gun{tag}", side * 1.45 + out, y, rot, "step_back" if go else "gun", "crew")
+        cast.append(gun)
         g = wheel_gun(f"wg{tag}")
-        g.location = (side * (1.15 if not go else 1.75), y, 0.38 if not go else 0.9)
         g.rotation_euler = (0, 0, math.radians(rot))
-        cast.append(P(f"off{tag}", side * 1.75 + out, y + 0.75, rot + side * 25,
-                      "carry_out" if swap else ("step_back" if go else "tyre_off"), "crew"))
-        cast.append(P(f"on{tag}", side * 1.8 + out, y - 0.75, rot - side * 25,
-                      "tyre_push" if swap else ("step_back" if go else "tyre_hold"), "crew"))
+        hm = hands_mid(gun)
+        g.location = hm if hm is not None else (side * (1.15 if not go else 1.75), y, 0.38 if not go else 0.9)
+        off = P(f"off{tag}", side * 1.75 + out, y + 0.75, rot + side * 25,
+                "carry_out" if swap else ("step_back" if go else "tyre_off"), "crew")
+        on = P(f"on{tag}", side * 1.8 + out, y - 0.75, rot - side * 25,
+               "tyre_push" if swap else ("step_back" if go else "tyre_hold"), "crew")
+        cast += [off, on]
         t = wheel(f"newtyre{tag}", 0.36, 0.34, 1)
-        if swap:  # the new tyre is on its way onto the hub
-            t.location = (side * 1.3, y - 0.45, 0.48)
-            t.rotation_euler = (0, 0, math.radians(-side * 20))
-        elif go:  # the old tyre is left lying beside the box
+        if go:  # the old tyre is left lying beside the box
             t.location = (side * 2.6, y + 0.4, 0.17)
             t.rotation_euler = (0, math.radians(90), 0)
-        else:
-            t.location = (side * 1.45, y - 0.85, 0.62)
-        if swap and car and wn in bpy.data.objects:  # the old tyre is in the off-man's hands
+        else:  # the new tyre is held between the tyre-on man's hands (sidewalls in his palms)
+            hold(t, on, fallback=(side * 1.45, y - 0.85, 0.62))
+        if swap and car and wn in bpy.data.objects:  # the old tyre comes away in the tyre-off man's hands
             w = bpy.data.objects[wn]
             mw = w.matrix_world.copy()
             w.parent = None
             w.matrix_world = mw
-            w.location = (side * 1.55, y + 0.55, 0.52)
-            w.rotation_euler = (0, 0, math.radians(side * 25))
+            hold(w, off, fallback=(side * 1.55, y + 0.55, 0.52))
     if "jacks" not in skip:
         jp = "jack_lift" if swap else ("step_back" if go else "jack")
-        cast.append(P("fjack", -1.25 if go else 0, 4.0 if not go else 3.9, 180, jp, "crew"))  # steps aside to let the car out
-        j = jack("fjack_eq")
-        j.location = (0, 2.95, 0)
-        j.rotation_euler = (math.radians(-6) if swap else 0, 0, math.pi)
-        cast.append(P("rjack", 0, -3.9, 0, jp, "crew"))
-        j2 = jack("rjack_eq")
-        j2.location = (0, -2.85, 0)
+        fj = P("fjack", -1.25 if go else 0, 4.0 if not go else 3.9, 180, jp, "crew")  # steps aside to let the car out
+        rj = P("rjack", 0, -3.9, 0, jp, "crew")
+        cast += [fj, rj]
+        lift = 0.07 if swap else 0.0
+        if go:  # the front jack is pulled clear of the exit, lying beside the box
+            jack_between("fjack_eq", (-1.75, 3.0, 0.11), (-1.75, 4.3, 0.14))
+        else:
+            fm = hands_mid(fj)
+            jack_between("fjack_eq", (0, 2.95, 0.12 + lift), fm if fm is not None else (0, 4.3, 0.9))
+        rm = hands_mid(rj)
+        jack_between("rjack_eq", (0, -2.85, 0.12 + lift), rm if rm is not None else (0, -4.2, 0.9))
     for s in (1, -1):
         if "stab" not in skip:
             cast.append(P(f"stab{s}", s * (1.3 + (0.5 if go else 0)), 0.1, 90 * s, "step_back" if go else "brace", "crew"))

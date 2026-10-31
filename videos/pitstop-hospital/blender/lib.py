@@ -317,7 +317,7 @@ def setup_render(w=540, h=960, samples=32, path="/tmp/out.png"):
     r.filepath = path
     r.image_settings.file_format = "PNG"
     sc.view_settings.view_transform = "AgX"
-    sc.view_settings.look = "AgX - High Contrast"
+    sc.view_settings.look = "AgX - Punchy"
     sc.view_settings.exposure = -0.3
     return sc
 
