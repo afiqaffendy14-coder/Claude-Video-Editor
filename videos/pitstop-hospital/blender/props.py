@@ -318,8 +318,11 @@ def f1car_block(name="car", body="red", driver=True):
     b("intake", (0.14, 0.02, 0.12), (0, -0.09, 0.79), C)
     b("fin", (0.03, 1.0, 0.16), (0, -1.15, 0.72))
     if driver:
-        b("helmet", (0.22, 0.24, 0.2), (0, 0.12, 0.7), M["yellow"])
-        b("hvisor", (0.18, 0.02, 0.06), (0, 0.245, 0.72), C)
+        # the driver: a full-size helmet (same scale as the crew's) in bright yellow so he stands out in the red car
+        b("helmet", (0.32, 0.34, 0.3), (0, 0.1, 0.76), M["yellow"])
+        b("hvisor", (0.27, 0.03, 0.11), (0, 0.27, 0.79), C)
+        b("hstripe", (0.33, 0.35, 0.04), (0, 0.1, 0.85), M["red"])
+        b("hchin", (0.24, 0.06, 0.07), (0, 0.27, 0.68), M["yellow"])
     # halo: three bars and a pillar
     b("halo_pillar", (0.05, 0.05, 0.22), (0, 0.78, 0.68), C)
     b("halo_top", (0.05, 0.35, 0.05), (0, 0.6, 0.81), C)
