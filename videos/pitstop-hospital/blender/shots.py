@@ -171,7 +171,7 @@ def phone_call():
     box("reach_sleeve", (2.6 * px, 6 * px, 2.2 * px), (1.1, -1.48, 0.58), M["scrubs"], rot=(0, 0, math.radians(35)))
     from lib import area
     area("phone_key", (0.5, -1.0, 1.6), (0.85, -1.2, 0.53), 60, 1.0)
-    cam((0.5, -1.55, 0.82), (0.88, -1.22, 0.53), 45, dof=0.5, fstop=2.0)
+    cam((1.78, -1.38, 0.98), (0.85, -1.32, 0.66), 38, dof=0.98, fstop=2.2)
 
 
 def ferrari(c):
@@ -209,7 +209,7 @@ def tiny_hand():
 
 
 SHOTS = [  # n, start, end, builder, description
-    (1, 0.00, 1.60, surgeon(((0.18, 1.05, 1.2), (0, -0.4, 1.42), 42, 1.55, 2.2)), "A masked children's heart surgeon leans over a tiny baby in its cot. Cold open."),
+    (1, 0.00, 1.60, surgeon(((0.22, 1.2, 1.0), (0, -0.05, 1.22), 32, 1.29, 2.2)), "A masked children's heart surgeon leans over a tiny baby in its cot. Cold open."),
     (2, 1.60, 3.40, pit_top(8, 24, phase="swap"), "...ask Ferrari for help? Top-down: the car up on its jacks, twenty crew working all four corners at once."),
     (3, 3.40, 5.60, exterior, "Street level, London: the hospital facade, a clock tower in the haze."),
     (4, 5.60, 7.84, theatre_top, "From the foot of the table: the surgical team, the baby's head and cap at the far end."),
@@ -217,7 +217,7 @@ SHOTS = [  # n, start, end, builder, description
     (6, 9.44, 11.20, corridor(-6.5, ((0.55, -10.8, 1.55), (0, 18, 1.3), 30, None, 2.8, 3), True), "Dim corridor: the team wheels the cot toward intensive care."),
     (7, 11.20, 13.14, corridor(0, ((0.3, -2.5, 0.38), (0, 0.4, 0.4), 30, 2.1, 2.8)), "Low, from behind: the porter's feet and the cot's castors rolling toward intensive care."),
     (8, 13.14, 15.00, icu("empty", ((0.3, 0.25, 1.12), (0.02, 0.55, 0.82), 45, 0.48, 2.2)), "Macro: the breathing tube and lines on the baby."),
-    (9, 15.00, 16.90, icu("chaos", ((0.05, 0.25, 1.95), (0, 0.5, 0.75), 34, 1.2, 2.8)), "Hands reach for the monitor cables: unplugged."),
+    (9, 15.00, 16.90, icu("chaos", ((-0.4, 1.72, 1.36), (-0.5, 0.74, 1.0), 30, 1.05, 2.4)), "Side-on at the head end: a doctor pulls a line's connector apart, everyone else working round the cot."),
     (10, 16.90, 18.40, corridor(0, ((1.35, -2.3, 1.45), (0, 0.6, 0.9), 24, None, 2.8, -5)), "Tracking: the cot, ventilator and IV pole on the move."),
     (11, 18.40, 20.10, icu("chaos", ((0, 0.15, 4.6), (0, 0.15, 0), 22), top=True), "Cutaway top-down: several teams crowd one tiny bed."),
     (12, 20.10, 21.40, icu("chaos", ((0.15, -0.35, 2.15), (0, 0.35, 0.8), 26, None, 2.8, 6)), "High angle: many hands at once. In that rush..."),
@@ -226,8 +226,8 @@ SHOTS = [  # n, start, end, builder, description
     (15, 24.40, 26.20, pit(((-2.4, 5.6, 0.55), (0, -1.0, 0.6), 24, 2.2, 3.2, 6), phase="arrive", car_y=-2.6), "Low behind the lollipop man: the car rolls in, twenty crew poised."),
     (16, 26.20, 27.60, pit(((5.2, 5.6, 2.4), (0.2, 0.5, 0.4), 22, 7.0, 5.6, -4), phase="swap"), "Wide and high: car on the jacks, four tyres off at once (counter overlay: 20)."),
     (17, 27.60, 29.00, pit(((0.3, 3.85, 1.55), (1.6, 2.35, 0.7), 26, 2.05, 3.2, -6), phase="swap", drop=("wing1", "fjack", "fjack_eq")), "Close: the old front-left tyre comes away in the tyre-off man's hands."),
-    (18, 29.00, 30.20, pit(((0.45, -0.4, 1.5), (1.45, 1.3, 0.7), 26, 2.05, 3.2, 5), phase="swap", drop=("stab1",)), "Low: the new tyre swings onto the hub, the gunner waiting with the wheel gun."),
-    (19, 30.20, 31.37, pit(((0.9, 6.4, 1.7), (0, 1.4, 0.45), 26, 4.6, 4.0, -6), phase="swap"), "Head-on: the front jack lifts the nose, every mechanic in their own spot, nobody in anyone's way."),
+    (18, 29.00, 30.20, pit(((2.05, 0.75, 3.3), (0.95, 1.65, 0.45), 28, 3.2, 3.2, 4), phase="swap", drop=("stab1", "offRL", "onRL", "gunRL")), "From above the corner: the new tyre swings onto the hub, the gunner waiting with the wheel gun."),
+    (19, 30.20, 31.37, pit(((1.1, 6.9, 2.75), (0, 1.0, 0.3), 26, 6.3, 4.0, -6), phase="swap"), "Head-on: the front jack lifts the nose, every mechanic in their own spot, nobody in anyone's way."),
     (20, 31.37, 32.92, phone_call, "Close: the doctor's hand reaches for the phone (overlay: calling Ferrari)."),
     (21, 32.92, 34.90, ferrari(((0.1, -2.3, 1.6), (0, 3.0, 1.55), 30)), "Ferrari's engineers study the hospital's handover footage."),
     (22, 34.90, 37.08, ferrari(((0.0, 1.55, 1.9), (0, 3.0, 1.9), 33)), "Screen close-up: the handover, problems circled in red (overlay)."),

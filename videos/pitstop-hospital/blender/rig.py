@@ -123,13 +123,22 @@ class Actor:
 
     # -- placement -------------------------------------------------------------------------------------------
     def place(self, loc, rot_deg, crouch=0.0):
-        """Put the whole rig (and its IK targets) at loc/heading; feet stay on the ground, hips drop by crouch."""
-        M = Matrix.Translation(V(loc)) @ Matrix.Rotation(math.radians(rot_deg), 4, "Z")
-        rest = {t.name: t.location.copy() for t in list(self.hand.values()) + list(self.foot.values())}
-        self.arm.matrix_world = M
-        self.arm.location.z = loc[2] - crouch
+        """Put the rig at loc/heading with the hips dropped by crouch. Its IK targets move with it (by the change in
+        placement, on the ground plane, so feet stay on the floor); targets gripping a prop stay with the prop."""
+        bpy.context.view_layer.update()
+        a = self.arm
+
+        def planar(x, y, r):
+            return Matrix.Translation(V((x, y, 0))) @ Matrix.Rotation(r, 4, "Z")
+        old = planar(a.location.x, a.location.y, a.rotation_euler.z)
+        new = planar(loc[0], loc[1], math.radians(rot_deg))
+        delta = new @ old.inverted()
+        a.location = (loc[0], loc[1], loc[2] - crouch)
+        a.rotation_euler = (0, 0, math.radians(rot_deg))
         for t in list(self.hand.values()) + list(self.foot.values()):
-            t.location = M @ rest[t.name]
+            if t.parent is None:
+                t.location = delta @ t.location
+        bpy.context.view_layer.update()
         return self
 
     @property
@@ -175,6 +184,7 @@ class Actor:
     def grip(self, k, obj, f=None):
         """Parent the hand target to a prop so the hand follows it (keeps the current world position)."""
         t = self.hand[k]
+        bpy.context.view_layer.update()  # the prop (or the target) may have just been moved
         mw = t.matrix_world.copy()
         t.parent = obj
         t.matrix_parent_inverse = obj.matrix_world.inverted()

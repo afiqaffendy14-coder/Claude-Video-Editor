@@ -16,7 +16,7 @@ import shots
 #   push: metres along the view   truck: metres sideways   crane: metres up (keeps aim)
 #   orbit: degrees around the pivot's vertical axis   spin: degrees of roll drift   d: pivot distance
 MOVES = {
-    1: dict(push=0.28, orbit=7, spin=-3, d=1.55),
+    1: dict(push=0.28, orbit=7, spin=-3, d=1.29),
     2: dict(push=1.2, spin=12, d=8.0),
     3: dict(crane=1.6, push=3.0, d=25.0),
     4: dict(orbit=-20, push=0.25, d=2.25),
@@ -24,7 +24,7 @@ MOVES = {
     6: dict(push=1.4, d=10.0, travel=(0, 0.7, 0)),
     7: dict(push=0.3, d=2.0, travel=(0, 0.7, 0), follow=True),
     8: dict(push=0.12, orbit=8, d=0.5),
-    9: dict(spin=8, push=0.2, d=1.2),
+    9: dict(spin=4, push=0.16, orbit=6, d=1.05),
     10: dict(truck=0.2, d=2.5, travel=(0, 0.7, 0), follow=True),
     11: dict(spin=-10, push=0.6, d=4.6),
     12: dict(orbit=10, push=0.2, d=1.5),
@@ -33,9 +33,9 @@ MOVES = {
     15: dict(push=0.5, d=6.0),
     16: dict(orbit=10, d=7.0),
     17: dict(push=0.3, orbit=6, d=2.0),
-    18: dict(push=0.3, orbit=-6, d=2.0),
-    19: dict(push=0.6, d=5.0),
-    20: dict(push=0.12, d=0.5),
+    18: dict(push=0.3, orbit=-8, d=3.2),
+    19: dict(push=0.6, d=6.4),
+    20: dict(push=0.15, d=0.98),
     21: dict(push=0.4, d=5.0),
     22: dict(push=0.25, d=1.4),
     23: dict(push=0.15, d=3.3),

@@ -47,6 +47,7 @@ class Performer:
         self.rnd = random.Random(seed)
         self.ph = self.rnd.uniform(0, 6.28)
         arm = actor.arm
+        bpy.context.view_layer.update()
         inv = arm.matrix_world.inverted()
         self.hand_local = {k: inv @ actor.hand[k].matrix_world.translation for k in "LR"}
         self.foot_world = {k: actor.foot[k].matrix_world.translation.copy() for k in "LR"}
@@ -54,6 +55,7 @@ class Performer:
         self.path = None  # optional: t -> (loc Vector on the ground, heading deg)
         self.steps = []  # [(k, t_lift, t_land, from Vector, to Vector)]
         self.extra = []  # functions (t, pose) -> None, layered on top
+        self.t_off = 0.0  # shifts the idle motion's clock (used for the loop: shot 35 runs into shot 1)
 
     # ---- planning helpers ------------------------------------------------------------------------------------
     def walk(self, path, t0, t1, cadence=1.8, duty=0.62, lift=0.1, width=0.1):
@@ -100,17 +102,18 @@ class Performer:
     # ---- pose -------------------------------------------------------------------------------------------------
     def pose(self, t):
         b = self.base
+        ti = t + self.t_off
         loc, rot = (self.path(t) if self.path else (V(b["loc"]), b["rot"]))
         p = dict(loc=V(loc), rot=rot, crouch=b["crouch"], lean=b["lean"], twist=b["twist"], side=0.0,
                  head=list(b["head"]), hands={}, feet={})
         # idle life: breathing, weight shift, a little look around (all slow, all continuous)
-        p["crouch"] += wob(t, 0.25, 0.004, self.ph)
-        p["side"] += wob(t, 0.2, 1.2, self.ph + 1)
-        p["head"][0] += wob(t, 0.15, 2.5, self.ph + 2)
-        p["head"][1] += wob(t, 0.22, 1.0, self.ph + 3)
+        p["crouch"] += wob(ti, 0.25, 0.004, self.ph)
+        p["side"] += wob(ti, 0.2, 1.2, self.ph + 1)
+        p["head"][0] += wob(ti, 0.15, 2.5, self.ph + 2)
+        p["head"][1] += wob(ti, 0.22, 1.0, self.ph + 3)
         for k in "LR":
-            p["hands"][k] = None if self.gripped[k] else ("local", self.hand_local[k] + V((wob(t, 0.3, 0.008, self.ph + (0 if k == "L" else 1.7)), 0,
-                                                                                            wob(t, 0.27, 0.008, self.ph + 2.4))))
+            p["hands"][k] = None if self.gripped[k] else ("local", self.hand_local[k] + V((wob(ti, 0.3, 0.008, self.ph + (0 if k == "L" else 1.7)), 0,
+                                                                                            wob(ti, 0.27, 0.008, self.ph + 2.4))))
             p["feet"][k] = self.foot_at(k, t) if self.steps else self.foot_world[k]
         for fn in self.extra:
             fn(t, p)

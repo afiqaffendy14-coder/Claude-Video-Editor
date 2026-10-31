@@ -6,15 +6,19 @@ The grade is the one in boards/grade.sh, so stills and video match.
 import json, os, re, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-frames, fps, caps, sfx, t0, t1, out = sys.argv[1:8]
+argv = sys.argv[sys.argv.index("--"):] if "--" in sys.argv else sys.argv  # also runs inside Blender's Python
+frames, fps, caps, sfx, t0, t1, out = argv[1:8]
 fps, t0, t1 = int(fps), float(t0), float(t1)
-W, H = (int(sys.argv[8]), int(sys.argv[9])) if len(sys.argv) > 9 else (720, 1280)
+W, H = (int(argv[8]), int(argv[9])) if len(argv) > 9 else (720, 1280)
+FFMPEG = os.environ.get("FFMPEG", "ffmpeg")
 grade = re.search(r'GRADE="(.+)"', open(os.path.join(HERE, "..", "boards", "grade.sh")).read()).group(1)
 vo = os.path.join(HERE, "..", "assets", "audio", "narrator", "v6_take1_60.wav")
 first = int(round(t0 * fps))
 meta = json.load(open(os.path.join(caps, "captions.json")))
+for c in meta:  # caption PNGs live next to captions.json (paths in it may come from another machine)
+    c["file"] = os.path.join(caps, os.path.basename(c["file"].replace("\\", "/")))
 
-args = ["ffmpeg", "-v", "error", "-y", "-framerate", str(fps), "-start_number", str(first), "-i", os.path.join(frames, "f%05d.png")]
+args = [FFMPEG, "-v", "error", "-y", "-framerate", str(fps), "-start_number", str(first), "-i", os.path.join(frames, "f%05d.png")]
 for c in meta:
     args += ["-i", c["file"]]
 args += ["-ss", str(t0), "-t", str(t1 - t0), "-i", vo, "-i", sfx]

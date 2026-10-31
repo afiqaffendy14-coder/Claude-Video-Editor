@@ -20,6 +20,30 @@ Street Hospital redesigned post-surgery handovers with help from Ferrari's pit c
 - Driver helmet: full-size yellow. Lollipop pole in the lollipop man's hand. Front jack moved clear before the car leaves.
 - Sound: synthesised SFX (`tools/sfx.py`, per shot) under the voiceover; no music yet.
 
+## Render it (the "go" step)
+On the PC/laptop, in this folder (`videos/pitstop-hospital`):
+- Windows: `go.bat` (EEVEE, fastest) or `go.bat cycles` (path traced, slower).  Mac/Linux: `./go.sh`.
+- Needs only Blender 5.x (5.2 LTS matches what the bake was built with) and ffmpeg:
+  `winget install BlenderFoundation.Blender` and `winget install Gyan.FFmpeg`.
+- Output: `out/pitstop-hospital-final.mp4` (1080x1920, 30 fps, 60.0 s, graded, captions, voiceover, SFX).
+- If it stops part-way, run it again: frames already on disk are skipped.
+
+What go does: `blender/bake.py` builds every shot and bakes all motion to keyframes (`out/blend/sNN.blend`, ~3 min) ->
+`blender/render.py` renders them on the GPU (OptiX/CUDA/HIP auto-detected for Cycles) -> `tools/compose.py` grades,
+overlays the pre-rendered captions (`assets/captions_1080/`) and mixes voiceover + pre-rendered SFX (`assets/audio/sfx_full.flac`).
+
+## Animation system (bake)
+- `blender/rig.py`: every person is a rigged block character (armature, rigid parts, IK hands/feet).
+- `blender/choreo.py`: per-frame performers (planted footsteps, no sliding; eased moves; idle life).
+- `blender/pitstop.py`: the pit stop on one stop clock (car up, guns off, wheels off/aside, new tyres on, guns on, drop).
+  Gun men kneel aft with the gun angled onto the nut (T-handle), tyre-off men forward-outboard, tyre-on men aft.
+- `blender/bake.py`: per-shot choreography (surgeon operating, corridor sprint with handheld shake, ICU scramble at
+  fixed stations + the connector pulled apart in shot 9, phone pickup, handover tasks...). Shot 35 runs on the film clock
+  into shot 1, camera path included, so the film loops.
+- `blender/validate.py out/blend`: per-frame checks for clipping (body vs set/props/people), hand reach, foot slide,
+  floor penetration, teleports. Remaining reports are brief arm-stretch moments while reaching/waving.
+- `blender/preview.py`: a few small CPU stills per shot for checking.
+
 ## Pipeline (what each piece does)
 1. `blender/shots.py` builds each shot (sets.py, people.py/voxel.py, props.py, dress.py), voxelises it.
 2. `blender/anim.py <out_frames> <w> <h> <samples> <fps> <shot ids...>` renders animated frames `fNNNNN.png`.
@@ -39,5 +63,6 @@ The cloud box had no GPU (CPU Cycles ~0.7 s per sample per 360x640 frame). On th
 - Then captions at 1080x1920 and compose at 1080x1920.
 
 ## Status at handoff
+- Baked + validated; ready for go on a GPU machine.
 - A low-quality 60 s test (360x640, 4 samples, 24 fps) was rendered in the cloud for motion/timing review.
 - Owner feedback still to apply after that test, if any, comes from the owner.
