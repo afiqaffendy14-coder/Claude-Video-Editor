@@ -79,6 +79,11 @@ def pit_set(car_y=0.0, crew=True, wheels_off=False, lit=True, car=True, crew_ski
                 bpy.data.objects[nm].location.x *= 1.6
     if crew:
         pit_crew(crew_skip)
+    import lib
+    if lib.STYLE.get("voxel"):
+        import dress
+        dress.pit_dress()
+        return M
     if lit:
         bg = bpy.context.scene.world.node_tree.nodes["Background"]
         bg.inputs[0].default_value = (0.45, 0.65, 1.0, 1)
@@ -201,7 +206,7 @@ def corridor_set(cot_y=0.0, team=True, dim=False):
 
 
 # ---------------------------------------------------------------- ICU bay
-def icu_set(mode="chaos", baby=True):
+def icu_set(mode="chaos", baby=True, skip=()):
     """mode: 'chaos' (crowded, everyone at once) | 'order' (roles, one leader) | 'empty'."""
     M = palette()
     world(0.05, (0.6, 0.8, 0.9))
@@ -225,7 +230,7 @@ def icu_set(mode="chaos", baby=True):
     box("mon_arm", (0.6, 0.06, 0.06), (0.7, 2.0, 1.9), M["white"], bev=0.02)
     v = vent("icu_vent")
     v.location = (-1.0, 1.55, 0)
-    iv_pole("icu_iv1").location = (1.55, 0.9, 0)
+    iv_pole("icu_iv1").location = (1.2, 1.65, 0)
     iv_pole("icu_iv2").location = (-1.55, 1.4, 0)
     # cables from the cot to the wall
     tube("cab1", [V((0.25, 0.7, 0.8)), V((0.6, 1.3, 0.7)), V((0.9, 1.9, 1.7))], 0.006, M["dark"])
@@ -239,13 +244,17 @@ def icu_set(mode="chaos", baby=True):
             P(n, x, y, r, p, o)
     elif mode == "order":
         P("leader", 0.0, -0.75, 0, "lead", "surgeon")
-        P("o1", 0.75, 0.45, 90, "work", "scrubs")
-        P("o2", -0.75, 0.45, -90, "work", "scrubs")
-        P("o3", 0.85, -0.3, 75, "watch", "scrubs")
-        P("o4", -0.85, -0.3, -75, "watch", "surgeon")
-    area("icu_key", (0.3, 0.1, 2.6), (0, 0.3, 0.7), 260, 0.9, color=(1.0, 0.86, 0.68))
+        if "o1" not in skip: P("o1", 0.75, 0.45, 90, "work", "scrubs")
+        if "o2" not in skip: P("o2", -0.75, 0.45, -90, "work", "scrubs")
+        if "o3" not in skip: P("o3", 0.85, -0.3, 75, "watch", "scrubs")
+        if "o4" not in skip: P("o4", -0.85, -0.3, -75, "watch", "surgeon")
+    area("icu_key", (0.3, 0.1, 2.6), (0, 0.3, 0.7), 110, 0.9, color=(1.0, 0.86, 0.68))
     area("icu_rim", (-2.6, 1.8, 2.4), (0, 0.2, 1.0), 220, 1.5, color=(0.55, 0.8, 1.0))
     area("icu_fill", (2.5, -3, 2.0), (0, 0.3, 1.0), 60, 3, color=(0.7, 0.85, 1.0))
+    import lib
+    if lib.STYLE.get("voxel"):
+        import dress
+        dress.icu_dress()
 
 
 # ---------------------------------------------------------------- hospital exterior (London)

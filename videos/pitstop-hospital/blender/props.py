@@ -129,7 +129,19 @@ def wheel_gun(name):
 
 
 def lollipop(name):
+    import lib
     M = palette()
+    if lib.STYLE.get("voxel"):  # pixel disc built row by row, white bar across the middle
+        px = 0.045
+        P = [box(name + "_pole", (px, px, 1.5), (0, 0, 0.75), M["grey"])]
+        r = 6
+        for j in range(-r, r):
+            half = int(math.sqrt(max(0, r * r - (j + 0.5) ** 2)) + 0.5)
+            if half <= 0:
+                continue
+            m = M["white"] if j in (-1, 0) else M["red"]
+            P.append(box(name + f"_row{j}", (2 * half * px, 0.03, px), (0, 0, 1.55 + (j + 0.5) * px), m))
+        return group(name, P)
     P = [cyl(name + "_pole", 0.018, 1.6, (0, 0, 0.8), M["grey"]),
          cyl(name + "_disc", 0.26, 0.03, (0, 0, 1.55), M["red"], rot=(math.pi / 2, 0, 0), bev=0.01)]
     return group(name, P)
@@ -167,16 +179,21 @@ def cot(name, baby=True, tubes=True):
             P.append(cyl(name + f"_post{sx}{sy}", 0.018, 0.22, (sx * 0.3, sy * 0.45, 0.2), M["steel"]))
     P.append(box(name + "_shelf", (0.6, 0.9, 0.03), (0, 0, 0.12), M["white"], bev=0.01))
     import lib
-    if baby and lib.STYLE.get("voxel"):  # block baby: cube head, closed eyes, knitted hat, blanket slab
+    if baby and lib.STYLE.get("voxel"):  # block baby: cube head (face up), closed eyes, rosy cheeks, knitted hat, blanket
         warm = mat("babyblanket", (0.92, 0.5, 0.08), 0.85)
+        hat = mat("babyhat", (0.98, 0.9, 0.75), 0.9)
         px = 0.045
-        P.append(box(name + "_head", (3 * px, 3 * px, 3 * px), (0, 0.29, 0.78), M["babyskin"]))
-        P.append(box(name + "_hat", (3 * px + 0.01, 2 * px, 3 * px + 0.01), (0, 0.33, 0.79), mat("babyhat", (0.98, 0.9, 0.75), 0.9)))
+        hx, hy, hz = 0, 0.3, 0.775  # head centre; the face is the top (+Z) side
+        P.append(box(name + "_head", (4 * px, 4 * px, 3 * px), (hx, hy, hz), M["babyskin"]))
+        P.append(box(name + "_hat", (4 * px + 0.01, 1.5 * px, 3 * px + 0.01), (hx, hy + 1.6 * px, hz), hat))
+        top = hz + 1.5 * px + 0.003
         for s in (1, -1):
-            P.append(box(name + f"_eye{s}", (0.7 * px, 0.01, 0.25 * px), (s * 0.7 * px, 0.29 - 1.5 * px - 0.004, 0.78), M["dark"],
-                         rot=(math.pi / 2, 0, 0)))
-        P.append(box(name + "_body", (6 * px, 7 * px, 2 * px), (0, 0.06, 0.74), warm))
-        P.append(box(name + "_fold", (6 * px + 0.01, 1 * px, 2 * px + 0.01), (0, 0.2, 0.745), mat("babyhat", (0.98, 0.9, 0.75), 0.9)))
+            P.append(box(name + f"_eye{s}", (px, 0.4 * px, 0.006), (s * px, hy + 0.2 * px, top), M["dark"]))
+            P.append(box(name + f"_cheek{s}", (px, px, 0.005), (s * 1.4 * px, hy - 0.8 * px, top), mat("cheek", (0.95, 0.5, 0.45), 0.6)))
+        P.append(box(name + "_mouth", (0.8 * px, 0.4 * px, 0.006), (0, hy - 1.3 * px, top), mat("mouth", (0.42, 0.22, 0.18), 0.6)))
+        P.append(box(name + "_body", (6 * px, 7 * px, 2.4 * px), (0, 0.04, 0.745), warm))
+        P.append(box(name + "_fold", (6 * px + 0.01, 1 * px, 2.4 * px + 0.012), (0, 0.18, 0.75), hat))
+        tubes = False
     elif baby:
         warm = mat("babyblanket", (0.92, 0.5, 0.08), 0.85)
         P.append(sphere(name + "_head", 0.072, (0, 0.27, 0.76), M["babyskin"], scale=(1, 1.05, 0.95)))
