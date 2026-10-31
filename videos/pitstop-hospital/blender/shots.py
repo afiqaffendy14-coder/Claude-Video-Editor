@@ -1,14 +1,17 @@
-"""Shot list for "The Pit Stop That Made a Children's Hospital Safer" (60.0 s, 36 hard cuts).
+"""Shot list for "Why would a children's heart surgeon ask Ferrari for help?" (60.0 s, 35 hard cuts, blocky style).
 
-Run: .venv-blender/bin/python shots.py board [ids...]   -> boards/stills/sNN.png (540x960 stills, mid-shot)
+Cut times follow the narrator's word timings (tools/timing.json, take 1).
+Run: .venv-blender/bin/python shots.py board [ids...]   -> boards/stills/sNN.png (540x960 stills)
+     .venv-blender/bin/python shots.py json              -> boards/shots.json (for the storyboard pages)
 """
 import math, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 import bpy
-from lib import V, reset, palette, setup_render, camera, render, box, sphere, cyl, tube, mat
-from people import person
-from props import clipboard, wheel
+import lib
+from lib import V, reset, palette, setup_render, camera, render, box, mat
+from props import clipboard
 import sets as S
+import voxel
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STILLS = os.path.join(ROOT, "boards", "stills")
@@ -18,7 +21,7 @@ AUX = os.path.join(ROOT, "boards", "aux")
 def dollhouse():
     """Cutaway: hide ceilings and ceiling lights so straight-down shots can see into a room."""
     for ob in bpy.data.objects:
-        if any(k in ob.name for k in ("ceiling", "_light", "th_panel", "cor_light")):
+        if any(k in ob.name for k in ("ceiling", "_light", "th_panel", "cor_light", "ceil_glow")):
             ob.hide_render = True
 
 
@@ -26,278 +29,208 @@ def cam(loc, target, lens=35, dof=None, fstop=2.8, roll=0.0):
     camera(V(loc), V(target), lens, dof, fstop, roll)
 
 
+def floor(name, material):
+    o = bpy.data.objects.get(name)
+    if o:
+        o.data.materials[0] = material
+
+
 # ------------------------------------------------------------------ shots
-def s_pit_top(h=11.0, crew=True):
+def pit_top(h, lens=32, y=0.4):
     def b():
-        S.pit_set(crew=crew)
-        cam((0, 0.4, h), (0, 0.4, 0), 32)
+        S.pit_set()
+        cam((0, y, h), (0, y, 0), lens)
     return b
 
 
-def s02():
+def surgeon_close():
     S.icu_set("empty")
-    cam((0.5, -0.3, 1.2), (0, 0.5, 0.74), 45, dof=0.95, fstop=2.0)
+    S.P("surg", 0.0, -0.5, 0, "work", "surgeon")
+    cam((0.18, 1.05, 1.2), (0, -0.4, 1.42), 42, dof=1.55, fstop=2.2)
 
 
-def s03():
+def exterior():
     S.exterior_set()
     cam((14, -10, 1.6), (12, 30, 10), 22)
 
 
-def s04():
+def theatre_top():
+    import dress
     S.theatre_set(lamps_aside=True)
+    floor("th_floor", dress.vinyl())
     dollhouse()
     cam((0, 0.1, 4.3), (0, 0.1, 0), 20)
 
 
-def s05():
+def theatre_monitor():
+    import dress
     S.theatre_set()
+    floor("th_floor", dress.vinyl())
     cam((1.12, 0.66, 1.72), (0.95, 1.25, 1.75), 55, dof=0.62, fstop=2.0)
 
 
-def s06():
-    S.corridor_set(cot_y=-6.5, dim=True)
-    cam((0.55, -10.8, 1.55), (0, 18, 1.3), 30)
+def corridor(cot_y, c, dim=False):
+    def b():
+        import dress
+        S.corridor_set(cot_y=cot_y, dim=dim)
+        floor("cor_floor", dress.vinyl())
+        cam(*c)
+    return b
 
 
-def s07():
-    S.corridor_set(cot_y=0)
-    cam((0.75, -0.35, 0.16), (0.3, 0.5, 0.1), 24, dof=0.45, fstop=2.8)
+def icu(mode, c, skip=(), top=False):
+    def b():
+        S.icu_set(mode, skip=skip)
+        if top:
+            dollhouse()
+        cam(*c)
+    return b
 
 
-def s08():
-    S.corridor_set(cot_y=0)
-    cam((1.35, -2.3, 1.45), (0, 0.6, 0.9), 24)
-
-
-def s09():
-    S.corridor_set(cot_y=2)
-    dollhouse()
-    cam((0, 2.2, 9.5), (0, 2.2, 0), 22)
-
-
-def s10():
-    S.icu_set("empty")
-    cam((0.32, 0.22, 0.95), (0.03, 0.62, 0.77), 70, dof=0.5, fstop=2.0)
-
-
-def s11():
-    S.icu_set("chaos")
-    cam((0.45, 1.05, 1.75), (0.92, 1.95, 1.8), 45, dof=1.0, fstop=2.8)
-
-
-def s12():
-    S.icu_set("chaos")
-    cam((0.15, -0.35, 2.15), (0, 0.35, 0.8), 26)
-
-
-def s13():
-    S.icu_set("chaos")
-    dollhouse()
-    cam((0, 0.15, 4.6), (0, 0.15, 0), 22)
-
-
-def s14():
+def dropped_notes():
     S.icu_set("chaos")
     M = palette()
     for i, (x, y, r) in enumerate([(0.25, -0.75, 20), (0.05, -0.95, -35), (0.45, -1.05, 60)]):
-        box(f"sheet{i}", (0.21, 0.29, 0.003), (x, y, 0.004 + i * 0.002), M["white"], rot=(0, 0, math.radians(r)))
+        box(f"sheet{i}", (0.21, 0.29, 0.006), (x, y, 0.004 + i * 0.004), M["white"], rot=(0, 0, math.radians(r)))
     cb = clipboard("cb", ticks=0)
     cb.location = (-0.05, -0.65, 0.02)
     cb.rotation_euler = (0, 0, math.radians(-20))
     cam((0.55, -1.55, 0.28), (0.15, -0.8, 0.02), 40, dof=0.85, fstop=2.0)
 
 
-def s15():
+def viewing():
     S.viewing_room(os.path.join(AUX, "tv_pit.png"))
     cam((0.1, -2.6, 1.45), (0, 2.4, 1.45), 28)
 
 
-def s16():
-    S.pit_set(car_y=-5.5)
-    cam((2.2, 7.5, 0.9), (0, -2.5, 0.5), 35)
+def pit(c, **kw):
+    def b():
+        S.pit_set(**kw)
+        cam(*c)
+    return b
 
 
-def s17():
-    S.pit_set()
-    cam((7.5, 8.0, 6.2), (0, 0.2, 0.3), 30)
+def phone_call():
+    """Staff room: a phone on the table, screen lit, the doctor's hand reaching for it."""
+    S.viewing_room(os.path.join(AUX, "tv_pit.png"))
+    M = palette()
+    box("table", (1.0, 0.6, 0.05), (0.9, -1.2, 0.5), M["white"])
+    box("table_leg", (0.06, 0.06, 0.48), (0.9, -1.2, 0.24), M["grey"])
+    box("phone", (0.08, 0.16, 0.012), (0.85, -1.2, 0.531), M["dark"], rot=(0, 0, math.radians(15)))
+    box("phone_screen", (0.07, 0.145, 0.004), (0.85, -1.2, 0.539), mat("phoneglow", (1, 1, 1), 0.3, emit=(0.6, 0.95, 0.7), emit_strength=3),
+        rot=(0, 0, math.radians(15)))
+    S.P("caller", 1.15, -1.75, 30, dict(lean=25, armR=(75, 5, 25), head=(0, 30)), "doctor")
+    px = voxel.PX
+    box("reach_hand", (2.2 * px, 3 * px, 1.4 * px), (1.0, -1.32, 0.56), M["skin"], rot=(0, 0, math.radians(35)))
+    box("reach_sleeve", (2.6 * px, 6 * px, 2.2 * px), (1.1, -1.48, 0.58), M["scrubs"], rot=(0, 0, math.radians(35)))
+    from lib import area
+    area("phone_key", (0.5, -1.0, 1.6), (0.85, -1.2, 0.53), 60, 1.0)
+    cam((0.5, -1.55, 0.82), (0.88, -1.22, 0.53), 45, dof=0.5, fstop=2.0)
 
 
-def s18():
-    S.pit_set()
-    cam((1.62, 1.12, 0.52), (1.08, 1.8, 0.4), 60, dof=0.82, fstop=2.0)
+def ferrari(c):
+    def b():
+        S.ferrari_room(os.path.join(AUX, "tv_chaos.png"))
+        cam(*c)
+    return b
 
 
-def s19():
-    S.pit_set()
-    cam((0, 0.4, 8.0), (0, 0.4, 0), 24)
-
-
-def s20():
-    S.pit_set()
-    cam((2.65, -3.3, 0.5), (1.2, 1.9, 0.6), 28)
-
-
-def s21():
-    S.ferrari_room(os.path.join(AUX, "tv_chaos.png"))
-    S.P("visA", -3.0, 0.6, 210, "talk", "doctor")
-    S.P("visB", -2.4, 0.9, 200, "watch", "suit")
-    S.P("host", -3.3, -0.6, 20, dict(armR=(50, 10, 20)), "engineer")
-    cam((-0.2, 3.0, 1.6), (-3.5, -0.5, 1.0), 30)
-
-
-def s22():
-    S.ferrari_room(os.path.join(AUX, "tv_chaos.png"))
-    cam((0.1, -2.3, 1.6), (0, 3.0, 1.55), 30)
-
-
-def s23():
-    S.ferrari_room(os.path.join(AUX, "tv_chaos.png"))
-    cam((0.0, 1.55, 1.9), (0, 3.0, 1.9), 33)
-
-
-def s24():
-    S.pit_set()
-    cam((0, 0.25, 0.86), (-0.6, 3.5, 1.7), 32, dof=3.5, fstop=4)
-
-
-def s25():
-    S.pit_set()
-    cam((0.6, 1.9, 1.35), (-0.85, 4.6, 1.45), 42, dof=3.0, fstop=2.8)
-
-
-def s26():
-    S.icu_set("order")
-    cam((0.05, 2.0, 1.75), (0, -0.75, 1.3), 50, dof=2.75, fstop=2.8)
-
-
-def s27():
-    S.icu_set("order")
-    dollhouse()
-    cam((0, 0.0, 4.6), (0, 0.0, 0), 22)
-
-
-def s28():
-    S.icu_set("order")
-    cam((1.05, -0.35, 1.25), (0.45, 0.45, 0.85), 45, dof=1.1, fstop=2.0)
-
-
-def s29():
+def checklist():
     S.icu_set("order")
     cb = clipboard("cb", ticks=4)
-    cb.location = (0.0, -0.08, 0.72)
+    cb.location = (0.0, -0.08, 0.76)
     cb.rotation_euler = (math.radians(4), 0, math.radians(8))
-    cam((0.12, -0.5, 1.05), (0, -0.08, 0.72), 60, dof=0.52, fstop=2.0)
+    cam((0.12, -0.5, 1.08), (0, -0.08, 0.76), 60, dof=0.52, fstop=2.0)
 
 
-def s30():
-    S.icu_set("order")
-    cam((2.3, -2.6, 1.7), (0, 0.3, 0.9), 30)
+def chart(before, after):
+    def b():
+        S.chart_set(before, after)
+        cam((0, -6.5, 1.6), (0, 0, 0.9), 42)
+    return b
 
 
-def s31():
-    S.chart_set(5.42, 3.15)
-    cam((0, -6.5, 1.6), (0, 0, 0.9), 42)
-
-
-def s32():
-    S.chart_set(2.09, 1.07)
-    cam((0, -6.5, 1.6), (0, 0, 0.5), 42)
-
-
-def s33():
-    S.pit_set(car_y=4.5)
-    cam((1.7, -0.6, 0.4), (0, 7, 0.5), 24)
-
-
-def s34():
-    S.pit_set(car=False)
-    cam((1.6, 8.5, 1.6), (0, 0, 1.0), 32)
-
-
-def s35():
+def tiny_hand():
     S.icu_set("order")
     M = palette()
-    # the baby's hand around a gloved finger, just above the blanket
-    sphere("bhand", 0.018, (0.05, 0.42, 0.76), M["babyskin"], scale=(1, 1.2, 0.8))
-    sphere("gfinger", 1, (0.09, 0.43, 0.77), M["glove"], scale=(0.075, 0.016, 0.016))
-    sphere("glove_hand", 1, (0.19, 0.44, 0.78), M["glove"], scale=(0.05, 0.075, 0.03))
-    cam((-0.05, 0.22, 0.86), (0.07, 0.42, 0.76), 85, dof=0.27, fstop=1.8)
+    px = voxel.PX
+    y = 0.44
+    box("bhand", (1.4 * px, 1.4 * px, 1.2 * px), (0.12, y, 0.8), M["babyskin"])
+    box("gfinger", (3.5 * px, 0.8 * px, 0.8 * px), (0.2, y, 0.805), M["glove"])
+    box("glove_hand", (2.4 * px, 3 * px, 1.6 * px), (0.32, y, 0.815), M["glove"])
+    box("glove_cuff", (2.6 * px, 3.2 * px, 1.8 * px), (0.42, y, 0.815), M["gown"])
+    cam((0.06, 0.12, 1.0), (0.18, y, 0.8), 70, dof=0.38, fstop=1.8)
 
 
 SHOTS = [  # n, start, end, builder, description
-    (1, 0.00, 1.85, s_pit_top(11), "Top-down pit stop: red car in its box, twenty crew around it. Cold open."),
-    (2, 1.85, 3.65, s02, "Low, shallow-focus: a tiny baby asleep in an intensive-care cot. The other half of the question."),
-    (3, 3.65, 5.50, s03, "Street level, London: the hospital's long facade, a clock tower in the haze."),
-    (4, 5.50, 6.90, s04, "Cutaway top-down: surgical team around the operating table under the lamps."),
-    (5, 6.90, 8.15, s05, "Macro: heart monitor, steady green trace."),
-    (6, 8.20, 9.60, s06, "Dim corridor: the team pushes the cot toward the intensive care doors far ahead."),
-    (7, 9.60, 10.85, s07, "Floor-level: cot castors rolling."),
-    (8, 10.85, 12.60, s08, "Tracking: the moving team, IV pole, ventilator, hand-bag breathing."),
-    (9, 12.60, 14.20, s09, "Cutaway top-down: corridor route, theatre → intensive care (arrow overlay)."),
-    (10, 14.20, 15.60, s10, "Macro: the breathing tube at the baby's face."),
-    (11, 15.60, 17.10, s11, "Hands reaching for the monitor cables."),
-    (12, 17.10, 18.70, s12, "High angle: lines and cables crossing over the cot, many hands."),
-    (13, 18.70, 20.40, s13, "Cutaway top-down: eight people crowd one cot, no pattern."),
-    (14, 20.40, 22.30, s14, "Floor-level: dropped clipboard and loose notes between shoes: details get lost."),
-    (15, 22.30, 23.90, s15, "From behind: two doctors watch a Ferrari pit stop on a staff-room screen."),
-    (16, 23.90, 25.55, s16, "Head-on, low: the red car arrives into its box, crew waiting."),
-    (17, 25.55, 26.90, s17, "High three-quarter: the whole crew at work (counter: 20)."),
-    (18, 26.90, 28.60, s18, "Macro: wheel gun on the front-left nut (timer overlay)."),
-    (19, 28.60, 30.30, s19, "Top-down: every crew member in a fixed spot (role markers overlay)."),
-    (20, 30.30, 31.90, s20, "Low tracking past the right side: one job each."),
-    (21, 31.90, 33.80, s21, "The doctors visit the engineers in red, a red car on display."),
-    (22, 33.80, 35.50, s22, "Engineers study the hospital handover footage on the wall screen."),
-    (23, 35.50, 37.10, s23, "Screen close-up: the crowded handover, problems circled in red (overlay)."),
-    (24, 37.10, 39.10, s24, "Driver's eye through the halo: the lollipop board ahead."),
-    (25, 39.10, 40.70, s25, "The lollipop man: one person in charge of the stop."),
-    (26, 40.70, 42.40, s26, "Match cut: the anaesthetist at the cot, hand raised, leading the handover."),
-    (27, 42.40, 43.80, s27, "Cutaway top-down: five staff in fixed positions (numbered role markers overlay)."),
-    (28, 43.80, 45.20, s28, "Hands connect the monitor lines one by one."),
-    (29, 45.20, 47.55, s29, "Macro: the handover checklist, red ticks."),
-    (30, 47.55, 50.35, s30, "Calm, ordered handover (overlay: −42% technical errors)."),
-    (31, 50.35, 51.70, s31, "Clay bars: errors per handover 5.42 → 3.15."),
-    (32, 51.70, 53.05, s32, "Clay bars: missing information 2.09 → 1.07, almost half."),
-    (33, 53.05, 54.70, s33, "Low tracking: the car leaves its box at speed."),
-    (34, 54.70, 56.40, s34, "The crew steps back in the empty box."),
-    (35, 56.40, 58.10, s35, "Macro: the baby's hand around a gloved finger."),
-    (36, 58.10, 60.00, s_pit_top(8.5), "Top-down pit stop again, pushing in: the loop back to the question."),
+    (1, 0.00, 1.60, pit_top(11), "Top-down: the red car in its box, twenty crew around it. Cold open."),
+    (2, 1.60, 3.40, surgeon_close, "A masked heart surgeon leans over a tiny block baby in its cot."),
+    (3, 3.40, 5.60, exterior, "Street level, London: the hospital facade, a clock tower in the haze."),
+    (4, 5.60, 7.84, theatre_top, "Cutaway top-down: the surgical team around the operating table."),
+    (5, 7.84, 9.44, theatre_monitor, "Close: the heart monitor's green trace. The danger isn't over."),
+    (6, 9.44, 11.20, corridor(-6.5, ((0.55, -10.8, 1.55), (0, 18, 1.3), 30), True), "Dim corridor: the team wheels the cot toward intensive care."),
+    (7, 11.20, 13.14, corridor(0, ((0.75, -0.35, 0.16), (0.3, 0.5, 0.1), 24, 0.45, 2.8)), "Floor level: the cot's castors rolling."),
+    (8, 13.14, 15.00, icu("empty", ((0.3, 0.25, 1.12), (0.02, 0.55, 0.82), 45, 0.48, 2.2)), "Macro: the breathing tube and lines on the baby."),
+    (9, 15.00, 16.90, icu("chaos", ((0.45, 1.05, 1.75), (0.92, 1.95, 1.8), 45, 1.0, 2.8)), "Hands reach for the monitor cables: unplugged."),
+    (10, 16.90, 18.40, corridor(0, ((1.35, -2.3, 1.45), (0, 0.6, 0.9), 24)), "Tracking: the cot, ventilator and IV pole on the move."),
+    (11, 18.40, 20.10, icu("chaos", ((0, 0.15, 4.6), (0, 0.15, 0), 22), top=True), "Cutaway top-down: several teams crowd one tiny bed."),
+    (12, 20.10, 21.40, icu("chaos", ((0.15, -0.35, 2.15), (0, 0.35, 0.8), 26)), "High angle: many hands at once. In that rush..."),
+    (13, 21.40, 22.70, dropped_notes, "Floor level: a dropped clipboard and loose notes. Details slip through."),
+    (14, 22.70, 24.40, viewing, "From behind: two doctors watch a pit stop on the staff-room screen."),
+    (15, 24.40, 26.20, pit(((0, -3.2, 8.5), (0, 0.6, 0), 28)), "The pit stop itself, from above: the same rush."),
+    (16, 26.20, 27.60, pit(((7.5, 8.0, 6.2), (0, 0.2, 0.3), 30)), "Wide: twenty mechanics at work (counter overlay: 20)."),
+    (17, 27.60, 29.00, pit(((1.62, 1.12, 0.52), (1.08, 1.8, 0.4), 60, 0.82, 2.0)), "Macro: the wheel gun on the front-left nut."),
+    (18, 29.00, 30.20, pit(((2.8, 0.6, 0.6), (1.4, 1.8, 0.5), 28)), "Low: old tyre off, new tyre on."),
+    (19, 30.20, 31.37, pit_top(8, 24), "Top-down: every mechanic in a fixed spot, nobody in anyone's way."),
+    (20, 31.37, 32.92, phone_call, "Close: the doctor's hand reaches for the phone (overlay: calling Ferrari)."),
+    (21, 32.92, 34.90, ferrari(((0.1, -2.3, 1.6), (0, 3.0, 1.55), 30)), "Ferrari's engineers study the hospital's handover footage."),
+    (22, 34.90, 37.08, ferrari(((0.0, 1.55, 1.9), (0, 3.0, 1.9), 33)), "Screen close-up: the handover, problems circled in red (overlay)."),
+    (23, 37.08, 38.90, pit(((0, 0.25, 0.86), (-0.6, 3.5, 1.7), 32, 3.5, 4.0)), "Driver's eye through the halo: the lollipop board ahead."),
+    (24, 38.90, 40.40, pit(((0.6, 1.9, 1.35), (-0.85, 4.6, 1.45), 42, 3.0, 2.8)), "The lollipop man: one person in charge."),
+    (25, 40.40, 41.92, icu("order", ((0.05, 2.0, 1.75), (0, -0.75, 1.3), 50, 2.75, 2.8)), "Match cut: the anaesthetist at the cot, hand raised, leading."),
+    (26, 41.92, 43.60, icu("order", ((0, 0.0, 4.6), (0, 0.0, 0), 22), top=True), "Cutaway top-down: everyone in a fixed spot (numbered roles overlay)."),
+    (27, 43.60, 45.00, icu("order", ((1.05, -0.35, 1.25), (0.45, 0.45, 0.85), 45, 1.1, 2.0)), "Hands connect the lines in order."),
+    (28, 45.00, 46.67, checklist, "Macro: the checklist, red ticks."),
+    (29, 46.67, 47.64, icu("order", ((1.75, 1.05, 1.9), (-0.15, -0.15, 0.95), 26, 2.0, 2.8), skip=("o1", "o3")), "Calm, ordered handover. And it worked."),
+    (30, 47.64, 50.10, chart(5.42, 3.15), "Block chart: errors per handover, 5.42 blocks to 3.15 (overlay: -42%)."),
+    (31, 50.10, 52.60, chart(2.09, 1.07), "Block chart: missing information, 2.09 to 1.07, almost half."),
+    (32, 52.60, 54.30, pit(((1.7, -0.6, 0.4), (0, 7, 0.5), 24), car_y=4.5), "Low: the car leaves its box at speed."),
+    (33, 54.30, 56.30, pit(((1.6, 8.5, 1.6), (0, 0, 1.0), 32), car=False), "The crew steps back in the empty box."),
+    (34, 56.30, 58.10, tiny_hand, "Macro: the baby's hand around a gloved finger."),
+    (35, 58.10, 60.00, pit_top(8.5), "Top-down pit stop again, pushing in: the loop back to the question."),
 ]
 
 
+def build(builder):
+    lib.STYLE["voxel"] = True
+    lib.STYLE["low"] = 0
+    builder()
+    voxel.voxelize_scene()
+
+
 def aux():
-    """Images shown on screens inside other shots (16:9)."""
+    """Images shown on screens inside other shots (16:9), in the same blocky style."""
     os.makedirs(AUX, exist_ok=True)
-    for name, build, c in [("tv_pit", lambda: S.pit_set(car_y=-1.0), ((0, -8.5, 7.5), (0, 0.5, 0), 30)),
-                           ("tv_chaos", lambda: S.icu_set("chaos"), ((0.2, -3.2, 2.6), (0, 0.4, 0.8), 24))]:
+    for name, b, c in [("tv_pit", lambda: S.pit_set(car_y=-1.0), ((0, -8.5, 7.5), (0, 0.5, 0), 30)),
+                       ("tv_chaos", lambda: S.icu_set("chaos"), ((0.2, -2.6, 2.5), (0, 0.4, 0.8), 26))]:
         reset()
         setup_render(960, 540, 24, os.path.join(AUX, name + ".png"))
-        build()
-        cam(*c)
+        build(lambda: (b(), cam(*c)))
         render()
 
 
 def board(ids=None):
     os.makedirs(STILLS, exist_ok=True)
-    if not ids or 15 in ids or 21 in ids or 22 in ids or 23 in ids:
-        if not (os.path.exists(os.path.join(AUX, "tv_pit.png")) and os.path.exists(os.path.join(AUX, "tv_chaos.png"))):
-            aux()
-    for n, t0, t1, build, desc in SHOTS:
+    if not (os.path.exists(os.path.join(AUX, "tv_pit.png")) and os.path.exists(os.path.join(AUX, "tv_chaos.png"))):
+        aux()
+    for n, t0, t1, b, desc in SHOTS:
         if ids and n not in ids:
             continue
         reset()
         setup_render(540, 960, 24, os.path.join(STILLS, f"s{n:02d}.png"))
-        build()
+        build(b)
         render()
         print(f"BOARD s{n:02d} done", flush=True)
-
-
-if __name__ == "__main__":
-    args = [a for a in sys.argv[1:] if not a.endswith(".py")]
-    if args and args[0] == "board":
-        board([int(a) for a in args[1:]] or None)
-    elif args and args[0] == "aux":
-        aux()
 
 
 def dump_json():
@@ -306,5 +239,11 @@ def dump_json():
     json.dump(out, open(os.path.join(ROOT, "boards", "shots.json"), "w"), indent=1)
 
 
-if __name__ == "__main__" and "json" in sys.argv:
-    dump_json()
+if __name__ == "__main__":
+    args = [a for a in sys.argv[1:] if not a.endswith(".py")]
+    if args and args[0] == "board":
+        board([int(a) for a in args[1:]] or None)
+    elif args and args[0] == "aux":
+        aux()
+    elif args and args[0] == "json":
+        dump_json()

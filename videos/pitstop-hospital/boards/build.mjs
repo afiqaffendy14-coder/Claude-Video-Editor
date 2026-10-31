@@ -47,13 +47,13 @@ figure { position: relative; } img { width: 100%; display: block; border-radius:
 .head { display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px; }
 .n { font: 900 22px M, sans-serif; } .t { font-size: 13px; font-weight: 700; color: #c41e27; }
 .vo { margin-top: 6px; font-size: 14px; font-style: italic; line-height: 1.4; } .d { margin-top: 6px; font-size: 12.5px; line-height: 1.45; color: #555; }
-</style></head><body><header><h1>The Pit Stop That Made a Children's Hospital Safer — storyboard ${label}</h1>
-<p>60.0 s · 36 hard cuts, every 1.2–2.8 s · continuous voiceover · Blender 3D, clay render · Montserrat Black captions with a black outline</p></header>
+</style></head><body><header><h1>Why would a children's heart surgeon ask Ferrari for help? — storyboard ${label}</h1>
+<p>60.0 s · 35 hard cuts, every 1–2.5 s · F1 Narrator voiceover (take 1), cuts on the spoken words · blocky Blender 3D · Montserrat Black captions with a black outline</p></header>
 <div class="grid">${SHOTS.slice(from, to).map(card).join("\n")}</div></body></html>`;
 
 const browser = await chromium.launch();
 const pg = await browser.newPage({ viewport: { width: 2400, height: 1000 } });
-for (const [i, from, to, label] of [[1, 0, 18, "1/2 (shots 1–18)"], [2, 18, 36, "2/2 (shots 19–36)"]]) {
+for (const [i, from, to, label] of [[1, 0, 18, "1/2 (shots 1–18)"], [2, 18, 35, "2/2 (shots 19–35)"]]) {
   const f = join(here, `storyboard-${i}.html`);
   writeFileSync(f, page(from, to, label));
   await pg.goto("file://" + f);

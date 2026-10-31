@@ -193,6 +193,13 @@ def cot(name, baby=True, tubes=True):
         P.append(box(name + "_mouth", (0.8 * px, 0.4 * px, 0.006), (0, hy - 1.3 * px, top), mat("mouth", (0.42, 0.22, 0.18), 0.6)))
         P.append(box(name + "_body", (6 * px, 7 * px, 2.4 * px), (0, 0.04, 0.745), warm))
         P.append(box(name + "_fold", (6 * px + 0.01, 1 * px, 2.4 * px + 0.012), (0, 0.18, 0.75), hat))
+        # breathing tube and two lines, built as thin blocks so they stay clean on the grid
+        tubec = mat("tubeclear", (0.85, 0.92, 0.95), 0.2, alpha=0.75)
+        P.append(box(name + "_et1", (px * 0.6, 3 * px, px * 0.6), (0.02, 0.3 - 0.05, top + 0.5 * px), tubec))
+        P.append(box(name + "_et2", (px * 0.6, px * 0.6, 5 * px), (0.02, 0.3 - 0.12, top + 2.6 * px), tubec))
+        P.append(box(name + "_et3", (4 * px, px * 0.6, px * 0.6), (0.11, 0.3 - 0.12, top + 5.0 * px), tubec))
+        P.append(box(name + "_line1", (px * 0.4, 6 * px, px * 0.4), (-0.12, 0.05, 0.81), M["red"]))
+        P.append(box(name + "_line2", (px * 0.4, px * 0.4, 6 * px), (-0.12, -0.08, 0.92), M["red"]))
         tubes = False
     elif baby:
         warm = mat("babyblanket", (0.92, 0.5, 0.08), 0.85)

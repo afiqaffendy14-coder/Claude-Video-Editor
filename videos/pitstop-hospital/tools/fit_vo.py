@@ -19,7 +19,8 @@ win = int(0.01 * sr)
 env = np.sqrt(np.convolve(y ** 2, np.ones(win) / win, mode="same"))
 loud = env > 10 ** (-38 / 20) * env.max()
 idx = np.where(loud)[0]
-y = y[max(0, idx[0] - int(0.02 * sr)): idx[-1] + int(0.06 * sr)]
+head = max(0, idx[0] - int(0.02 * sr))
+y = y[head: idx[-1] + int(0.06 * sr)]
 loud = loud[max(0, idx[0] - int(0.02 * sr)): idx[-1] + int(0.06 * sr)]
 # runs of silence at least 0.1 s long
 runs, i, n = [], 0, len(loud)
@@ -45,9 +46,14 @@ else:
     cap = (lo + hi) / 2
 out, prev = [], 0
 fade = int(0.008 * sr)
+tmap, pos = [], 0  # (source start, source end, output start) in samples, for moving word timings across
 for a, b in runs:
     out.append(y[prev:a])
+    tmap.append((prev, a, pos))
+    pos += a - prev
     keep = int(min((b - a) / sr, cap) * sr)
+    tmap.append((a, b, pos, keep))
+    pos += keep
     mid_ = (a + b) // 2
     seg = np.concatenate([y[a:a + keep // 2], y[b - (keep - keep // 2):b]])
     if len(seg) > 2 * fade:
@@ -55,10 +61,13 @@ for a, b in runs:
     out.append(seg)
     prev = b
 out.append(y[prev:])
+tmap.append((prev, len(y), pos))
 z = np.concatenate(out)
 tmp = dst + ".tmp.wav"
 sf.write(tmp, z, sr, subtype="PCM_16")
 dur = len(z) / sr
 tempo = dur / TARGET if abs(dur - TARGET) > 0.01 else 1.0  # gentle either way; words keep their pitch
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-af", f"atempo={tempo:.5f},loudnorm=I=-16:TP=-1.5:LRA=7", "-ar", str(sr), dst], check=True)
+import json
+json.dump({"sr": sr, "head": int(head), "tempo": tempo, "map": [[int(v) for v in t] for t in tmap]}, open(dst + ".map.json", "w"))
 print(f"pauses capped at {cap:.3f}s, {len(runs)} pauses, speech {speech:.2f}s, before tempo {dur:.2f}s, tempo x{tempo:.3f}")

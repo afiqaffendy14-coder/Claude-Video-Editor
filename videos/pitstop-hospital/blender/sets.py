@@ -365,7 +365,16 @@ def chart_set(before=5.42, after=3.15, labels=("BEFORE", "AFTER")):
     world(0.6, (0.94, 0.94, 0.95))
     cyclorama(loc=(0, -22, 0), rot=0.0)
     k = 0.32
-    box("bar_before", (0.9, 0.9, before * k), (-0.7, 0, before * k / 2), M["clay2"], bev=0.04)
-    box("bar_after", (0.9, 0.9, after * k), (0.7, 0, after * k / 2), M["red"], bev=0.04)
+    import lib
+    if lib.STYLE.get("voxel"):  # one block per error: 5.42 -> five blocks and a 0.42 sliver
+        for x, val, m in ((-0.7, before, M["grey"]), (0.7, after, M["red"])):
+            n, frac = int(val), val - int(val)
+            for i in range(n):
+                box(f"blk{x}_{i}", (0.9, 0.9, k * 0.96), (x, 0, k * (i + 0.5)), m)
+            if frac > 0.02:
+                box(f"blk{x}_f", (0.9, 0.9, k * frac * 0.96), (x, 0, k * (n + frac / 2)), m)
+    else:
+        box("bar_before", (0.9, 0.9, before * k), (-0.7, 0, before * k / 2), M["clay2"], bev=0.04)
+        box("bar_after", (0.9, 0.9, after * k), (0.7, 0, after * k / 2), M["red"], bev=0.04)
     area("ch_key", (3, -5, 6), (0, 0, 0.8), 1500, 6)
     area("ch_fill", (-4, -3, 2), (0, 0, 0.8), 300, 5)
