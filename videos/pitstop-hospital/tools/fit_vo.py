@@ -3,14 +3,15 @@
 Pauses longer than a cap are cut down to the cap; the cap is searched so the take lands on TARGET seconds.
 Pauses already short stay as they are, so the delivery keeps its rhythm. If even the shortest allowed pauses
 leave it too long, the remainder is taken up with a gentle pitch-preserving tempo change (ffmpeg atempo).
-Run: ../../.venv-audio/bin/python tools/fit_vo.py in.wav out.wav [target=59.95]
+Run: ../../.venv-audio/bin/python tools/fit_vo.py in.wav out.wav [target=59.95] [floor=0.14]
+With a small floor (e.g. 0.08) every pause becomes a breath, and tempo takes up the difference to the target.
 """
 import subprocess, sys
 import numpy as np, soundfile as sf
 
 src, dst = sys.argv[1], sys.argv[2]
 TARGET = float(sys.argv[3]) if len(sys.argv) > 3 else 59.95
-FLOOR = 0.14  # shortest pause we allow between phrases
+FLOOR = float(sys.argv[4]) if len(sys.argv) > 4 else 0.14  # shortest pause we allow between phrases
 y, sr = sf.read(src)
 if y.ndim > 1:
     y = y.mean(axis=1)
@@ -35,7 +36,7 @@ while i < n:
 speech = len(y) / sr - sum((b - a) / sr for a, b in runs)
 length = lambda cap: speech + sum(min((b - a) / sr, cap) for a, b in runs)
 lo, hi = FLOOR, 2.0
-if length(lo) > TARGET:
+if len(sys.argv) > 4 or length(lo) > TARGET:  # floor given: every pause cut to a breath, no search
     cap = lo
 else:
     for _ in range(40):
@@ -58,6 +59,6 @@ z = np.concatenate(out)
 tmp = dst + ".tmp.wav"
 sf.write(tmp, z, sr, subtype="PCM_16")
 dur = len(z) / sr
-tempo = dur / TARGET if dur > TARGET + 0.01 else 1.0
+tempo = dur / TARGET if abs(dur - TARGET) > 0.01 else 1.0  # gentle either way; words keep their pitch
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-af", f"atempo={tempo:.5f},loudnorm=I=-16:TP=-1.5:LRA=7", "-ar", str(sr), dst], check=True)
 print(f"pauses capped at {cap:.3f}s, {len(runs)} pauses, speech {speech:.2f}s, before tempo {dur:.2f}s, tempo x{tempo:.3f}")
