@@ -2,37 +2,33 @@
 
 Broad-audience short, exactly 60 s, continuous voiceover, looped ending (the last line runs straight into the first).
 
-## Script v4: v2 tightened, no pauses (current)
+## Script v5: v2 rewritten to flow (current, awaiting approval before voiceover)
 
-v2's story and hook with the filler removed and real detail in its place (the doctors' names, Maranello, the
-anaesthetist as leader, airline pilots, the study size). 181 words. Recorded in the F1 Narrator voice
-(ElevenLabs v4, assets/audio/narrator/v4_take*_60.wav): every pause cut to a breath (0.08 s), no gap over 0.15 s,
-exactly 60.0 s (take 2 at its natural speed, take 1 at x1.03).
+Based on v2. Filler cut, each step joined to the next so it reads as one continuous story, and sharper images
+("saw the same problem, solved", "picked them apart", "their smallest patients"). 181 words: at the
+F1 Narrator's natural pace that is about 60 s of continuous speech with only breaths between sentences, so no speed-up.
 
 1. Why would a children's heart surgeon ask Ferrari for help?
-2. Great Ormond Street Hospital, London.
-3. A baby has just survived heart surgery.
-4. But the danger isn't over.
-5. Next, the move to intensive care.
-6. Every tube, wire and monitor gets unplugged, moved, and plugged back in.
-7. Several teams crowd one tiny bed, and details get missed.
-8. Heart surgeon Martin Elliott and intensive care chief Allan Goldman looked to Formula One.
-9. A pit stop: twenty mechanics, one car, done in seconds, and nobody gets in anyone's way.
-10. So they went to Ferrari, in Maranello.
-11. Ferrari's team studied videos of the hospital's handovers.
-12. The fix came straight from the pit lane.
-13. One leader runs the handover, the anaesthetist, just like the lollipop man.
-14. Everyone gets one job, in a fixed order.
-15. A checklist makes sure nothing is forgotten.
-16. They borrowed ideas from airline pilots too.
-17. The result? Across about fifty handovers, technical errors dropped by forty-two percent.
-18. Missing information was almost cut in half.
-19. A sport chasing tenths of a second taught doctors to protect what matters most.
-20. So next time someone asks you...
+2. At Great Ormond Street Hospital in London, a baby has just survived heart surgery.
+3. But the danger isn't over.
+4. Next: the move from surgery to intensive care.
+5. Every tube, wire and monitor gets unplugged, moved, and plugged back in.
+6. Several teams crowd one tiny bed, and small details slip through.
+7. Then two of its doctors watched a Formula One pit stop and saw the same problem, solved.
+8. Twenty mechanics. One car. Four new tyres in seconds, and nobody gets in anyone's way.
+9. So they called Ferrari.
+10. Ferrari's crew studied videos of the hospital's handovers and picked them apart.
+11. The fix came straight from the pit lane.
+12. One leader runs the handover, just like the lollipop man.
+13. Everyone gets one job, done in a fixed order.
+14. And a checklist makes sure nothing gets forgotten.
+15. The result? Technical errors dropped by forty-two percent, and missing information was almost cut in half.
+16. A sport obsessed with saving tenths of a second taught doctors to protect their smallest patients.
+17. So next time someone asks you...
 
 (loops to line 1: "So next time someone asks you... Why would a children's heart surgeon ask Ferrari for help?")
 
-v3 (conversational) is in videos/pitstop-hospital/tools/lines.v3.json, v2 in lines.v2.json, v1 in lines.v1.json.
+Earlier versions: tools/lines.v1.json ... lines.v4.json.
 
 ## Facts and sources
 
