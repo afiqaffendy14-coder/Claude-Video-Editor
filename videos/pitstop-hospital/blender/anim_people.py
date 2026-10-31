@@ -112,7 +112,7 @@ class People:
         bpy.context.view_layer.update()
         self.blocks = obstacles()
 
-    def frame(self, t):
+    def frame(self, t, travel=None):
         from voxel import block_person
         from sets import hand_world
         for i, q in enumerate(self.people):
@@ -121,10 +121,12 @@ class People:
                 for ob in [old] + list(old.children_recursive):
                     bpy.data.objects.remove(ob, do_unlink=True)
             pose, (fwd, side) = animate(q["pose_name"], q["pose"], t, ph=1.7 * i)
+            if travel is not None:  # the whole team moves together (corridor): legs keep walking, no extra drift
+                fwd, side = 0.0, 0.0
             r = math.radians(q["rot"])
             heading = Vector((-math.sin(r), math.cos(r), 0))
             right = Vector((math.cos(r), math.sin(r), 0))
-            loc = Vector(q["loc"]) + heading * fwd + right * side
+            loc = Vector(q["loc"]) + heading * fwd + right * side + (travel * t if travel is not None else Vector())
             for attempt in range(16):  # no clipping: step back until both hands are clear of the car, cot, baby, table
                 root = block_person(q["name"], tuple(loc), q["rot"], pose, q["outfit"], q["scale"])
                 hands = [hand_world(root, k) for k in "LR"]

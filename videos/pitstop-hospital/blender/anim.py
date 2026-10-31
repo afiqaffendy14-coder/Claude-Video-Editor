@@ -21,7 +21,57 @@ MOVES = {
     3: dict(crane=1.6, push=3.0, d=25.0),
     4: dict(orbit=-20, push=0.25, d=2.25),
     5: dict(push=0.32, truck=0.12, spin=2, d=1.1),
+    6: dict(push=1.4, d=10.0, travel=(0, 0.7, 0)),
+    7: dict(push=0.3, d=2.0, travel=(0, 0.7, 0), follow=True),
+    8: dict(push=0.12, orbit=8, d=0.5),
+    9: dict(spin=8, push=0.2, d=1.2),
+    10: dict(truck=0.2, d=2.5, travel=(0, 0.7, 0), follow=True),
+    11: dict(spin=-10, push=0.6, d=4.6),
+    12: dict(orbit=10, push=0.2, d=1.5),
+    13: dict(orbit=-6, push=0.3, d=1.35),
+    14: dict(push=0.5, d=4.0),
+    15: dict(push=0.5, d=6.0),
+    16: dict(orbit=10, d=7.0),
+    17: dict(push=0.3, orbit=6, d=2.0),
+    18: dict(push=0.3, orbit=-6, d=2.0),
+    19: dict(push=0.6, d=5.0),
+    20: dict(push=0.12, d=0.5),
+    21: dict(push=0.4, d=5.0),
+    22: dict(push=0.25, d=1.4),
+    23: dict(push=0.15, d=3.3),
+    24: dict(orbit=8, push=0.2, d=2.0),
+    25: dict(push=0.3, d=2.2),
+    26: dict(spin=10, push=0.5, d=4.6),
+    27: dict(spin=-6, push=0.15, d=1.1),
+    28: dict(truck=0.08, push=0.08, d=0.5),
+    29: dict(orbit=-8, push=0.2, d=2.0),
+    30: dict(push=0.6, d=4.7),
+    31: dict(push=0.5, d=3.3),
+    32: dict(push=0.4, d=7.0),
+    33: dict(push=0.8, d=7.0),
+    34: dict(push=0.1, orbit=6, d=0.5),
+    35: dict(push=0.3, orbit=-6, spin=2, d=1.95),
 }
+
+TRAVELLERS = ("cot", "cor_vent", "cor_iv")  # corridor props that roll along with the team
+
+
+def shot_props(n, t, dur, start):
+    """Things that move in a shot besides people and camera: the car arriving/leaving, the falling syringe."""
+    if n == 15 and "car" in bpy.data.objects:  # rolls into the box, slowing down
+        k = min(1.0, t / dur)
+        bpy.data.objects["car"].location.y = start["car"][1] - 1.6 + 1.6 * (1 - (1 - k) ** 2)
+    if n == 32 and "car" in bpy.data.objects:  # pulls away, speeding up
+        c = bpy.data.objects["car"]
+        h = Vector((-math.sin(c.rotation_euler.z), math.cos(c.rotation_euler.z), 0))
+        c.location = Vector(start["car"]) + h * (1.2 * t + 1.6 * t * t)
+    if n == 13:  # the syringe tumbles to the floor (slowed down)
+        for nm in ("syr_barrel", "syr_plunger", "syr_tip"):
+            ob = bpy.data.objects.get(nm)
+            if ob:
+                z0 = start[nm][2]
+                ob.location.z = max(0.03, z0 - 0.55 * t * t)
+                ob.rotation_euler.x = start[nm + "_rx"] + 2.2 * t
 
 
 def camera_path(cam, mv):
@@ -81,6 +131,14 @@ def main():
         at, straight_down, m0 = camera_path(cam, MOVES.get(n, dict(push=0.3)))
         import anim_people
         people = anim_people.People()
+        mv = MOVES.get(n, dict(push=0.3))
+        travel = Vector(mv.get("travel", (0, 0, 0)))
+        start = {}
+        for nm in ("car", "syr_barrel", "syr_plunger", "syr_tip") + TRAVELLERS:
+            ob = bpy.data.objects.get(nm)
+            if ob:
+                start[nm] = tuple(ob.location)
+                start[nm + "_rx"] = ob.rotation_euler.x
         f0, f1 = math.ceil(t0 * fps - 1e-6), math.ceil(t1 * fps - 1e-6)
         for f in range(f0, f1):
             path = os.path.join(out, f"f{f:05d}.png")
@@ -89,6 +147,9 @@ def main():
             t = f / fps
             u = (t - t0) / (t1 - t0) - 0.5
             loc, pivot, roll = at(u)
+            if mv.get("follow"):  # tracking shot: the camera travels with the team
+                loc = loc + travel * (t - t0)
+                pivot = pivot + travel * (t - t0)
             if straight_down:  # top-down: drop straight in, spin around the view axis
                 cam.matrix_world = Matrix.Translation(loc) @ (Matrix.Rotation(math.radians(roll), 4, "Z") @ m0.to_3x3().to_4x4())
                 cam.location = loc
@@ -96,7 +157,12 @@ def main():
                 cam.location = loc
                 look_at(cam, pivot, roll)
             ecg_scroll(t)
-            people.frame(t - t0)
+            people.frame(t - t0, travel if travel.length else None)
+            for nm in TRAVELLERS:
+                ob = bpy.data.objects.get(nm)
+                if ob and travel.length:
+                    ob.location = Vector(start[nm]) + travel * (t - t0)
+            shot_props(n, t - t0, t1 - t0, start)
             sc.render.filepath = path
             bpy.ops.render.render(write_still=True)
         print(f"ANIM shot {n} frames {f0}-{f1 - 1}", flush=True)
