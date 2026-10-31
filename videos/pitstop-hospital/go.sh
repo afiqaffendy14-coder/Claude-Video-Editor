@@ -5,6 +5,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 ENGINE="${1:-eevee}"
 BLENDER="${BLENDER:-$(command -v blender || echo /Applications/Blender.app/Contents/MacOS/Blender)}"
+echo "[0/3] Checking for broken frames from an earlier run..."
+"$BLENDER" -b --factory-startup --python tools/frames_fix.py -- out/frames ${REDO:-}
 echo "[1/3] Baking the 35 shots..."
 "$BLENDER" -b --factory-startup --python blender/bake.py -- out/blend
 echo "[2/3] Rendering 1800 frames with $ENGINE (re-run to resume if interrupted)..."

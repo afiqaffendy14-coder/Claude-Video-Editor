@@ -272,6 +272,67 @@ def busy(pf, seed, t1, outer=False):
     pf.extra.append(fx)
 
 
+def unplug_fx(f0, f1, dur):
+    import shots as SH
+    J = V(SH.UNPLUG_J)
+    sc = bpy.context.scene
+
+    def group(name, members, at):
+        g = empty_at(name, at)
+        bpy.context.view_layer.update()
+        for nm in members:
+            ob = bpy.data.objects.get(nm)
+            if ob:
+                ob.parent = g
+                ob.matrix_parent_inverse = g.matrix_world.inverted()
+        return g
+    gl = group("uL", ["uhandL", "uthumbL", "usleeveL"], J + V((0, 0, 0.04)))
+    gb = group("uB", ["connB"] + [f"connB_ridge{i}" for i in range(3)], J + V((0, 0, -0.04)))
+    gr = group("uR", ["uhandR", "uthumbR", "usleeveR"], J + V((0, 0, -0.04)))
+    lag = empty_at("uB_lag", J + V((0, 0, -0.16)))
+    down = bpy.data.objects.get("unplug_down")
+    bpy.context.view_layer.update()
+    for idx, e in ((0, gb), (1, lag)):  # the loose tube end rides on the yellow half (and lags behind it)
+        m = down.modifiers.new(f"hook{idx}", "HOOK")
+        m.object = e
+        m.vertex_indices_set([idx])
+        m.matrix_inverse = e.matrix_world.inverted()
+    b0, r0, l0, lag0 = gb.location.copy(), gr.location.copy(), gl.location.copy(), lag.location.copy()
+    t_rel = 1.05
+
+    def b_pos(t):
+        tw = overshoot(t, 0.28, 0.62, 0.1)                       # quarter-turn to unlock
+        pull = overshoot(t, 0.68, 1.0, 0.06)                     # then pulled apart
+        p = b0 + V((0, -0.05, -0.1)) * pull + V((wob(t, 7, 0.002), 0, 0)) * (1 - pull)
+        if t > t_rel:                                            # let go: it drops and swings on its tube
+            u = t - t_rel
+            p = p + V((0.02 * math.sin(3.1 * u) * math.exp(-1.5 * u), -0.07 * math.sin(5.5 * u) * math.exp(-1.6 * u),
+                       -0.11 * (1 - math.exp(-5 * u) * math.cos(6 * u))))
+        return p, math.radians(95 * tw - 5 * tw * (t > 0.62))
+    for f, t in frames(f0, f1, pad=6):
+        p, rz = b_pos(t)
+        key_obj(gb, f, loc=p, rot=(0, 0, rz))
+        pl, _ = b_pos(max(0.0, t - 0.09))
+        key_obj(lag, f, loc=lag0 + (pl - b0) * 0.75)
+        if t <= t_rel:
+            key_obj(gr, f, loc=r0 + (p - b0), rot=(0, 0, rz))
+        else:  # the hand comes away, up and out of shot
+            u = ease(t, t_rel, t_rel + 0.55)
+            pr, _ = b_pos(t_rel)
+            key_obj(gr, f, loc=r0 + (pr - b0) + V((-0.12, -0.16, 0.1)) * u, rot=(0, 0, rz))
+        key_obj(gl, f, loc=l0 + V((wob(t, 3.3, 0.0025), wob(t, 2.9, 0.002), wob(t, 4.1, 0.0015))))
+    for i, td in enumerate((1.02, 1.3, 1.55, 1.8)):  # drips keep coming from the open end
+        d = bpy.data.objects.get(f"drip{i}")
+        if not d:
+            continue
+        top = J + V((0.004 * i, 0, -0.012))
+        for f, t in frames(f0, f1, pad=6):
+            u = t - td
+            z = top.z - 4.9 * u * u if u > 0 else top.z
+            on = 1.0 if (u > 0 and z > 0.86) else 0.001
+            key_obj(d, f, loc=(top.x, top.y, max(z, 0.86)), scale=(on, on, on * (1 + min(2.0, 6 * max(u, 0)))))
+
+
 # ---------------------------------------------------------------- per-shot choreography
 def shot_fx(n, perf, f0, f1, dur):
     P = perf.get
@@ -371,9 +432,9 @@ def shot_fx(n, perf, f0, f1, dur):
 
     if n in (9, 11, 12, 13):  # intensive care: everyone scrambling, each at their own station round the cot
         # cot: x +-0.38, y -0.25..0.85, mattress top 0.71; stations 0.75 m apart so nobody shares space
-        if n == 9:
-            remove_perf(perf, "c8")  # the camera looks across the cot from c1's spot
-            remove_perf(perf, "c1")
+        if n == 9:  # the close-up's hands are c2's; c1 and c8 would stand in front of the lens
+            for nm in ("c8", "c1", "c2", "c4"):
+                remove_perf(perf, nm)
         ST = dict(c2=(-0.72, 0.8, -90), c4=(-0.72, -0.1, -90), c1=(0.72, 0.8, 90), c3=(0.72, -0.1, 90),
                   c8=(0.0, 1.56, 180), c5=(0.0, -0.92, 0), c6=(1.5, 1.0, 12), c7=(-1.4, 0.3, -95))
         for i, (nm, (x, y, rot)) in enumerate(ST.items()):
@@ -390,39 +451,8 @@ def shot_fx(n, perf, f0, f1, dur):
             pf.foot_world = {k: pf.a.foot[k].matrix_world.translation.copy() for k in "LR"}
             pf.hand_local = {"L": V((0.22, 0.12, 0.86)), "R": V((-0.22, 0.12, 0.86))}
             busy(pf, seed=n * 10 + i, t1=dur, outer=outer)
-        if n == 9:  # c2 pulls a line's connector apart, on camera
-            line = bpy.data.objects.get("iv_line")
-            pf = P("c2")
-            if line and pf:
-                junction = V((-0.42, 0.78, 0.95))
-                conn = box("iv_conn", (0.035, 0.06, 0.035), tuple(junction), M["white"])
-                cap = box("iv_conn_cap", (0.03, 0.02, 0.03), tuple(junction + V((0, 0.035, 0))), M["yellow"])
-                bpy.context.view_layer.update()
-                cap.parent = conn
-                cap.matrix_parent_inverse = conn.matrix_world.inverted()
-                hook = line.modifiers.new("unplug", "HOOK")
-                hook.object = conn
-                # the baby-side half of the line follows the connector: hook the first two control points' handles
-                hook.vertex_indices_set([6, 7, 8])
-                start = junction.copy()
-                pull = start + V((-0.12, -0.16, 0.16))
-                for f, t in frames(f0, f1):
-                    x = overshoot(t, 0.55, 1.15, 0.05)
-                    key_obj(conn, f, loc=start.lerp(pull, x) + V((0, 0, 0.01 * math.sin(6 * t)) if x > 0 else V()),
-                            rot=(math.radians(25 * x), 0, math.radians(-30 * x)))
-                free(pf, "R")
-                pf.a.arm["holds"] = ["iv_conn"]
-
-                def unplug(t, p, conn_start=start, pull=pull):
-                    reach = ease(t, 0.1, 0.5)
-                    x = overshoot(t, 0.55, 1.15, 0.05)
-                    hand = conn_start.lerp(pull, x) + V((0.03, -0.02, 0.01))
-                    M_ = Matrix.Translation(p["loc"]) @ Matrix.Rotation(math.radians(p["rot"]), 4, "Z")
-                    rest = M_ @ pf.hand_local["R"]
-                    p["hands"]["R"] = ("world", rest.lerp(hand, reach))
-                    p["head"][0] = 0.4 * p["head"][0]
-                    p["head"][1] += 20 * reach
-                pf.extra.append(unplug)
+        if n == 9:  # close-up insert: gloved hands twist the connector, pull it apart, the loose end drops away
+            unplug_fx(f0, f1, dur)
         if n == 13:  # a syringe slips off the edge and clatters down
             parts = [bpy.data.objects.get(nm) for nm in ("syr_barrel", "syr_plunger", "syr_tip")]
             g = empty_at("syringe", (0.42, -0.24, 0.7))
@@ -669,8 +699,8 @@ def fcurves(ob):
     return out
 
 
-RUN_CAM = {6: (0, 2.0, 0), 7: (0, 2.25, 0), 10: (0, 2.3, 0)}
-SHAKE = {6: (0.018, 0.7), 7: (0.022, 0.9), 10: (0.02, 0.8), 9: (0.008, 0.35), 11: (0.01, 0.4), 12: (0.012, 0.5),
+RUN_CAM = {6: (0, 2.0, 0), 7: (0, 2.25, 0), 10: (0, 2.3, 0)}  # (shot 9 is a close-up with a light handheld feel)
+SHAKE = {6: (0.018, 0.7), 7: (0.022, 0.9), 10: (0.02, 0.8), 9: (0.0025, 0.3), 11: (0.01, 0.4), 12: (0.012, 0.5),
          13: (0.012, 0.5), 2: (0.004, 0.15), 16: (0.006, 0.2), 17: (0.008, 0.3), 18: (0.008, 0.3), 32: (0.01, 0.4)}
 
 

@@ -24,7 +24,7 @@ MOVES = {
     6: dict(push=1.4, d=10.0, travel=(0, 0.7, 0)),
     7: dict(push=0.3, d=2.0, travel=(0, 0.7, 0), follow=True),
     8: dict(push=0.12, orbit=8, d=0.5),
-    9: dict(spin=4, push=0.16, orbit=6, d=1.05),
+    9: dict(push=0.06, orbit=4, d=0.52),
     10: dict(truck=0.2, d=2.5, travel=(0, 0.7, 0), follow=True),
     11: dict(spin=-10, push=0.6, d=4.6),
     12: dict(orbit=10, push=0.2, d=1.5),

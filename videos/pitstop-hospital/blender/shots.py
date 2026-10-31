@@ -113,6 +113,59 @@ def icu(mode, c, skip=(), top=False):
     return b
 
 
+UNPLUG_J = (-0.22, 0.6, 1.02)  # where the line's two connector halves meet (above the cot's left rail)
+
+
+def soft_line(name, pts, r, material):
+    """A soft tube (NURBS curve with a round bevel) whose points can be hooked to moving empties."""
+    cu = bpy.data.curves.new(name, "CURVE")
+    cu.dimensions = "3D"
+    cu.bevel_depth = r
+    cu.bevel_resolution = 4
+    cu.use_fill_caps = True
+    sp = cu.splines.new("NURBS")
+    sp.points.add(len(pts) - 1)
+    for p_, c in zip(sp.points, pts):
+        p_.co = (c[0], c[1], c[2], 1.0)
+    sp.order_u = 3
+    sp.use_endpoint_u = True
+    ob = bpy.data.objects.new(name, cu)
+    bpy.context.scene.collection.objects.link(ob)
+    ob.data.materials.append(material)
+    ob["smooth"] = True
+    return ob
+
+
+def unplug_close():
+    """Close on gloved hands at a line connector over the cot: twist, pull apart, the loose end drops away.
+    The scramble carries on, out of focus, behind."""
+    S.icu_set("chaos")
+    M = palette()
+    il = bpy.data.objects.get("iv_line")
+    for nm in ("iv_line", "et_hose", "iv_tape"):  # the close-up's own line replaces these in this shot
+        if bpy.data.objects.get(nm):
+            bpy.data.objects[nm].hide_render = True
+    J = V(UNPLUG_J)
+    line_m = mat("ivline_clear", (0.62, 0.85, 1.0), 0.15, coat=0.6)
+    # upstream: from the drip stand down to part A (held still); downstream: from part B to the baby
+    soft_line("unplug_up", [J + V((0, 0, 0.07)), J + V((0, 0.0, 0.2)), J + V((-0.05, 0.1, 0.45)), V((-0.6, 1.1, 1.75)), V((-1.5, 1.4, 1.8))], 0.009, line_m)
+    soft_line("unplug_down", [J - V((0, 0, 0.075)), J - V((0, 0, 0.16)), J + V((0.06, -0.02, -0.24)), V((-0.08, 0.5, 0.84)), V((0.0, 0.52, 0.84))], 0.009, line_m)
+    box("connA", (0.05, 0.05, 0.09), tuple(J + V((0, 0, 0.03))), M["white"], bev=0.006)
+    box("connA_collar", (0.062, 0.062, 0.022), tuple(J + V((0, 0, 0.005))), mat("conn_blue", (0.15, 0.4, 0.95), 0.4), bev=0.004)
+    box("connB", (0.056, 0.056, 0.07), tuple(J + V((0, 0, -0.04))), mat("conn_yellow", (1.0, 0.78, 0.1), 0.35), bev=0.006)
+    for i in range(3):  # grip ridges on the yellow half
+        box(f"connB_ridge{i}", (0.064, 0.064, 0.008), tuple(J + V((0, 0, -0.06 + 0.018 * i))), mat("conn_yellow2", (0.95, 0.62, 0.05), 0.4))
+    glove, sleeve = mat("nitrile_glove", (0.3, 0.36, 0.95), 0.45), mat("sleeve_scrub", (0.16, 0.52, 0.6), 0.8)
+    for k, side, z in (("L", 1, 0.04), ("R", -1, -0.05)):  # hands grip from the sides, so both read on camera
+        box(f"uhand{k}", (0.1, 0.09, 0.1), tuple(J + V((-0.05, side * 0.068, z))), glove, bev=0.008)
+        box(f"uthumb{k}", (0.035, 0.03, 0.055), tuple(J + V((0.03, side * 0.035, z))), glove, bev=0.006)
+        box(f"usleeve{k}", (0.12, 0.12, 0.5), tuple(J + V((-0.27, side * 0.16, z + 0.14))), sleeve,
+            rot=(0, math.radians(-62), math.radians(side * 25)))
+    for i in range(4):
+        box(f"drip{i}", (0.012, 0.012, 0.018), tuple(J + V((0, 0, -0.01))), mat("drip", (0.7, 0.88, 1.0), 0.05, coat=1.0, emit=(0.7, 0.88, 1.0), emit_strength=0.4))
+    cam((-0.22 + 0.5, 0.6 + 0.12, 1.12), tuple(J + V((0, 0, -0.02))), 35, 0.52, 2.8)
+
+
 def dropped_notes():
     S.icu_set("chaos")
     M = palette()
@@ -217,7 +270,7 @@ SHOTS = [  # n, start, end, builder, description
     (6, 9.44, 11.20, corridor(-6.5, ((0.55, -10.8, 1.55), (0, 18, 1.3), 30, None, 2.8, 3), True), "Dim corridor: the team wheels the cot toward intensive care."),
     (7, 11.20, 13.14, corridor(0, ((0.3, -2.5, 0.38), (0, 0.4, 0.4), 30, 2.1, 2.8)), "Low, from behind: the porter's feet and the cot's castors rolling toward intensive care."),
     (8, 13.14, 15.00, icu("empty", ((0.3, 0.25, 1.12), (0.02, 0.55, 0.82), 45, 0.48, 2.2)), "Macro: the breathing tube and lines on the baby."),
-    (9, 15.00, 16.90, icu("chaos", ((-0.4, 1.72, 1.36), (-0.5, 0.74, 1.0), 30, 1.05, 2.4)), "Side-on at the head end: a doctor pulls a line's connector apart, everyone else working round the cot."),
+    (9, 15.00, 16.90, unplug_close, "Close on gloved hands at a line over the cot: twist, pull, the connector comes apart and the loose end drops away."),
     (10, 16.90, 18.40, corridor(0, ((1.35, -2.3, 1.45), (0, 0.6, 0.9), 24, None, 2.8, -5)), "Tracking: the cot, ventilator and IV pole on the move."),
     (11, 18.40, 20.10, icu("chaos", ((0, 0.15, 4.6), (0, 0.15, 0), 22), top=True), "Cutaway top-down: several teams crowd one tiny bed."),
     (12, 20.10, 21.40, icu("chaos", ((0.15, -0.35, 2.15), (0, 0.35, 0.8), 26, None, 2.8, 6)), "High angle: many hands at once. In that rush..."),
