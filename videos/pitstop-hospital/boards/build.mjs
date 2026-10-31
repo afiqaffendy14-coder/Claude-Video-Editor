@@ -29,7 +29,7 @@ const chunkAt = (t) => {
 const said = (s) => WORDS.filter((w) => w.start >= s.start - 1e-3 && w.start < s.end - 1e-3).map((w) => w.w).join(" ");
 
 const card = (s) => `<div class="card">
-  <figure><img src="stills/s${String(s.n).padStart(2, "0")}.png"/><div class="cap">${chunkAt((s.start + s.end) / 2)}</div></figure>
+  <figure><img src="graded/s${String(s.n).padStart(2, "0")}.png"/><div class="cap">${chunkAt((s.start + s.end) / 2)}</div></figure>
   <div class="head"><span class="n">${String(s.n).padStart(2, "0")}</span><span class="t">${s.start.toFixed(2)}–${s.end.toFixed(2)}s · ${(s.end - s.start).toFixed(1)}s</span></div>
   <p class="vo">“${said(s)}”</p>
   <p class="d">${s.desc}</p>

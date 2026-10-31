@@ -43,10 +43,27 @@ def pit_top(h, lens=32, y=0.4):
     return b
 
 
-def surgeon_close():
+def surgeon(c):
+    """A masked heart surgeon leaning over the cot, seen from the baby's side (opens and closes the film)."""
+    def b():
+        S.icu_set("empty")
+        S.P("surg", 0.0, -0.5, 0, "work", "surgeon")
+        cam(*c)
+    return b
+
+
+def handoff_slip():
+    """At the foot of the cot, one nurse passes the notes to another; a page slips loose and falls."""
     S.icu_set("empty")
-    S.P("surg", 0.0, -0.5, 0, "work", "surgeon")
-    cam((0.18, 1.05, 1.2), (0, -0.4, 1.42), 42, dof=1.55, fstop=2.2)
+    M = palette()
+    reach = dict(lean=12, armL=(78, 4, 18), armR=(78, 4, 18), head=(0, 18))
+    S.P("giver", 0.62, -0.42, 90, reach, "scrubs")
+    S.P("taker", -0.62, -0.42, -90, reach, "surgeon")
+    box("hand_cb", (0.3, 0.24, 0.014), (0.0, -0.42, 1.2), M["clay2"], rot=(0, math.radians(8), 0))
+    box("hand_cb_paper", (0.26, 0.2, 0.006), (0.0, -0.42, 1.21), M["white"], rot=(0, math.radians(8), 0))
+    box("falling_page", (0.21, 0.29, 0.005), (0.12, -0.6, 0.78), M["white"], rot=(math.radians(38), math.radians(24), math.radians(12)))
+    box("falling_page2", (0.21, 0.29, 0.005), (0.25, -0.85, 0.006), M["white"], rot=(0, 0, math.radians(40)))
+    cam((0.15, -1.75, 1.3), (0, -0.45, 1.0), 32, dof=1.35, fstop=2.4)
 
 
 def exterior():
@@ -163,19 +180,19 @@ def tiny_hand():
 
 
 SHOTS = [  # n, start, end, builder, description
-    (1, 0.00, 1.60, pit_top(11), "Top-down: the red car in its box, twenty crew around it. Cold open."),
-    (2, 1.60, 3.40, surgeon_close, "A masked heart surgeon leans over a tiny block baby in its cot."),
+    (1, 0.00, 1.60, surgeon(((0.18, 1.05, 1.2), (0, -0.4, 1.42), 42, 1.55, 2.2)), "A masked children's heart surgeon leans over a tiny baby in its cot. Cold open."),
+    (2, 1.60, 3.40, pit_top(11), "...ask Ferrari? Top-down: the red car in its box, twenty crew around it."),
     (3, 3.40, 5.60, exterior, "Street level, London: the hospital facade, a clock tower in the haze."),
     (4, 5.60, 7.84, theatre_top, "Cutaway top-down: the surgical team around the operating table."),
     (5, 7.84, 9.44, theatre_monitor, "Close: the heart monitor's green trace. The danger isn't over."),
     (6, 9.44, 11.20, corridor(-6.5, ((0.55, -10.8, 1.55), (0, 18, 1.3), 30), True), "Dim corridor: the team wheels the cot toward intensive care."),
-    (7, 11.20, 13.14, corridor(0, ((0.85, -1.1, 0.14), (0.32, -0.48, 0.08), 32, 0.75, 2.8)), "Floor level: the cot's castors rolling."),
+    (7, 11.20, 13.14, corridor(0, ((1.25, -0.6, 0.38), (0, 0.15, 0.4), 26, 1.35, 2.8)), "Low side angle: the cot, its castors and the team's feet on the move."),
     (8, 13.14, 15.00, icu("empty", ((0.3, 0.25, 1.12), (0.02, 0.55, 0.82), 45, 0.48, 2.2)), "Macro: the breathing tube and lines on the baby."),
     (9, 15.00, 16.90, icu("chaos", ((0.05, 0.25, 1.95), (0, 0.5, 0.75), 34, 1.2, 2.8)), "Hands reach for the monitor cables: unplugged."),
     (10, 16.90, 18.40, corridor(0, ((1.35, -2.3, 1.45), (0, 0.6, 0.9), 24)), "Tracking: the cot, ventilator and IV pole on the move."),
     (11, 18.40, 20.10, icu("chaos", ((0, 0.15, 4.6), (0, 0.15, 0), 22), top=True), "Cutaway top-down: several teams crowd one tiny bed."),
     (12, 20.10, 21.40, icu("chaos", ((0.15, -0.35, 2.15), (0, 0.35, 0.8), 26)), "High angle: many hands at once. In that rush..."),
-    (13, 21.40, 22.70, dropped_notes, "Floor level: a dropped clipboard and loose notes. Details slip through."),
+    (13, 21.40, 22.70, handoff_slip, "Over the cot, the notes pass from one pair of hands to another; a page slips loose and falls."),
     (14, 22.70, 24.40, viewing, "From behind: two doctors watch a pit stop on the staff-room screen."),
     (15, 24.40, 26.20, pit(((0, -3.2, 8.5), (0, 0.6, 0), 28)), "The pit stop itself, from above: the same rush."),
     (16, 26.20, 27.60, pit(((7.5, 8.0, 6.2), (0, 0.2, 0.3), 30)), "Wide: twenty mechanics at work (counter overlay: 20)."),
@@ -187,7 +204,7 @@ SHOTS = [  # n, start, end, builder, description
     (22, 34.90, 37.08, ferrari(((0.0, 1.55, 1.9), (0, 3.0, 1.9), 33)), "Screen close-up: the handover, problems circled in red (overlay)."),
     (23, 37.08, 38.90, pit(((0, 0.25, 0.86), (-0.6, 3.5, 1.7), 32, 3.5, 4.0)), "Driver's eye through the halo: the lollipop board ahead."),
     (24, 38.90, 40.40, pit(((0.6, 1.9, 1.35), (-0.85, 4.6, 1.45), 42, 3.0, 2.8)), "The lollipop man: one person in charge."),
-    (25, 40.40, 41.92, icu("order", ((0.05, 2.0, 1.75), (0, -0.75, 1.3), 50, 2.75, 2.8)), "Match cut: the anaesthetist at the cot, hand raised, leading."),
+    (25, 40.40, 41.92, icu("order", ((0.55, 1.2, 2.1), (0, -0.75, 1.45), 40, 2.15, 2.8), skip=("o1",)), "The hospital's 'lollipop man': the anaesthetist in a red cap at the foot of the cot, hand raised, team turned to him."),
     (26, 41.92, 43.60, icu("order", ((0, 0.0, 4.6), (0, 0.0, 0), 22), top=True), "Cutaway top-down: everyone in a fixed spot (numbered roles overlay)."),
     (27, 43.60, 45.00, icu("order", ((0.05, 0.3, 1.85), (0, 0.5, 0.75), 34, 1.1, 2.8)), "Hands connect the lines in order."),
     (28, 45.00, 46.67, checklist, "Macro: the checklist, red ticks."),
@@ -197,7 +214,7 @@ SHOTS = [  # n, start, end, builder, description
     (32, 52.60, 54.30, pit(((2.7, -2.6, 0.5), (0, 6, 0.5), 26), car_y=4.5, crew_skip=("FL", "RL", "jacks", "wing", "stab", "lolli")), "Low: the car leaves its box at speed."),
     (33, 54.30, 56.30, pit(((1.6, 8.5, 1.6), (0, 0, 1.0), 32), car=False), "The crew steps back in the empty box."),
     (34, 56.30, 58.10, tiny_hand, "Macro: the baby's hand around a gloved finger."),
-    (35, 58.10, 60.00, pit_top(8.5), "Top-down pit stop again, pushing in: the loop back to the question."),
+    (35, 58.10, 60.00, surgeon(((0.25, 1.4, 1.25), (0, -0.4, 1.42), 36, 1.95, 2.2)), "Back on the surgeon, pushing in: the loop back to the opening question."),
 ]
 
 

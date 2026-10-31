@@ -302,4 +302,5 @@ def icu_dress():
         if o:
             bpy.data.objects.remove(o, do_unlink=True)
     sun("window_sun", (62, 0, 12), 4.0, 1.0, (1.0, 0.86, 0.66))
-    area("icu_fill", (0, -1.5, 3.0), (0, 0.3, 0.6), 120, 2.5, color=(0.8, 0.9, 1.0))
+    area("icu_fill", (0, -1.5, 3.0), (0, 0.3, 0.6), 70, 2.5, color=(0.8, 0.9, 1.0))
+    area("icu_rimlight", (-1.2, 2.0, 2.6), (0, -0.2, 1.2), 160, 1.2, color=(0.75, 0.88, 1.0))  # cool rim from behind

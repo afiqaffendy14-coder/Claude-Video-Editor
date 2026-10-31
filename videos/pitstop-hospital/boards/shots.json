@@ -3,13 +3,13 @@
   "n": 1,
   "start": 0.0,
   "end": 1.6,
-  "desc": "Top-down: the red car in its box, twenty crew around it. Cold open."
+  "desc": "A masked children's heart surgeon leans over a tiny baby in its cot. Cold open."
  },
  {
   "n": 2,
   "start": 1.6,
   "end": 3.4,
-  "desc": "A masked heart surgeon leans over a tiny block baby in its cot."
+  "desc": "...ask Ferrari? Top-down: the red car in its box, twenty crew around it."
  },
  {
   "n": 3,
@@ -39,7 +39,7 @@
   "n": 7,
   "start": 11.2,
   "end": 13.14,
-  "desc": "Floor level: the cot's castors rolling."
+  "desc": "Low side angle: the cot, its castors and the team's feet on the move."
  },
  {
   "n": 8,
@@ -75,7 +75,7 @@
   "n": 13,
   "start": 21.4,
   "end": 22.7,
-  "desc": "Floor level: a dropped clipboard and loose notes. Details slip through."
+  "desc": "Over the cot, the notes pass from one pair of hands to another; a page slips loose and falls."
  },
  {
   "n": 14,
@@ -147,7 +147,7 @@
   "n": 25,
   "start": 40.4,
   "end": 41.92,
-  "desc": "Match cut: the anaesthetist at the cot, hand raised, leading."
+  "desc": "The hospital's 'lollipop man': the anaesthetist in a red cap at the foot of the cot, hand raised, team turned to him."
  },
  {
   "n": 26,
@@ -207,6 +207,6 @@
   "n": 35,
   "start": 58.1,
   "end": 60.0,
-  "desc": "Top-down pit stop again, pushing in: the loop back to the question."
+  "desc": "Back on the surgeon, pushing in: the loop back to the opening question."
  }
 ]

@@ -98,7 +98,7 @@ def pit_crew(skip=()):
     for (y, side, tag) in [(1.8, 1, "FL"), (1.8, -1, "FR"), (-1.78, 1, "RL"), (-1.78, -1, "RR")]:
         if tag in skip:
             continue
-        rot = -90 if side == 1 else 90
+        rot = 90 if side == 1 else -90  # face the car (people face +Y at rot 0)
         cast.append(P(f"gun{tag}", side * 1.45, y, rot, "gun", "crew"))
         g = wheel_gun(f"wg{tag}")
         g.location = (side * 1.15, y, 0.38)
@@ -118,9 +118,9 @@ def pit_crew(skip=()):
         j2.location = (0, -2.85, 0)
     for s in (1, -1):
         if "stab" not in skip:
-            cast.append(P(f"stab{s}", s * 1.3, 0.1, -90 * s, "brace", "crew"))
+            cast.append(P(f"stab{s}", s * 1.3, 0.1, 90 * s, "brace", "crew"))
         if "wing" not in skip:
-            cast.append(P(f"wing{s}", s * 1.2, 2.95, 180 + s * 30, "brace", "crew"))
+            cast.append(P(f"wing{s}", s * 1.2, 2.95, 180 - s * 30, "brace", "crew"))
     if "lolli" not in skip:
         cast.append(P("lolliman", -0.9, 4.6, 180, "lolli", "crew"))
         l = lollipop("lolli_eq")
@@ -246,7 +246,7 @@ def icu_set(mode="chaos", baby=True, skip=()):
         for (n, x, y, r, p), o in zip(cast, outfits):
             P(n, x, y, r, p, o)
     elif mode == "order":
-        P("leader", 0.0, -0.75, 0, "lead", "surgeon")
+        P("leader", 0.0, -0.75, 0, "lead", "leader")
         if "o1" not in skip: P("o1", 0.75, 0.45, 90, "work", "scrubs")
         if "o2" not in skip: P("o2", -0.75, 0.45, -90, "work", "scrubs")
         if "o3" not in skip: P("o3", 0.85, -0.3, 75, "watch", "scrubs")
@@ -281,11 +281,13 @@ def exterior_set():
         sphere("crown", 1.6, (x, 3.2, 4.2), mat("leaf", (0.42, 0.52, 0.42), 0.9), scale=(1, 1, 0.9))
     # distant clock tower in haze
     tw = mat("tower", (0.82, 0.83, 0.86), 0.9)
-    box("tower", (4, 4, 40), (-45, 90, 20), tw)
-    box("clockblk", (5, 5, 6), (-45, 90, 42), tw)
-    cyl("spire", 3.2, 10, (-45, 90, 50), tw, seg=4, r2=0.2, rot=(0, 0, math.pi / 4))
+    import lib
+    tx = 45 if lib.STYLE.get("voxel") else -45  # blocky shot looks right of the facade
+    box("tower", (4, 4, 40), (tx, 90, 20), tw)
+    box("clockblk", (5, 5, 6), (tx, 90, 42), tw)
+    cyl("spire", 3.2, 10, (tx, 90, 50), tw, seg=4, r2=0.2, rot=(0, 0, math.pi / 4))
     for s in (1, -1):
-        cyl("clockface", 1.6, 0.1, (-45, 90 - 2.55, 42), M["clay"], rot=(math.pi / 2, 0, 0))
+        cyl("clockface", 1.6, 0.1, (tx, 90 - 2.55, 42), M["clay"], rot=(math.pi / 2, 0, 0))
     sun = bpy.data.lights.new("sun", "SUN")
     sun.energy = 3.0
     sun.angle = math.radians(8)

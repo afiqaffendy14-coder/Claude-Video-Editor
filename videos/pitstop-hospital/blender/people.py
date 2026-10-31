@@ -16,6 +16,7 @@ OUTFITS = {
     "scrubs": dict(upper="scrubs", lower="scrubs", cap="scrubs", mask=False, hands="skin", shoes="white"),
     "doctor": dict(upper="scrubs", lower="scrubs", cap=None, mask=False, hands="skin", shoes="grey", hair=True),
     "crew": dict(upper="redm", lower="redm", helmet=True, hands="dark", shoes="dark"),
+    "leader": dict(upper="gown", lower="gown", cap="red", mask=True, hands="glove", shoes="white"),  # the handover's "lollipop man"
     "engineer": dict(upper="redm", lower="dark", cap=None, mask=False, hands="skin", shoes="dark", hair=True),
     "suit": dict(upper="grey", lower="grey", cap=None, mask=False, hands="skin", shoes="dark", hair=True),
 }

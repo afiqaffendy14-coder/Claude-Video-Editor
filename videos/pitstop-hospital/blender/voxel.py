@@ -246,7 +246,7 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
     fz = hs / 2 + 0.003  # front face
     if o.get("helmet"):
         parts.append(_boxat(name + "_helmet", (hs + 2 * P_ * 0.5, hs + P_, hs + P_ * 0.5), Hr, neck, (0, -P_ * 0.25, hs / 2 + P_ * 0.2), M["red"]))
-        parts.append(_boxat(name + "_visor", (6 * P_, 0.02, 2 * P_), Hr, neck, (0, hs / 2 + P_ * 0.5, hs / 2 + P_ * 0.5), M["dark"]))
+        parts.append(_boxat(name + "_visor", (7 * P_, 0.05, 3.2 * P_), Hr, neck, (0, hs / 2 + P_ * 0.5 + 0.01, hs / 2 + P_ * 0.4), M["dark"]))
         parts.append(_boxat(name + "_stripe", (hs + P_ + 0.006, P_ * 2, P_ * 0.6), Hr, neck, (0, 0, hs + P_ * 0.2), M["white"]))
     else:
         for s in (1, -1):  # eyes: one dark pixel each with a white pixel inside
