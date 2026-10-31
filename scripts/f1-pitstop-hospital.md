@@ -2,35 +2,45 @@
 
 Broad-audience short, exactly 60 s, continuous voiceover, looped ending (the last line runs straight into the first).
 
-## Script (exactly 60.0 s)
+## Script v2 (exactly 60.0 s)
 
-Measured with the draft voice (speed 1.09, lines butt-joined): speech runs 0.00–59.96 s, video 60.00 s.
+Measured with the draft voice (speed 1.11, lines butt-joined): speech runs 0.00–59.91 s, video 60.00 s.
 The hook is a question; the last line runs straight back into it.
 
 | # | Time (s) | Line |
 |---|---|---|
-| 1 | 0.00–3.65 | How did a Ferrari pit crew make a children's hospital safer? |
-| 2 | 3.68–5.48 | Great Ormond Street, London. |
-| 3 | 5.51–8.15 | A baby has just survived heart surgery. |
-| 4 | 8.18–10.85 | But one of the riskiest moments is still ahead. |
-| 5 | 10.88–14.17 | The move from the operating theatre to intensive care. |
-| 6 | 14.19–18.68 | Breathing tube, drips, monitors, all unplugged, moved, plugged back in. |
-| 7 | 18.70–22.28 | Several teams, one tiny patient. Details get lost. |
-| 8 | 22.30–25.54 | Then two of its doctors studied a Ferrari pit stop. |
-| 9 | 25.57–28.56 | Twenty mechanics. One car. Done in seconds. |
-| 10 | 28.59–31.92 | Nobody in anyone's way. Everyone with one job. |
-| 11 | 31.94–33.78 | So they asked Ferrari for help. |
-| 12 | 33.80–37.10 | Ferrari studied videos of the hospital's handovers. |
-| 13 | 37.13–39.08 | The fix came straight from the pits. |
-| 14 | 39.10–42.36 | One leader, like the lollipop man, runs everything. |
-| 15 | 42.38–45.18 | Everyone gets one task, in a fixed order. |
-| 16 | 45.20–47.54 | A checklist, so nothing is forgotten. |
-| 17 | 47.56–50.35 | Technical errors fell by forty-two percent. |
-| 18 | 50.38–53.02 | Missing information, almost cut in half. |
-| 19 | 53.05–58.10 | A sport chasing tenths of a second taught doctors to protect what matters most. |
-| 20 | 58.13–59.96 | So next time someone asks... |
+| 1 | 0.00–2.98 | Why would a children's heart surgeon ask Ferrari for help? |
+| 2 | 3.00–5.81 | It starts at Great Ormond Street Hospital, London. |
+| 3 | 5.83–8.45 | A baby has just survived heart surgery. |
+| 4 | 8.48–10.41 | But the danger isn't over. |
+| 5 | 10.43–13.95 | Now that tiny patient has to move to intensive care. |
+| 6 | 13.97–17.77 | Every tube, wire and monitor, unplugged and plugged back in. |
+| 7 | 17.80–21.23 | Several teams. One tiny bed. And things get missed. |
+| 8 | 21.25–24.77 | Then two of its doctors studied a Formula One pit stop. |
+| 9 | 24.79–27.61 | Twenty mechanics. One car. A few seconds. |
+| 10 | 27.63–30.12 | And nobody gets in anyone's way. |
+| 11 | 30.15–31.55 | So they called Ferrari. |
+| 12 | 31.57–35.22 | Ferrari's crew studied videos of the hospital's handovers. |
+| 13 | 35.25–37.81 | Their answer came straight from the pit lane. |
+| 14 | 37.84–41.40 | One leader, like the lollipop man, runs the whole handover. |
+| 15 | 41.42–44.16 | Everyone gets one job, in a fixed order. |
+| 16 | 44.19–46.70 | And a checklist, so nothing gets forgotten. |
+| 17 | 46.72–47.58 | The result? |
+| 18 | 47.61–50.43 | Technical errors dropped by forty-two percent. |
+| 19 | 50.45–53.10 | Missing information, almost cut in half. |
+| 20 | 53.12–58.05 | A sport chasing tenths of a second taught doctors to protect what matters most. |
+| 21 | 58.08–59.91 | So next time someone asks you... |
 
-(loops to line 1: "So next time someone asks... How did a Ferrari pit crew make a children's hospital safer?")
+(loops to line 1: "So next time someone asks you... Why would a children's heart surgeon ask Ferrari for help?")
+
+### How it holds attention
+- 0–3 s: an odd pairing (children's heart surgeon + Ferrari) as a question the viewer can't answer.
+- Every 5–10 s a turn re-raises the stakes: "But the danger isn't over." / "Then..." / "So they called Ferrari." / "The result?"
+- The pit stop is described in the same rhythm as the handover (short counts: "Twenty mechanics. One car. A few seconds.")
+  so the viewer makes the connection a beat before it's said.
+- Payoff numbers land after "The result?", then an emotional line, then the loop.
+
+v1 (previous) is in tools/lines.v1.json.
 
 ## Facts and sources
 
