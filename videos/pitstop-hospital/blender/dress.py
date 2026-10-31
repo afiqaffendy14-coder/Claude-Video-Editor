@@ -128,7 +128,7 @@ def data_screen():
     return pixmat("datascreen", _img("datascreen", 16, 12, f), 0.6, 0.3, emit=1.5)
 
 
-def ecg_screen():
+def ecg_screen(w=0.36, h=0.23):
     """Patient monitor: green heart trace, a blue and a yellow line, numbers as blocks, on black."""
     trace = {0: 8, 1: 8, 2: 8, 3: 8, 4: 7, 5: 3, 6: 11, 7: 8, 8: 8, 9: 8, 10: 8, 11: 8, 12: 8, 13: 8, 14: 8, 15: 8}
     def f(x, y):
@@ -144,7 +144,11 @@ def ecg_screen():
         if x >= 17 and 8 <= yy <= 10:
             return (0.2, 0.6, 1.0)
         return (0.01, 0.015, 0.02)
-    return pixmat("ecg", _img("ecg", 22, 16, f), 0.3, 0.3, emit=2.0)
+    m = pixmat(f"ecg_{w:.3f}x{h:.3f}", _img("ecg", 22, 16, f), 1.0, 0.3, emit=2.0)
+    mp = next(n for n in m.node_tree.nodes if n.type == "MAPPING")  # fit the image exactly to the screen face
+    mp.inputs["Scale"].default_value = (1 / w, 1.0, 1 / h)
+    mp.inputs["Location"].default_value = (0.5, 0.5, 0.5)
+    return m
 
 
 # ---------------------------------------------------------------- sky

@@ -220,7 +220,7 @@ def monitor(name, w=0.42, h=0.3, wave=True):
     if lib.STYLE.get("voxel") and wave:  # blocky: the trace is a pixel image on the screen, lit
         import dress
         P = [box(name + "_case", (w, 0.06, h), (0, 0, 0), M["white"]),
-             box(name + "_screen", (w * 0.86, 0.012, h * 0.78), (0, 0.031, 0), dress.ecg_screen())]
+             box(name + "_screen", (w * 0.86, 0.012, h * 0.78), (0, 0.031, 0), dress.ecg_screen(w * 0.86, h * 0.78))]
         return group(name, P)
     P = [box(name + "_case", (w, 0.06, h), (0, 0, 0), M["white"], bev=0.02),
          box(name + "_screen", (w * 0.86, 0.01, h * 0.78), (0, 0.031, 0), M["screen"], bev=0.004)]

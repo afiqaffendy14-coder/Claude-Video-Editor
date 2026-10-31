@@ -66,7 +66,7 @@ def theatre_monitor():
     import dress
     S.theatre_set()
     floor("th_floor", dress.vinyl())
-    cam((1.12, 0.66, 1.72), (0.95, 1.25, 1.75), 55, dof=0.62, fstop=2.0)
+    cam((1.33, 0.22, 1.78), (0.95, 1.25, 1.75), 40, dof=1.1, fstop=2.4)
 
 
 def corridor(cot_y, c, dim=False):
@@ -146,12 +146,12 @@ def checklist():
 def chart(before, after):
     def b():
         S.chart_set(before, after)
-        cam((0, -4.6, 1.15), (0, 0, 0.55 * before / 5.42 + 0.25), 42)
+        cam((0, -4.6, 1.15), (0, 0, 0.55 * before / 5.42 + 0.25), 34)
     return b
 
 
 def tiny_hand():
-    S.icu_set("order")
+    S.icu_set("empty")
     M = palette()
     px = voxel.PX
     y = 0.44
@@ -159,7 +159,7 @@ def tiny_hand():
     box("gfinger", (3.5 * px, 0.8 * px, 0.8 * px), (0.2, y, 0.805), M["glove"])
     box("glove_hand", (2.4 * px, 3 * px, 1.6 * px), (0.32, y, 0.815), M["glove"])
     box("glove_cuff", (2.6 * px, 3.2 * px, 1.8 * px), (0.42, y, 0.815), M["gown"])
-    cam((0.14, 0.27, 1.05), (0.18, y, 0.8), 60, dof=0.31, fstop=2.0)
+    cam((0.35, 0.05, 1.15), (0.2, y, 0.8), 50, dof=0.53, fstop=2.0)
 
 
 SHOTS = [  # n, start, end, builder, description
@@ -171,7 +171,7 @@ SHOTS = [  # n, start, end, builder, description
     (6, 9.44, 11.20, corridor(-6.5, ((0.55, -10.8, 1.55), (0, 18, 1.3), 30), True), "Dim corridor: the team wheels the cot toward intensive care."),
     (7, 11.20, 13.14, corridor(0, ((0.85, -1.1, 0.14), (0.32, -0.48, 0.08), 32, 0.75, 2.8)), "Floor level: the cot's castors rolling."),
     (8, 13.14, 15.00, icu("empty", ((0.3, 0.25, 1.12), (0.02, 0.55, 0.82), 45, 0.48, 2.2)), "Macro: the breathing tube and lines on the baby."),
-    (9, 15.00, 16.90, icu("chaos", ((0.55, -0.05, 1.5), (0, 0.5, 0.85), 34, 0.85, 2.8)), "Hands reach for the monitor cables: unplugged."),
+    (9, 15.00, 16.90, icu("chaos", ((0.05, 0.25, 1.95), (0, 0.5, 0.75), 34, 1.2, 2.8)), "Hands reach for the monitor cables: unplugged."),
     (10, 16.90, 18.40, corridor(0, ((1.35, -2.3, 1.45), (0, 0.6, 0.9), 24)), "Tracking: the cot, ventilator and IV pole on the move."),
     (11, 18.40, 20.10, icu("chaos", ((0, 0.15, 4.6), (0, 0.15, 0), 22), top=True), "Cutaway top-down: several teams crowd one tiny bed."),
     (12, 20.10, 21.40, icu("chaos", ((0.15, -0.35, 2.15), (0, 0.35, 0.8), 26)), "High angle: many hands at once. In that rush..."),
@@ -179,8 +179,8 @@ SHOTS = [  # n, start, end, builder, description
     (14, 22.70, 24.40, viewing, "From behind: two doctors watch a pit stop on the staff-room screen."),
     (15, 24.40, 26.20, pit(((0, -3.2, 8.5), (0, 0.6, 0), 28)), "The pit stop itself, from above: the same rush."),
     (16, 26.20, 27.60, pit(((7.5, 8.0, 6.2), (0, 0.2, 0.3), 30)), "Wide: twenty mechanics at work (counter overlay: 20)."),
-    (17, 27.60, 29.00, pit(((2.35, 1.0, 0.45), (1.1, 1.8, 0.38), 55, 1.45, 2.4)), "Macro: the wheel gun on the front-left nut."),
-    (18, 29.00, 30.20, pit(((3.3, 0.1, 0.95), (1.45, 1.4, 0.45), 30)), "Low: old tyre off, new tyre on."),
+    (17, 27.60, 29.00, pit(((1.6, 2.6, 1.1), (1.0, 1.8, 0.38), 40, 1.15, 2.8), crew_skip=("FR", "RR", "RL", "jacks", "stab", "wing", "lolli")), "Macro: the wheel gun on the front-left nut."),
+    (18, 29.00, 30.20, pit(((3.2, 4.2, 1.4), (1.3, 1.6, 0.5), 35), crew_skip=("FR", "RR", "RL", "jacks", "stab", "wing", "lolli")), "Low: old tyre off, new tyre on."),
     (19, 30.20, 31.37, pit_top(8, 24), "Top-down: every mechanic in a fixed spot, nobody in anyone's way."),
     (20, 31.37, 32.92, phone_call, "Close: the doctor's hand reaches for the phone (overlay: calling Ferrari)."),
     (21, 32.92, 34.90, ferrari(((0.1, -2.3, 1.6), (0, 3.0, 1.55), 30)), "Ferrari's engineers study the hospital's handover footage."),
@@ -189,12 +189,12 @@ SHOTS = [  # n, start, end, builder, description
     (24, 38.90, 40.40, pit(((0.6, 1.9, 1.35), (-0.85, 4.6, 1.45), 42, 3.0, 2.8)), "The lollipop man: one person in charge."),
     (25, 40.40, 41.92, icu("order", ((0.05, 2.0, 1.75), (0, -0.75, 1.3), 50, 2.75, 2.8)), "Match cut: the anaesthetist at the cot, hand raised, leading."),
     (26, 41.92, 43.60, icu("order", ((0, 0.0, 4.6), (0, 0.0, 0), 22), top=True), "Cutaway top-down: everyone in a fixed spot (numbered roles overlay)."),
-    (27, 43.60, 45.00, icu("order", ((1.35, -0.95, 1.55), (0.3, 0.4, 0.85), 36, 1.75, 2.4)), "Hands connect the lines in order."),
+    (27, 43.60, 45.00, icu("order", ((0.05, 0.3, 1.85), (0, 0.5, 0.75), 34, 1.1, 2.8)), "Hands connect the lines in order."),
     (28, 45.00, 46.67, checklist, "Macro: the checklist, red ticks."),
     (29, 46.67, 47.64, icu("order", ((1.75, 1.05, 1.9), (-0.15, -0.15, 0.95), 26, 2.0, 2.8), skip=("o1", "o3")), "Calm, ordered handover. And it worked."),
     (30, 47.64, 50.10, chart(5.42, 3.15), "Block chart: errors per handover, 5.42 blocks to 3.15 (overlay: -42%)."),
     (31, 50.10, 52.60, chart(2.09, 1.07), "Block chart: missing information, 2.09 to 1.07, almost half."),
-    (32, 52.60, 54.30, pit(((2.7, -2.6, 0.5), (0, 6, 0.5), 26), car_y=4.5), "Low: the car leaves its box at speed."),
+    (32, 52.60, 54.30, pit(((2.7, -2.6, 0.5), (0, 6, 0.5), 26), car_y=4.5, crew_skip=("FL", "RL", "jacks", "wing", "stab", "lolli")), "Low: the car leaves its box at speed."),
     (33, 54.30, 56.30, pit(((1.6, 8.5, 1.6), (0, 0, 1.0), 32), car=False), "The crew steps back in the empty box."),
     (34, 56.30, 58.10, tiny_hand, "Macro: the baby's hand around a gloved finger."),
     (35, 58.10, 60.00, pit_top(8.5), "Top-down pit stop again, pushing in: the loop back to the question."),
