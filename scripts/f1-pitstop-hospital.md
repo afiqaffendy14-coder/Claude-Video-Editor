@@ -2,45 +2,42 @@
 
 Broad-audience short, exactly 60 s, continuous voiceover, looped ending (the last line runs straight into the first).
 
-## Script v2 (exactly 60.0 s)
+## Script v3: conversational (current)
 
-Measured with the draft voice (speed 1.11, lines butt-joined): speech runs 0.00–59.91 s, video 60.00 s.
-The hook is a question; the last line runs straight back into it.
+Same story, beats and loop as v2, rewritten the way a person tells it: contractions, "Picture this", "You'd think...
+It's not", question-and-answer beats, everyday words ("stuff gets missed", "slips through"). 168 words;
+the narrator reads it in about 64-66 s naturally and pauses are tightened to land on exactly 60.0 s.
 
-| # | Time (s) | Line |
-|---|---|---|
-| 1 | 0.00–2.98 | Why would a children's heart surgeon ask Ferrari for help? |
-| 2 | 3.00–5.81 | It starts at Great Ormond Street Hospital, London. |
-| 3 | 5.83–8.45 | A baby has just survived heart surgery. |
-| 4 | 8.48–10.41 | But the danger isn't over. |
-| 5 | 10.43–13.95 | Now that tiny patient has to move to intensive care. |
-| 6 | 13.97–17.77 | Every tube, wire and monitor, unplugged and plugged back in. |
-| 7 | 17.80–21.23 | Several teams. One tiny bed. And things get missed. |
-| 8 | 21.25–24.77 | Then two of its doctors studied a Formula One pit stop. |
-| 9 | 24.79–27.61 | Twenty mechanics. One car. A few seconds. |
-| 10 | 27.63–30.12 | And nobody gets in anyone's way. |
-| 11 | 30.15–31.55 | So they called Ferrari. |
-| 12 | 31.57–35.22 | Ferrari's crew studied videos of the hospital's handovers. |
-| 13 | 35.25–37.81 | Their answer came straight from the pit lane. |
-| 14 | 37.84–41.40 | One leader, like the lollipop man, runs the whole handover. |
-| 15 | 41.42–44.16 | Everyone gets one job, in a fixed order. |
-| 16 | 44.19–46.70 | And a checklist, so nothing gets forgotten. |
-| 17 | 46.72–47.58 | The result? |
-| 18 | 47.61–50.43 | Technical errors dropped by forty-two percent. |
-| 19 | 50.45–53.10 | Missing information, almost cut in half. |
-| 20 | 53.12–58.05 | A sport chasing tenths of a second taught doctors to protect what matters most. |
-| 21 | 58.08–59.91 | So next time someone asks you... |
+1. Why would a children's heart surgeon call Ferrari for help?
+2. Picture this. Great Ormond Street Hospital, London.
+3. A baby's just come through heart surgery.
+4. You'd think that's the hard part. It's not.
+5. Now they've got to move that tiny patient to intensive care.
+6. Every tube, wire and monitor comes off... and goes back on.
+7. Several teams round one little bed. Stuff gets missed.
+8. Then two of its doctors studied an F1 pit stop.
+9. Twenty-odd mechanics, one car, done in seconds. Nobody's in anybody's way.
+10. So they did the obvious thing. They called Ferrari.
+11. And Ferrari's crew actually watched videos of the hospital's handovers.
+12. The fix? Straight out of the pit lane.
+13. One person in charge, like the lollipop man.
+14. Everyone's got one job. Same order, every time.
+15. Plus a checklist, so nothing slips through.
+16. And the result?
+17. Technical errors? Down forty-two percent.
+18. Missing information? Nearly halved.
+19. A sport obsessed with tenths of a second taught doctors how to protect what really matters.
+20. So next time someone asks you...
 
-(loops to line 1: "So next time someone asks you... Why would a children's heart surgeon ask Ferrari for help?")
+(loops to line 1: "So next time someone asks you... Why would a children's heart surgeon call Ferrari for help?")
 
 ### How it holds attention
 - 0–3 s: an odd pairing (children's heart surgeon + Ferrari) as a question the viewer can't answer.
-- Every 5–10 s a turn re-raises the stakes: "But the danger isn't over." / "Then..." / "So they called Ferrari." / "The result?"
-- The pit stop is described in the same rhythm as the handover (short counts: "Twenty mechanics. One car. A few seconds.")
-  so the viewer makes the connection a beat before it's said.
-- Payoff numbers land after "The result?", then an emotional line, then the loop.
+- A turn every 5–10 s: "You'd think that's the hard part. It's not." / "Then..." / "So they did the obvious thing." / "And the result?"
+- Question-then-answer beats ("The fix? Straight out of the pit lane.") keep the viewer completing the thought.
+- Payoff numbers, then the emotional line, then the loop.
 
-v1 (previous) is in tools/lines.v1.json.
+v2 is in videos/pitstop-hospital/tools/lines.v2.json, v1 in lines.v1.json.
 
 ## Facts and sources
 
