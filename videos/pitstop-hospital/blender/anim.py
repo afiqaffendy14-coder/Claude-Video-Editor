@@ -79,6 +79,8 @@ def main():
         shots.build(b)
         cam = sc.camera
         at, straight_down, m0 = camera_path(cam, MOVES.get(n, dict(push=0.3)))
+        import anim_people
+        people = anim_people.People()
         f0, f1 = math.ceil(t0 * fps - 1e-6), math.ceil(t1 * fps - 1e-6)
         for f in range(f0, f1):
             path = os.path.join(out, f"f{f:05d}.png")
@@ -94,6 +96,7 @@ def main():
                 cam.location = loc
                 look_at(cam, pivot, roll)
             ecg_scroll(t)
+            people.frame(t - t0)
             sc.render.filepath = path
             bpy.ops.render.render(write_still=True)
         print(f"ANIM shot {n} frames {f0}-{f1 - 1}", flush=True)

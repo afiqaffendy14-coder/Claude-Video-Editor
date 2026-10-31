@@ -27,7 +27,7 @@ const list = chunks.map((c, i) => ({
   end: i + 1 < chunks.length ? chunks[i + 1][0].start : 60,
 })).filter((c) => c.end > +from && c.start < +to);
 const font = "file://" + join(here, "../assets/fonts/montserrat-latin-900-normal.woff2");
-const size = Math.round(+W * 0.085);
+const size = Math.round(+W * 0.062);  // smaller, lower third (approved in the caption preview)
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: +W, height: +H } });
 const meta = [];
@@ -36,8 +36,8 @@ for (const [i, c] of list.entries()) {
   writeFileSync(html, `<!doctype html><html><head><style>
     @font-face { font-family: M; src: url(${font}); font-weight: 900; }
     html, body { margin: 0; background: transparent; width: ${W}px; height: ${H}px; }
-    div { position: absolute; left: 6%; right: 6%; top: 58%; text-align: center; font: 900 ${size}px/1.1 M, sans-serif;
-      color: #fff; -webkit-text-stroke: ${Math.round(size * 0.26)}px #000; paint-order: stroke fill;
+    div { position: absolute; left: 8%; right: 8%; top: 74%; transform: translateY(-50%); text-align: center; font: 900 ${size}px/1.1 M, sans-serif;
+      color: #fff; -webkit-text-stroke: ${Math.round(size * 0.22)}px #000; paint-order: stroke fill;
       text-shadow: 0 ${Math.round(size * 0.1)}px ${Math.round(size * 0.2)}px rgba(0,0,0,.35); }
   </style></head><body><div>${c.text}</div></body></html>`);
   await page.goto("file://" + html);

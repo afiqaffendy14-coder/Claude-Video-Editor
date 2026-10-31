@@ -154,6 +154,9 @@ def voxelize_object(ob, b=PX):
     bm.to_mesh(me2)
     bm.free()
     vo = link(bpy.data.objects.new(ob.name + "_vox", me2))
+    if ob.parent:  # keep following the prop's group, so a held tyre or gun can still be moved as one piece
+        vo.parent = ob.parent
+        vo.matrix_parent_inverse = ob.parent.matrix_world.inverted()
     for slot in ob.material_slots:
         me2.materials.append(px_material(slot.material))
     if not ob.material_slots:
@@ -291,6 +294,8 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
         parts.append(_boxat(name + "_shoe" + k, (t * 1.05, 6 * P_, 2 * P_), yaw, an, (0, P_, -P_), M[o["shoes"]]))
     root = link(bpy.data.objects.new(name, None))
     root["person"] = True
+    import json as _json
+    root["args"] = _json.dumps(dict(loc=list(loc), rot=rot, pose=p, outfit=outfit, scale=scale))
     for k_, h_ in hands.items():
         root["hand" + k_] = tuple(h_)
     for q in parts:
@@ -301,3 +306,27 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
     if parent:
         root.parent = parent
     return root
+
+
+def texture_person(root):
+    """Pixel materials + flat shading for a block person built after voxelize_scene (animation frames)."""
+    for ob in [root] + list(root.children_recursive):
+        if ob.type != "MESH":
+            continue
+        for p in ob.data.polygons:
+            p.use_smooth = False
+        for slot in ob.material_slots:
+            slot.material = px_material(slot.material, "fine")
+
+
+def texture_boxes(objs):
+    for ob in objs:
+        if ob.type != "MESH":
+            continue
+        for m in list(ob.modifiers):
+            if m.type == "BEVEL":
+                ob.modifiers.remove(m)
+        for p in ob.data.polygons:
+            p.use_smooth = False
+        for slot in ob.material_slots:
+            slot.material = px_material(slot.material, "fine")

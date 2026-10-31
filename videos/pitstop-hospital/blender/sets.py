@@ -53,6 +53,7 @@ def hands_mid(root):
 
 def hold(obj, root, fallback):
     """Put a wheel between a person's hands, its axle along the line from hand to hand."""
+    register_hold(obj.name, root.name, "wheel")
     l, r = hand_world(root, "L"), hand_world(root, "R")
     if l is None:
         obj.location = fallback
@@ -64,7 +65,18 @@ def hold(obj, root, fallback):
 
 def P(name, x, y, rot, pose, outfit, **kw):
     pose_ = POSE[pose] if isinstance(pose, str) else pose
-    return person(name, (x, y, 0), rot, pose_, outfit, **kw)
+    r = person(name, (x, y, 0), rot, pose_, outfit, **kw)
+    r["pose_name"] = pose if isinstance(pose, str) else "custom"
+    return r
+
+
+def register_hold(obj_name, person_name, mode, **extra):
+    """Record that a prop follows a person's hands (anim_people.py re-places it every frame)."""
+    import json
+    sc = bpy.context.scene
+    holds = json.loads(sc.get("holds", "[]"))
+    holds.append(dict(obj=obj_name, person=person_name, mode=mode, **extra))
+    sc["holds"] = json.dumps(holds)
 
 
 # ---------------------------------------------------------------- pit lane
@@ -143,6 +155,7 @@ def pit_crew(skip=(), phase="ready", car=True):
         g.rotation_euler = (0, 0, math.radians(rot))
         hm = hands_mid(gun)
         g.location = hm if hm is not None else (side * (1.15 if not go else 1.75), y, 0.38 if not go else 0.9)
+        register_hold(g.name, gun.name, "mid")
         off = P(f"off{tag}", side * 1.75 + out, y + 0.75, rot + side * 25,
                 "carry_out" if swap else ("step_back" if go else "tyre_off"), "crew")
         on = P(f"on{tag}", side * 1.8 + out, y - 0.75, rot - side * 25,
@@ -171,8 +184,10 @@ def pit_crew(skip=(), phase="ready", car=True):
         else:
             fm = hands_mid(fj)
             jack_between("fjack_eq", (0, 2.95, 0.12 + lift), fm if fm is not None else (0, 4.3, 0.9))
+            register_hold("fjack_eq", fj.name, "jack", head=[0, 2.95, 0.12 + lift])
         rm = hands_mid(rj)
         jack_between("rjack_eq", (0, -2.85, 0.12 + lift), rm if rm is not None else (0, -4.2, 0.9))
+        register_hold("rjack_eq", rj.name, "jack", head=[0, -2.85, 0.12 + lift])
     for s in (1, -1):
         if "stab" not in skip:
             cast.append(P(f"stab{s}", s * (1.3 + (0.5 if go else 0)), 0.1, 90 * s, "step_back" if go else "brace", "crew"))
@@ -185,6 +200,7 @@ def pit_crew(skip=(), phase="ready", car=True):
         h = hand_world(lm, "R")
         if h is not None:  # the pole sits in his right hand; board leans toward the driver (or straight up for go)
             l.location = h
+            register_hold(l.name, lm.name, "hand", hand="R")
             l.rotation_euler = (0 if go else math.radians(18), 0, 0)
         elif go:  # board lifted high: go
             l.location = (-0.72, 4.62, 1.15)
@@ -353,6 +369,10 @@ def icu_set(mode="chaos", baby=True, skip=()):
 # ---------------------------------------------------------------- hospital exterior (London)
 def exterior_set():
     M = palette()
+    import lib
+    if lib.STYLE.get("voxel"):  # passers-by on the pavement
+        for i, (x, y, r, o) in enumerate([(9.5, 4.6, 90, "suit"), (13.5, 3.4, -90, "doctor"), (16.5, 4.9, 90, "engineer"), (11.8, 5.2, -90, "scrubs")]):
+            P(f"walker{i}", x, y, r, "walk", o)
     world(0.8, (0.9, 0.93, 0.98))
     brick = mat("facade", (0.78, 0.74, 0.7), 0.8)
     box("street", (120, 120, 0.1), (0, 0, -0.05), M["clay2"])
