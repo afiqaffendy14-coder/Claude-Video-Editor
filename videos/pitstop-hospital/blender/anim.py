@@ -17,7 +17,7 @@ import shots
 #   orbit: degrees around the pivot's vertical axis   spin: degrees of roll drift   d: pivot distance
 MOVES = {
     1: dict(push=0.28, orbit=7, spin=-3, d=1.55),
-    2: dict(push=2.2, spin=24, d=8.0),
+    2: dict(push=1.2, spin=12, d=8.0),
     3: dict(crane=1.6, push=3.0, d=25.0),
     4: dict(orbit=-20, push=0.25, d=2.25),
     5: dict(push=0.32, truck=0.12, spin=2, d=1.1),

@@ -28,7 +28,8 @@ def _walk(p, t, speed=1.0, stride=26):
 
 
 def animate(name, base, t, ph):
-    """-> (pose, (forward, sideways) offset in metres in the person's own frame)."""
+    """-> (pose, (forward, sideways) offset in metres in the person's own frame).
+    Small, slow, continuous movements: just enough to feel alive. Pit crew stay at their stations."""
     p = {k: (list(v) if isinstance(v, (list, tuple)) else v) for k, v in base.items()}
     s = lambda f, a=1.0, o=0.0: a * math.sin(2 * math.pi * f * t + ph + o)
     off = (0.0, 0.0)
@@ -38,42 +39,64 @@ def animate(name, base, t, ph):
         v[i] += d
         p[k] = tuple(v)
 
-    if name in ("work", "reach", "reach2", "hold_bag"):
-        add("armL", 2, s(1.1, 16)); add("armR", 2, s(0.9, 18, 1.3)); add("armR", 0, s(0.7, 9, 0.4))
-        p["head"] = (p.get("head", (0, 0))[0] + s(0.35, 8), p.get("head", (0, 0))[1] + s(0.6, 5, 0.8))
-        p["lean"] = p.get("lean", 0) + s(0.5, 3)
+    def head(yaw, pitch):
+        h = p.get("head", (0, 0))
+        p["head"] = (h[0] + yaw, h[1] + pitch)
+
+    if name in ("work", "reach", "reach2", "hold_bag"):  # hands busy, head almost still
+        add("armL", 2, s(0.45, 7)); add("armR", 2, s(0.38, 8, 1.3)); add("armR", 0, s(0.3, 4, 0.4))
+        head(s(0.2, 2), s(0.25, 1.5, 0.8))
     elif name in ("talk", "watch"):
-        add("armR", 2, s(0.8, 20)); add("armR", 0, s(0.5, 10, 0.6))
-        p["head"] = (p.get("head", (0, 0))[0] + s(0.3, 12), p.get("head", (0, 0))[1] + s(0.5, 4))
-    elif name == "gun":
-        add("armL", 0, s(13, 2.5)); add("armR", 0, s(13, 2.5, 0.5)); p["lean"] = p.get("lean", 0) + s(7, 1.5)
-    elif name == "carry_out":
-        off = (-0.9 * t, 0.0)
-        p = _walk(p, t, 1.6, 20)
-        p["armL"], p["armR"] = base["armL"], base["armR"]
-    elif name == "tyre_push":
-        off = (0.45 * t, 0.0)
-        p = _walk(p, t, 1.4, 16)
-        p["armL"], p["armR"] = base["armL"], base["armR"]
-    elif name == "jack_lift":
-        p["lean"] = -4 - 12 * min(1.0, t / 1.2) + s(1.5, 1.5)
-    elif name == "ready":
-        p["crouch"] = p.get("crouch", 0) + 0.03 * math.sin(2 * math.pi * 2.2 * t + ph)
-    elif name == "step_back":
-        off = (-0.6 * t, 0.0)
-        p = _walk(p, t, 1.4, 18)
+        add("armR", 2, s(0.35, 8)); head(s(0.18, 3), 0)
+    elif name == "gun":  # the wheel gun buzzes in his hands; he stays put
+        add("armL", 0, s(9, 1.2)); add("armR", 0, s(9, 1.2, 0.5))
+    elif name == "carry_out":  # old tyre eased off the hub: a short, slow step back, still at his station
+        off = (-min(0.35, 0.18 * t), 0.0)
+    elif name == "tyre_push":  # new tyre offered up to the hub: a short, slow step in
+        off = (min(0.25, 0.12 * t), 0.0)
+    elif name == "jack_lift":  # leans back on the lever as the nose comes up
+        p["lean"] = p.get("lean", -12) - 4 * min(1.0, t / 1.5)
+    elif name in ("ready", "brace"):
+        p["crouch"] = p.get("crouch", 0) + 0.012 * math.sin(2 * math.pi * 0.8 * t + ph)
+    elif name == "step_back":  # only once the car has gone: a slow step away
+        off = (-0.25 * t, 0.0)
     elif name == "go_signal":
-        add("armR", 0, -95 + min(95, 140 * t))
+        add("armR", 0, -30 + min(30, 25 * t))
     elif name == "lead":
-        add("armR", 0, -80 + min(80, 110 * t)); p["head"] = (s(0.4, 10), 5)
+        add("armR", 0, -40 + min(40, 35 * t)); head(s(0.2, 2), 0)
     elif name in ("walk", "push"):
-        off = ((1.15 if name == "walk" else 0.8) * t, 0.0)
-        p = _walk(p, t, 1.7 if name == "walk" else 1.3, 26 if name == "walk" else 18)
+        off = ((1.0 if name == "walk" else 0.7) * t, 0.0)
+        p = _walk(p, t, 1.5 if name == "walk" else 1.2, 22 if name == "walk" else 16)
         if name == "push":
             p["armL"], p["armR"] = base["armL"], base["armR"]
-    else:  # breathing, small head turns
-        p["head"] = (p.get("head", (0, 0))[0] + s(0.25, 6), p.get("head", (0, 0))[1] + s(0.4, 2))
+    else:  # breathing, a little look around
+        head(s(0.15, 3), s(0.2, 1))
     return p, off
+
+
+def obstacles():
+    """World boxes hands must stay out of: the car body, cot walls, the baby, the operating table."""
+    keys = ("car_mono", "car_pod", "car_fw", "car_rw", "car_floor", "car_airbox", "car_nose", "car_halo",
+            "_side", "_end", "_head", "_hat", "_body", "_blanket", "_fold", "table_top", "table_pad", "op_baby")
+    out = []
+    for ob in bpy.data.objects:
+        if ob.type != "MESH" or ob.get("person") or any(p.get("person") for p in ob.parent_recursive):
+            continue
+        if not any(k in ob.name for k in keys) or ob.name.startswith(("wg", "newtyre", "fjack", "rjack", "lolli")):
+            continue
+        if "_w" in ob.name and ("car_wf" in ob.name or "car_wr" in ob.name):
+            continue
+        pts = [ob.matrix_world @ Vector(c) for c in ob.bound_box]
+        lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
+        hi = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
+        if (hi - lo).length < 12:
+            out.append((lo - Vector((0.03, 0.03, 0.03)), hi + Vector((0.03, 0.03, 0.03))))
+    return out
+
+
+def _inside(p, box):
+    lo, hi = box
+    return lo.x <= p.x <= hi.x and lo.y <= p.y <= hi.y and lo.z <= p.z <= hi.z
 
 
 class People:
@@ -86,6 +109,8 @@ class People:
                 a = json.loads(ob["args"])
                 self.people.append(dict(name=ob.name, pose_name=ob.get("pose_name", "custom"), **a))
         self.holds = json.loads(bpy.context.scene.get("holds", "[]"))
+        bpy.context.view_layer.update()
+        self.blocks = obstacles()
 
     def frame(self, t):
         from voxel import block_person
@@ -100,7 +125,14 @@ class People:
             heading = Vector((-math.sin(r), math.cos(r), 0))
             right = Vector((math.cos(r), math.sin(r), 0))
             loc = Vector(q["loc"]) + heading * fwd + right * side
-            root = block_person(q["name"], tuple(loc), q["rot"], pose, q["outfit"], q["scale"])
+            for attempt in range(16):  # no clipping: step back until both hands are clear of the car, cot, baby, table
+                root = block_person(q["name"], tuple(loc), q["rot"], pose, q["outfit"], q["scale"])
+                hands = [hand_world(root, k) for k in "LR"]
+                if hands[0] is None or not any(_inside(h, b) for h in hands for b in self.blocks):
+                    break
+                for ob in [root] + list(root.children_recursive):
+                    bpy.data.objects.remove(ob, do_unlink=True)
+                loc = loc - heading * 0.03
             root["pose_name"] = q["pose_name"]
             voxel.texture_person(root)
         bpy.context.view_layer.update()
