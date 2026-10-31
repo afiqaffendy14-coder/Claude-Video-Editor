@@ -120,9 +120,20 @@ def viewing():
     cam((0.1, -2.6, 1.45), (0, 2.4, 1.45), 28)
 
 
-def pit(c, **kw):
+def remove(*names):
+    """Delete people/props (root empty and everything under it) that would block a close-up."""
+    for n in names:
+        root = bpy.data.objects.get(n)
+        if not root:
+            continue
+        for ob in [root] + list(root.children_recursive):
+            bpy.data.objects.remove(ob, do_unlink=True)
+
+
+def pit(c, drop=(), **kw):
     def b():
         S.pit_set(**kw)
+        remove(*drop)
         cam(*c)
     return b
 
@@ -163,7 +174,7 @@ def checklist():
 def chart(before, after):
     def b():
         S.chart_set(before, after)
-        cam((0, -4.6, 1.15), (0, 0, 0.55 * before / 5.42 + 0.25), 34)
+        cam((0, -(2.4 + before * 0.42), 0.55 + before * 0.12), (0, 0, before * 0.16 + 0.05), 32)
     return b
 
 
@@ -186,7 +197,7 @@ SHOTS = [  # n, start, end, builder, description
     (4, 5.60, 7.84, theatre_top, "Cutaway top-down: the surgical team around the operating table."),
     (5, 7.84, 9.44, theatre_monitor, "Close: the heart monitor's green trace. The danger isn't over."),
     (6, 9.44, 11.20, corridor(-6.5, ((0.55, -10.8, 1.55), (0, 18, 1.3), 30), True), "Dim corridor: the team wheels the cot toward intensive care."),
-    (7, 11.20, 13.14, corridor(0, ((1.25, -0.6, 0.38), (0, 0.15, 0.4), 26, 1.35, 2.8)), "Low side angle: the cot, its castors and the team's feet on the move."),
+    (7, 11.20, 13.14, corridor(0, ((0.3, -2.5, 0.38), (0, 0.4, 0.4), 30, 2.1, 2.8)), "Low, from behind: the porter's feet and the cot's castors rolling toward intensive care."),
     (8, 13.14, 15.00, icu("empty", ((0.3, 0.25, 1.12), (0.02, 0.55, 0.82), 45, 0.48, 2.2)), "Macro: the breathing tube and lines on the baby."),
     (9, 15.00, 16.90, icu("chaos", ((0.05, 0.25, 1.95), (0, 0.5, 0.75), 34, 1.2, 2.8)), "Hands reach for the monitor cables: unplugged."),
     (10, 16.90, 18.40, corridor(0, ((1.35, -2.3, 1.45), (0, 0.6, 0.9), 24)), "Tracking: the cot, ventilator and IV pole on the move."),
@@ -196,14 +207,14 @@ SHOTS = [  # n, start, end, builder, description
     (14, 22.70, 24.40, viewing, "From behind: two doctors watch a pit stop on the staff-room screen."),
     (15, 24.40, 26.20, pit(((0, -3.2, 8.5), (0, 0.6, 0), 28)), "The pit stop itself, from above: the same rush."),
     (16, 26.20, 27.60, pit(((7.5, 8.0, 6.2), (0, 0.2, 0.3), 30)), "Wide: twenty mechanics at work (counter overlay: 20)."),
-    (17, 27.60, 29.00, pit(((1.6, 2.6, 1.1), (1.0, 1.8, 0.38), 40, 1.15, 2.8), crew_skip=("FR", "RR", "RL", "jacks", "stab", "wing", "lolli")), "Macro: the wheel gun on the front-left nut."),
+    (17, 27.60, 29.00, pit(((2.7, 3.5, 2.3), (1.15, 1.75, 0.4), 34, 2.9, 2.8), crew_skip=("FR", "RR", "RL", "jacks", "stab", "wing", "lolli")), "High three-quarter on the front-left corner: gunner, tyre off, tyre on, all at once."),
     (18, 29.00, 30.20, pit(((3.2, 4.2, 1.4), (1.3, 1.6, 0.5), 35), crew_skip=("FR", "RR", "RL", "jacks", "stab", "wing", "lolli")), "Low: old tyre off, new tyre on."),
     (19, 30.20, 31.37, pit_top(8, 24), "Top-down: every mechanic in a fixed spot, nobody in anyone's way."),
     (20, 31.37, 32.92, phone_call, "Close: the doctor's hand reaches for the phone (overlay: calling Ferrari)."),
     (21, 32.92, 34.90, ferrari(((0.1, -2.3, 1.6), (0, 3.0, 1.55), 30)), "Ferrari's engineers study the hospital's handover footage."),
     (22, 34.90, 37.08, ferrari(((0.0, 1.55, 1.9), (0, 3.0, 1.9), 33)), "Screen close-up: the handover, problems circled in red (overlay)."),
     (23, 37.08, 38.90, pit(((0, 0.25, 0.86), (-0.6, 3.5, 1.7), 32, 3.5, 4.0)), "Driver's eye through the halo: the lollipop board ahead."),
-    (24, 38.90, 40.40, pit(((0.6, 1.9, 1.35), (-0.85, 4.6, 1.45), 42, 3.0, 2.8)), "The lollipop man: one person in charge."),
+    (24, 38.90, 40.40, pit(((0.4, 2.6, 1.4), (-0.8, 4.2, 1.75), 28, 2.0, 2.8), crew_skip=("jacks",)), "The lollipop man: one person in charge."),
     (25, 40.40, 41.92, icu("order", ((0.55, 1.2, 2.1), (0, -0.75, 1.45), 40, 2.15, 2.8), skip=("o1",)), "The hospital's 'lollipop man': the anaesthetist in a red cap at the foot of the cot, hand raised, team turned to him."),
     (26, 41.92, 43.60, icu("order", ((0, 0.0, 4.6), (0, 0.0, 0), 22), top=True), "Cutaway top-down: everyone in a fixed spot (numbered roles overlay)."),
     (27, 43.60, 45.00, icu("order", ((0.05, 0.3, 1.85), (0, 0.5, 0.75), 34, 1.1, 2.8)), "Hands connect the lines in order."),
