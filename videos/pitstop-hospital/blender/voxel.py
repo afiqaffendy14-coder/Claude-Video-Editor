@@ -237,6 +237,7 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
     leg_len = 9 * P_ + 8 * P_ + 2 * P_
     pelvis = V((0, 0, leg_len - p["crouch"]))
     parts, hands = [], {}
+    joints = {}
     up, lo_, skin = M[o["upper"]], M[o["lower"]], M["skin"]
     # torso
     parts.append(_boxat(name + "_torso", (W, D, H), T, pelvis, (0, 0, H / 2), up))
@@ -280,6 +281,7 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
         parts.append(_seg(name + "_fa" + k, el, Rf, 4 * P_, t * 0.96, up))
         wr = el + Rf @ V((0, 0, -4 * P_))
         hands[k] = wr + Rf @ V((0, 0, -1.1 * P_))  # centre of the hand block, person-local
+        joints.update({"sh" + k: sh, "el" + k: el, "wr" + k: wr})
         parts.append(_seg(name + "_hand" + k, wr, Rf, 2.2 * P_, t * 0.92, M[o["hands"]]))
         # legs: thigh, shin, shoe
         lf, lside, knee = p["leg" + k]
@@ -290,6 +292,7 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
         Rs = Rl @ R("X", -knee)
         parts.append(_seg(name + "_sh" + k, kn, Rs, 8 * P_, t, lo_))
         an = kn + Rs @ V((0, 0, -8 * P_))
+        joints.update({"hp" + k: hp, "kn" + k: kn, "an" + k: an})
         yaw = Th
         parts.append(_boxat(name + "_shoe" + k, (t * 1.05, 6 * P_, 2 * P_), yaw, an, (0, P_, -P_), M[o["shoes"]]))
     root = link(bpy.data.objects.new(name, None))
@@ -298,6 +301,8 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
     root["args"] = _json.dumps(dict(loc=list(loc), rot=rot, pose=p, outfit=outfit, scale=scale))
     for k_, h_ in hands.items():
         root["hand" + k_] = tuple(h_)
+    joints.update(pelvis=pelvis, neck=neck)
+    root["joints"] = _json.dumps({k_: list(j_) for k_, j_ in joints.items()})  # person-local, for rigging
     for q in parts:
         q.parent = root
     root.location = loc
