@@ -19,7 +19,10 @@ echo [2/3] Rendering 1800 frames with %ENGINE% (re-run to resume if interrupted)
 echo [3/3] Grading, captions, voiceover and sound...
 "%BLENDER%" -b --factory-startup --python tools\compose.py -- out\frames 30 assets\captions_1080 assets\audio\sfx_full.flac 0 60 out\pitstop-hospital-final.mp4 1080 1920 || goto :fail
 echo DONE: %CD%\out\pitstop-hospital-final.mp4
+start "" "%CD%\out"
+pause
 exit /b 0
 :fail
 echo FAILED - see the messages above.
+pause
 exit /b 1
