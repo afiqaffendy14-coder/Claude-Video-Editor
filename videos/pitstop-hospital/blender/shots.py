@@ -209,7 +209,7 @@ def tiny_hand():
 
 SHOTS = [  # n, start, end, builder, description
     (1, 0.00, 1.60, surgeon(((0.18, 1.05, 1.2), (0, -0.4, 1.42), 42, 1.55, 2.2)), "A masked children's heart surgeon leans over a tiny baby in its cot. Cold open."),
-    (2, 1.60, 3.40, pit(((0.9, 6.4, 1.7), (0, 1.4, 0.45), 26, 4.6, 4.0, -6), phase="swap"), "...ask Ferrari? Head-on: the front jack lifts the nose, every wheel coming off at once."),
+    (2, 1.60, 3.40, pit_top(8, 24, phase="swap"), "...ask Ferrari for help? Top-down: the car up on its jacks, twenty crew working all four corners at once."),
     (3, 3.40, 5.60, exterior, "Street level, London: the hospital facade, a clock tower in the haze."),
     (4, 5.60, 7.84, theatre_top, "From the foot of the table: the surgical team, the baby's head and cap at the far end."),
     (5, 7.84, 9.44, theatre_monitor, "Close: the heart monitor's green trace. The danger isn't over."),
@@ -226,7 +226,7 @@ SHOTS = [  # n, start, end, builder, description
     (16, 26.20, 27.60, pit(((5.2, 5.6, 2.4), (0.2, 0.5, 0.4), 22, 7.0, 5.6, -4), phase="swap"), "Wide and high: car on the jacks, four tyres off at once (counter overlay: 20)."),
     (17, 27.60, 29.00, pit(((0.3, 3.85, 1.55), (1.6, 2.35, 0.7), 26, 2.05, 3.2, -6), phase="swap", drop=("wing1", "fjack", "fjack_eq")), "Close: the old front-left tyre comes away in the tyre-off man's hands."),
     (18, 29.00, 30.20, pit(((0.45, -0.4, 1.5), (1.45, 1.3, 0.7), 26, 2.05, 3.2, 5), phase="swap", drop=("stab1",)), "Low: the new tyre swings onto the hub, the gunner waiting with the wheel gun."),
-    (19, 30.20, 31.37, pit_top(8, 24, phase="swap"), "Top-down: every mechanic in a fixed spot, nobody in anyone's way."),
+    (19, 30.20, 31.37, pit(((0.9, 6.4, 1.7), (0, 1.4, 0.45), 26, 4.6, 4.0, -6), phase="swap"), "Head-on: the front jack lifts the nose, every mechanic in their own spot, nobody in anyone's way."),
     (20, 31.37, 32.92, phone_call, "Close: the doctor's hand reaches for the phone (overlay: calling Ferrari)."),
     (21, 32.92, 34.90, ferrari(((0.1, -2.3, 1.6), (0, 3.0, 1.55), 30)), "Ferrari's engineers study the hospital's handover footage."),
     (22, 34.90, 37.08, ferrari(((0.0, 1.55, 1.9), (0, 3.0, 1.9), 33)), "Screen close-up: the handover, problems circled in red (overlay)."),
