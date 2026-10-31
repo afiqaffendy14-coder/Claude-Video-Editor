@@ -128,6 +128,25 @@ def data_screen():
     return pixmat("datascreen", _img("datascreen", 16, 12, f), 0.6, 0.3, emit=1.5)
 
 
+def ecg_screen():
+    """Patient monitor: green heart trace, a blue and a yellow line, numbers as blocks, on black."""
+    trace = {0: 8, 1: 8, 2: 8, 3: 8, 4: 7, 5: 3, 6: 11, 7: 8, 8: 8, 9: 8, 10: 8, 11: 8, 12: 8, 13: 8, 14: 8, 15: 8}
+    def f(x, y):
+        yy = 15 - y
+        if x < 16 and trace[x] == yy or (x == 5 and 3 <= yy <= 8) or (x == 6 and 8 <= yy <= 11):
+            return (0.1, 1.0, 0.35)
+        if yy == 12 and x < 14 and x % 3 != 2:
+            return (0.2, 0.6, 1.0)
+        if yy == 14 and x < 12 and x % 4 != 3:
+            return (1.0, 0.85, 0.1)
+        if x >= 17 and 2 <= yy <= 5:
+            return (0.1, 1.0, 0.35)
+        if x >= 17 and 8 <= yy <= 10:
+            return (0.2, 0.6, 1.0)
+        return (0.01, 0.015, 0.02)
+    return pixmat("ecg", _img("ecg", 22, 16, f), 0.3, 0.3, emit=2.0)
+
+
 # ---------------------------------------------------------------- sky
 def sky_world(horizon=(0.7, 0.82, 0.95), zenith=(0.22, 0.48, 0.92), strength=1.0):
     sc = bpy.context.scene

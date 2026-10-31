@@ -165,7 +165,10 @@ def theatre_set(team=True, lamps_aside=False):
         P("surg3", 0.7, -0.7, 60, "reach", "surgeon")
         P("nurse1", -0.8, -0.8, -60, "work", "surgeon")
         P("anaesthetist", 0.35, 1.35, 160, "watch", "surgeon")
-    area("th_key", (0, 0, 3.1), (0, 0, 0), 900, 2.5)
+    import lib
+    if lib.STYLE.get("voxel"):  # blocky look reads brighter: calm the lamps and the key
+        bpy.data.materials["lamp"].node_tree.nodes["Principled BSDF"].inputs["Emission Strength"].default_value = 1.5
+    area("th_key", (0, 0, 3.1), (0, 0, 0), 900 if not lib.STYLE.get("voxel") else 320, 2.5)
     area("th_fill", (3, -3, 2.8), (0, 0, 1), 250, 3)
     area("th_fill2", (-3, 3, 2.8), (0, 0, 1), 150, 3)
 
@@ -291,6 +294,12 @@ def exterior_set():
     sc = bpy.context.scene
     # haze so the tower fades into the sky
     w = sc.world
+    import lib
+    if lib.STYLE.get("voxel"):  # blocky: gradient sky and block clouds instead of haze
+        import dress
+        dress.sky_world()
+        dress.clouds((0, 30), n=10, z=40, spread=60)
+        return
     vol = w.node_tree.nodes.new("ShaderNodeVolumeScatter")
     vol.inputs["Density"].default_value = 0.004
     w.node_tree.links.new(vol.outputs[0], w.node_tree.nodes["World Output"].inputs["Volume"])

@@ -177,6 +177,8 @@ def voxelize_scene(b=PX):
     for ob in list(bpy.data.objects):
         if ob.type not in ("MESH", "CURVE"):
             continue
+        if ob.type == "MESH" and (len(ob.data.vertices) <= 4 or "screen" in ob.name):
+            continue  # flat screens showing images stay as they are
         if _is_box(ob) or _under_person(ob):
             for m in list(ob.modifiers):
                 if m.type == "BEVEL":
