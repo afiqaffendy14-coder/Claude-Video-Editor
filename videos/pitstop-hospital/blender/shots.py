@@ -225,7 +225,7 @@ SHOTS = [  # n, start, end, builder, description
     (20, 31.37, 32.92, phone_call, "Close: the doctor's hand reaches for the phone (overlay: calling Ferrari)."),
     (21, 32.92, 34.90, ferrari(((0.1, -2.3, 1.6), (0, 3.0, 1.55), 30)), "Ferrari's engineers study the hospital's handover footage."),
     (22, 34.90, 37.08, ferrari(((0.0, 1.55, 1.9), (0, 3.0, 1.9), 33)), "Screen close-up: the handover, problems circled in red (overlay)."),
-    (23, 37.08, 38.90, pit(((0, 0.25, 0.86), (-0.6, 3.5, 1.7), 32, 3.5, 4.0)), "Driver's eye through the halo: the lollipop board ahead."),
+    (23, 37.08, 38.90, pit(((0, 0.34, 0.95), (-0.6, 3.5, 1.7), 30, 3.4, 4.0)), "Driver's eye through the halo: the lollipop board ahead."),
     (24, 38.90, 40.40, pit(((0.4, 2.6, 1.4), (-0.8, 4.2, 1.75), 28, 2.0, 2.8), crew_skip=("jacks",)), "The lollipop man: one person in charge."),
     (25, 40.40, 41.92, icu("order", ((0.55, 1.2, 2.1), (0, -0.75, 1.45), 40, 2.15, 2.8), skip=("o1",)), "The hospital's 'lollipop man': the anaesthetist in a red cap at the foot of the cot, hand raised, team turned to him."),
     (26, 41.92, 43.60, icu("order", ((0, 0.0, 4.6), (0, 0.0, 0), 22), top=True), "Cutaway top-down: everyone in a fixed spot (numbered roles overlay)."),
