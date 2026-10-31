@@ -198,8 +198,8 @@ def cot(name, baby=True, tubes=True):
         P.append(box(name + "_et1", (px * 0.6, 3 * px, px * 0.6), (0.02, 0.3 - 0.05, top + 0.5 * px), tubec))
         P.append(box(name + "_et2", (px * 0.6, px * 0.6, 5 * px), (0.02, 0.3 - 0.12, top + 2.6 * px), tubec))
         P.append(box(name + "_et3", (4 * px, px * 0.6, px * 0.6), (0.11, 0.3 - 0.12, top + 5.0 * px), tubec))
-        P.append(box(name + "_line1", (px * 0.4, 6 * px, px * 0.4), (-0.12, 0.05, 0.81), M["red"]))
-        P.append(box(name + "_line2", (px * 0.4, px * 0.4, 6 * px), (-0.12, -0.08, 0.92), M["red"]))
+        P.append(box(name + "_line1", (px * 0.35, 6 * px, px * 0.35), (-0.12, 0.05, 0.81), tubec))
+        P.append(box(name + "_line2", (px * 0.35, px * 0.35, 6 * px), (-0.12, -0.08, 0.92), tubec))
         tubes = False
     elif baby:
         warm = mat("babyblanket", (0.92, 0.5, 0.08), 0.85)

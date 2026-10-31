@@ -9,7 +9,7 @@
   "n": 2,
   "start": 1.6,
   "end": 3.4,
-  "desc": "...ask Ferrari? Top-down: the red car in its box, twenty crew around it."
+  "desc": "...ask Ferrari? Head-on: the front jack lifts the nose, every wheel coming off at once."
  },
  {
   "n": 3,
@@ -21,7 +21,7 @@
   "n": 4,
   "start": 5.6,
   "end": 7.84,
-  "desc": "Cutaway top-down: the surgical team around the operating table."
+  "desc": "From the foot of the table: the surgical team, the baby's head and cap at the far end."
  },
  {
   "n": 5,
@@ -75,7 +75,7 @@
   "n": 13,
   "start": 21.4,
   "end": 22.7,
-  "desc": "Over the cot, the notes pass from one pair of hands to another; a page slips loose and falls."
+  "desc": "Floor level: an IV line has come loose and lies on the floor, dripping, while everyone looks elsewhere."
  },
  {
   "n": 14,
@@ -87,25 +87,25 @@
   "n": 15,
   "start": 24.4,
   "end": 26.2,
-  "desc": "The pit stop itself, from above: the same rush."
+  "desc": "Low behind the lollipop man: the car rolls in, twenty crew poised."
  },
  {
   "n": 16,
   "start": 26.2,
   "end": 27.6,
-  "desc": "Wide: twenty mechanics at work (counter overlay: 20)."
+  "desc": "Wide and high: car on the jacks, four tyres off at once (counter overlay: 20)."
  },
  {
   "n": 17,
   "start": 27.6,
   "end": 29.0,
-  "desc": "High three-quarter on the front-left corner: gunner, tyre off, tyre on, all at once."
+  "desc": "Close: the old front-left tyre comes away in the tyre-off man's hands."
  },
  {
   "n": 18,
   "start": 29.0,
   "end": 30.2,
-  "desc": "Low: old tyre off, new tyre on."
+  "desc": "Low: the new tyre swings onto the hub, the gunner waiting with the wheel gun."
  },
  {
   "n": 19,
@@ -159,7 +159,7 @@
   "n": 27,
   "start": 43.6,
   "end": 45.0,
-  "desc": "Hands connect the lines in order."
+  "desc": "Side angle: lines reconnected one by one, in order."
  },
  {
   "n": 28,
@@ -189,13 +189,13 @@
   "n": 32,
   "start": 52.6,
   "end": 54.3,
-  "desc": "Low: the car leaves its box at speed."
+  "desc": "Low and tilted: board up, the car pulls out toward the fast lane, crew stepping clear."
  },
  {
   "n": 33,
   "start": 54.3,
   "end": 56.3,
-  "desc": "The crew steps back in the empty box."
+  "desc": "The empty box: crew stepping back, old tyres on the ground, the board up."
  },
  {
   "n": 34,

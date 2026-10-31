@@ -27,6 +27,13 @@ POSE = dict(
     talk=dict(armR=(45, 15, 70), armL=(15, 10, 40), head=(20, 0)),
     sit=dict(crouch=0.45, lean=5, legL=(90, 6, 90), legR=(90, 6, 90), armL=(55, 6, 55), armR=(55, 6, 55)),
     hold_bag=dict(lean=10, armL=(50, 10, 60), armR=(70, 10, 40), head=(0, 25)),
+    # pit-stop action
+    carry_out=dict(crouch=0.12, lean=-8, legL=(-15, 6, 10), legR=(28, 6, 22), armL=(50, 25, 60), armR=(50, 25, 60), head=(0, 12)),
+    tyre_push=dict(crouch=0.18, lean=28, legL=(42, 8, 40), legR=(-12, 8, 15), armL=(72, 18, 22), armR=(72, 18, 22)),
+    jack_lift=dict(crouch=0.12, lean=-14, legL=(-25, 8, 15), legR=(32, 8, 25), armL=(38, 6, 8), armR=(38, 6, 8)),
+    ready=dict(crouch=0.28, lean=22, legL=(32, 12, 42), legR=(32, 12, 42), armL=(42, 10, 40), armR=(42, 10, 40)),
+    go_signal=dict(armR=(165, 8, 5), armL=(15, 10, 20), head=(0, -12)),
+    step_back=dict(lean=-6, legL=(-22, 6, 10), legR=(22, 6, 15), armL=(25, 15, 30), armR=(25, 15, 30), head=(0, -5)),
 )
 
 
@@ -36,7 +43,7 @@ def P(name, x, y, rot, pose, outfit, **kw):
 
 
 # ---------------------------------------------------------------- pit lane
-def pit_set(car_y=0.0, crew=True, wheels_off=False, lit=True, car=True, crew_skip=()):
+def pit_set(car_y=0.0, crew=True, wheels_off=False, lit=True, car=True, crew_skip=(), phase="ready"):
     """Car faces +Y in its box at the origin; garage on -X; pit wall on +X."""
     M = palette()
     world(0.55, (0.93, 0.94, 0.96))
@@ -77,8 +84,10 @@ def pit_set(car_y=0.0, crew=True, wheels_off=False, lit=True, car=True, crew_ski
         if wheels_off:
             for nm in ("car_wf1", "car_wf-1"):
                 bpy.data.objects[nm].location.x *= 1.6
+    if car and phase in ("swap",):
+        bpy.data.objects["car"].location.z = 0.07  # up on the jacks
     if crew:
-        pit_crew(crew_skip)
+        pit_crew(crew_skip, phase, car)
     import lib
     if lib.STYLE.get("voxel"):
         import dress
@@ -92,40 +101,64 @@ def pit_set(car_y=0.0, crew=True, wheels_off=False, lit=True, car=True, crew_ski
     return M
 
 
-def pit_crew(skip=()):
-    """About twenty: three per wheel, two jacks, two stabilisers, two wing men, the lollipop man."""
+def pit_crew(skip=(), phase="ready", car=True):
+    """About twenty: three per wheel, two jacks, two stabilisers, two wing men, the lollipop man.
+    phase: 'ready' (poised, car in the box), 'arrive' (poised, car rolling in), 'swap' (car on jacks, old tyres
+    coming off, new ones going on), 'go' (crew stepping back, board up, car leaving or gone)."""
     cast = []
-    for (y, side, tag) in [(1.8, 1, "FL"), (1.8, -1, "FR"), (-1.78, 1, "RL"), (-1.78, -1, "RR")]:
+    swap, go = phase == "swap", phase == "go"
+    for (y, side, tag, wn) in [(1.8, 1, "FL", "car_wf1"), (1.8, -1, "FR", "car_wf-1"), (-1.78, 1, "RL", "car_wr1"), (-1.78, -1, "RR", "car_wr-1")]:
         if tag in skip:
             continue
         rot = 90 if side == 1 else -90  # face the car (people face +Y at rot 0)
-        cast.append(P(f"gun{tag}", side * 1.45, y, rot, "gun", "crew"))
+        out = side * (0.5 if go else 0.0)  # step back from the car when it goes
+        cast.append(P(f"gun{tag}", side * 1.45 + out, y, rot, "step_back" if go else "gun", "crew"))
         g = wheel_gun(f"wg{tag}")
-        g.location = (side * 1.15, y, 0.38)
+        g.location = (side * (1.15 if not go else 1.75), y, 0.38 if not go else 0.9)
         g.rotation_euler = (0, 0, math.radians(rot))
-        cast.append(P(f"off{tag}", side * 1.75, y + 0.75, rot + side * 25, "tyre_off", "crew"))
-        cast.append(P(f"on{tag}", side * 1.8, y - 0.75, rot - side * 25, "tyre_hold", "crew"))
+        cast.append(P(f"off{tag}", side * 1.75 + out, y + 0.75, rot + side * 25,
+                      "carry_out" if swap else ("step_back" if go else "tyre_off"), "crew"))
+        cast.append(P(f"on{tag}", side * 1.8 + out, y - 0.75, rot - side * 25,
+                      "tyre_push" if swap else ("step_back" if go else "tyre_hold"), "crew"))
         t = wheel(f"newtyre{tag}", 0.36, 0.34, 1)
-        t.location = (side * 1.45, y - 0.85, 0.62)
-        t.rotation_euler = (0, 0, 0)
+        if swap:  # the new tyre is on its way onto the hub
+            t.location = (side * 1.3, y - 0.45, 0.48)
+            t.rotation_euler = (0, 0, math.radians(-side * 20))
+        elif go:  # the old tyre is left lying beside the box
+            t.location = (side * 2.6, y + 0.4, 0.17)
+            t.rotation_euler = (0, math.radians(90), 0)
+        else:
+            t.location = (side * 1.45, y - 0.85, 0.62)
+        if swap and car and wn in bpy.data.objects:  # the old tyre is in the off-man's hands
+            w = bpy.data.objects[wn]
+            mw = w.matrix_world.copy()
+            w.parent = None
+            w.matrix_world = mw
+            w.location = (side * 1.55, y + 0.55, 0.52)
+            w.rotation_euler = (0, 0, math.radians(side * 25))
     if "jacks" not in skip:
-        cast.append(P("fjack", 0, 4.0, 180, "jack", "crew"))
+        jp = "jack_lift" if swap else ("step_back" if go else "jack")
+        cast.append(P("fjack", 0, 4.0 + (0.6 if go else 0), 180, jp, "crew"))
         j = jack("fjack_eq")
         j.location = (0, 2.95, 0)
-        j.rotation_euler = (0, 0, math.pi)
-        cast.append(P("rjack", 0, -3.9, 0, "jack", "crew"))
+        j.rotation_euler = (math.radians(-6) if swap else 0, 0, math.pi)
+        cast.append(P("rjack", 0, -3.9, 0, jp, "crew"))
         j2 = jack("rjack_eq")
         j2.location = (0, -2.85, 0)
     for s in (1, -1):
         if "stab" not in skip:
-            cast.append(P(f"stab{s}", s * 1.3, 0.1, 90 * s, "brace", "crew"))
+            cast.append(P(f"stab{s}", s * (1.3 + (0.5 if go else 0)), 0.1, 90 * s, "step_back" if go else "brace", "crew"))
         if "wing" not in skip:
-            cast.append(P(f"wing{s}", s * 1.2, 2.95, 180 - s * 30, "brace", "crew"))
+            cast.append(P(f"wing{s}", s * (1.2 + (0.5 if go else 0)), 2.95, 180 - s * 30, "step_back" if go else "brace", "crew"))
     if "lolli" not in skip:
-        cast.append(P("lolliman", -0.9, 4.6, 180, "lolli", "crew"))
+        cast.append(P("lolliman", -0.9, 4.6, 180, "go_signal" if go else "lolli", "crew"))
         l = lollipop("lolli_eq")
-        l.location = (-0.75, 4.25, 0.65)
-        l.rotation_euler = (math.radians(28), 0, 0)
+        if go:  # board lifted high: go
+            l.location = (-0.72, 4.62, 1.15)
+            l.rotation_euler = (0, 0, 0)
+        else:
+            l.location = (-0.75, 4.25, 0.65)
+            l.rotation_euler = (math.radians(28), 0, 0)
     return cast
 
 
@@ -144,7 +177,21 @@ def theatre_set(team=True, lamps_aside=False):
     # the tiny patient under drapes, only the drape shape shows
     d = drapes("drape", 1.0, 0.75)
     d.location = (0, 0.15, 1.08)
-    sphere("pt_bump", 1, (0, 0.2, 1.1), M["gown"], scale=(0.16, 0.3, 0.06))
+    import lib
+    if lib.STYLE.get("voxel"):  # the baby on the table: face up, cap, closed eyes; dark surgical drape so it reads
+        px = 0.045
+        drape_dark = mat("drape_dark", (0.05, 0.3, 0.34), 0.85)
+        bpy.data.objects["drape"].data.materials[0] = drape_dark
+        top = 1.15 + 1.75 * px
+        box("op_baby_head", (5 * px, 5 * px, 3.5 * px), (0, 0.62, 1.15), M["babyskin"])
+        box("op_baby_cap", (5 * px + 0.01, 1.6 * px, 3.5 * px + 0.012), (0, 0.69, 1.152), mat("babyhat", (0.98, 0.9, 0.75), 0.9))
+        for sx in (1, -1):
+            box(f"op_baby_eye{sx}", (1.1 * px, 0.35 * px, 0.008), (sx * 1.1 * px, 0.62, top), M["dark"])
+            box(f"op_baby_cheek{sx}", (px, px, 0.006), (sx * 1.5 * px, 0.57, top), mat("cheek", (0.95, 0.5, 0.45), 0.6))
+        box("op_baby_body", (6 * px, 9 * px, 2 * px), (0, 0.28, 1.13), drape_dark)
+        box("op_site", (2.4 * px, 2.4 * px, 0.012), (0, 0.36, 1.18), mat("site", (0.85, 0.45, 0.4), 0.5))
+    else:
+        sphere("pt_bump", 1, (0, 0.2, 1.1), M["gown"], scale=(0.16, 0.3, 0.06))
     for i, (x, y) in enumerate([(-1.1, 0.9), (1.2, -0.9)] if lamps_aside else [(-0.45, 0.4), (0.5, -0.2)]):
         l = surgical_lamp(f"lamp{i}", 1.0)
         l.location = (x, y, 2.15)
