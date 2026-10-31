@@ -4,13 +4,14 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { execSync } from "node:child_process";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const { chromium } = require(join(execSync("npm root -g").toString().trim(), "playwright"));
-const [out, W, H, from = "0", to = "60"] = process.argv.slice(2);
+const [outArg, W, H, from = "0", to = "60"] = process.argv.slice(2);
+const out = resolve(outArg);
 mkdirSync(out, { recursive: true });
 const words = JSON.parse(readFileSync(join(here, "timing.json"))).lines.flatMap((l) => l.words);
 const chunks = [];
@@ -31,13 +32,15 @@ const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: +W, height: +H } });
 const meta = [];
 for (const [i, c] of list.entries()) {
-  await page.setContent(`<!doctype html><html><head><style>
+  const html = join(out, "cap.html");  // loaded from disk so the local font file is allowed to load
+  writeFileSync(html, `<!doctype html><html><head><style>
     @font-face { font-family: M; src: url(${font}); font-weight: 900; }
     html, body { margin: 0; background: transparent; width: ${W}px; height: ${H}px; }
     div { position: absolute; left: 6%; right: 6%; top: 58%; text-align: center; font: 900 ${size}px/1.1 M, sans-serif;
       color: #fff; -webkit-text-stroke: ${Math.round(size * 0.26)}px #000; paint-order: stroke fill;
       text-shadow: 0 ${Math.round(size * 0.1)}px ${Math.round(size * 0.2)}px rgba(0,0,0,.35); }
   </style></head><body><div>${c.text}</div></body></html>`);
+  await page.goto("file://" + html);
   await page.evaluate(() => document.fonts.ready);
   const f = join(out, `c${String(i).padStart(2, "0")}.png`);
   await page.screenshot({ path: f, omitBackground: true });
