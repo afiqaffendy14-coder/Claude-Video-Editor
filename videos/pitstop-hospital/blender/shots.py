@@ -27,6 +27,7 @@ def dollhouse():
 
 def cam(loc, target, lens=35, dof=None, fstop=2.8, roll=0.0):
     camera(V(loc), V(target), lens, dof, fstop, roll)
+    bpy.context.scene["cam_roll"] = roll or 0.0  # anim.py keeps the storyboard's tilt while it moves the camera
 
 
 def floor(name, material):
