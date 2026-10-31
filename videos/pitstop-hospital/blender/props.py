@@ -133,14 +133,15 @@ def lollipop(name):
     M = palette()
     if lib.STYLE.get("voxel"):  # pixel disc built row by row, white bar across the middle
         px = 0.045
-        P = [box(name + "_pole", (px, px, 1.5), (0, 0, 0.75), M["grey"])]
+        # the group origin is the grip point: the pole runs 0.45 m below the hand and 1.05 m above it
+        P = [box(name + "_pole", (px, px, 1.5), (0, 0, 0.3), M["grey"])]
         r = 6
         for j in range(-r, r):
             half = int(math.sqrt(max(0, r * r - (j + 0.5) ** 2)) + 0.5)
             if half <= 0:
                 continue
             m = M["white"] if j in (-1, 0) else M["red"]
-            P.append(box(name + f"_row{j}", (2 * half * px, 0.03, px), (0, 0, 1.55 + (j + 0.5) * px), m))
+            P.append(box(name + f"_row{j}", (2 * half * px, 0.03, px), (0, 0, 1.1 + (j + 0.5) * px), m))
         return group(name, P)
     P = [cyl(name + "_pole", 0.018, 1.6, (0, 0, 0.8), M["grey"]),
          cyl(name + "_disc", 0.26, 0.03, (0, 0, 1.55), M["red"], rot=(math.pi / 2, 0, 0), bev=0.01)]
@@ -195,11 +196,7 @@ def cot(name, baby=True, tubes=True):
         P.append(box(name + "_fold", (6 * px + 0.01, 1 * px, 2.4 * px + 0.012), (0, 0.18, 0.75), hat))
         # breathing tube and two lines, built as thin blocks so they stay clean on the grid
         tubec = mat("tubeclear", (0.85, 0.92, 0.95), 0.2, alpha=0.75)
-        P.append(box(name + "_et1", (px * 0.6, 3 * px, px * 0.6), (0.02, 0.3 - 0.05, top + 0.5 * px), tubec))
-        P.append(box(name + "_et2", (px * 0.6, px * 0.6, 5 * px), (0.02, 0.3 - 0.12, top + 2.6 * px), tubec))
-        P.append(box(name + "_et3", (4 * px, px * 0.6, px * 0.6), (0.11, 0.3 - 0.12, top + 5.0 * px), tubec))
-        P.append(box(name + "_line1", (px * 0.35, 6 * px, px * 0.35), (-0.12, 0.05, 0.81), tubec))
-        P.append(box(name + "_line2", (px * 0.35, px * 0.35, 6 * px), (-0.12, -0.08, 0.92), tubec))
+        P.append(box(name + "_mouthpiece", (1.2 * px, 1.2 * px, 1.2 * px), (0.0, 0.3 - 1.3 * px, top + 0.4 * px), M["white"]))
         tubes = False
     elif baby:
         warm = mat("babyblanket", (0.92, 0.5, 0.08), 0.85)
@@ -319,10 +316,11 @@ def f1car_block(name="car", body="red", driver=True):
     b("fin", (0.03, 1.0, 0.16), (0, -1.15, 0.72))
     if driver:
         # the driver: a full-size helmet (same scale as the crew's) in bright yellow so he stands out in the red car
-        b("helmet", (0.32, 0.34, 0.3), (0, 0.1, 0.76), M["yellow"])
-        b("hvisor", (0.27, 0.03, 0.11), (0, 0.27, 0.79), C)
-        b("hstripe", (0.33, 0.35, 0.04), (0, 0.1, 0.85), M["red"])
-        b("hchin", (0.24, 0.06, 0.07), (0, 0.27, 0.68), M["yellow"])
+        # same size as the crew's helmets (0.40 m), sitting on the cockpit rim
+        b("helmet", (0.4, 0.4, 0.38), (0, 0.14, 0.79), M["yellow"])
+        b("hvisor", (0.33, 0.04, 0.14), (0, 0.355, 0.83), C)
+        b("hstripe", (0.41, 0.41, 0.05), (0, 0.14, 0.92), M["red"])
+        b("hchin", (0.3, 0.06, 0.08), (0, 0.35, 0.66), M["yellow"])
     # halo: three bars and a pillar
     b("halo_pillar", (0.05, 0.05, 0.22), (0, 0.78, 0.68), C)
     b("halo_top", (0.05, 0.35, 0.05), (0, 0.6, 0.81), C)

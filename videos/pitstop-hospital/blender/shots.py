@@ -52,22 +52,26 @@ def surgeon(c):
     return b
 
 
-def loose_line():
-    """Floor level beside the cot: an IV line has come loose and lies on the floor, dripping. Nobody has noticed."""
+def falling():
+    """Mid-handover, everyone busy at the cot: a syringe slips off the edge and a line tugged loose falls to the floor."""
     S.icu_set("chaos")
+    remove("c3", "c5")
     M = palette()
     px = voxel.PX
-    line = mat("ivline", (0.3, 0.7, 1.0), 0.25)
-    # hanging from the cot side, then lying across the floor in a few straight runs, ending in a loose connector
-    box("ll_hang", (px * 0.8, px * 0.8, 0.5), (0.37, -0.05, 0.36), line)
-    box("ll_run1", (px * 0.8, 0.42, px * 0.8), (0.37, -0.26, 0.018), line)
-    box("ll_run2", (0.34, px * 0.8, px * 0.8), (0.54, -0.47, 0.018), line)
-    box("ll_run3", (px * 0.8, 0.26, px * 0.8), (0.71, -0.6, 0.018), line)
-    box("ll_conn", (1.4 * px, 2.2 * px, 1.4 * px), (0.71, -0.76, 0.03), M["white"])
-    box("ll_cap", (1.0 * px, 0.8 * px, 1.0 * px), (0.71, -0.84, 0.03), M["yellow"])
-    for i, (x, y) in enumerate([(0.73, -0.9), (0.69, -0.95), (0.76, -0.99)]):
-        box(f"ll_drip{i}", (0.6 * px, 0.6 * px, 0.15 * px), (x, y, 0.004), line)
-    cam((1.05, -1.25, 0.11), (0.64, -0.66, 0.03), 40, dof=0.72, fstop=1.8, roll=-4)
+    from lib import tube
+    # the syringe, mid-fall, tumbling off the cot's edge
+    tilt = (math.radians(35), math.radians(-20), math.radians(30))
+    box("syr_barrel", (1.2 * px, 6 * px, 1.2 * px), (0.48, -0.42, 0.62), M["white"], rot=tilt)
+    box("syr_plunger", (0.6 * px, 3 * px, 0.6 * px), (0.53, -0.3, 0.66), M["grey"], rot=tilt)
+    box("syr_tip", (0.4 * px, 1.5 * px, 0.4 * px), (0.43, -0.54, 0.58), M["steel"], rot=tilt)
+    # a line pulled loose: hanging over the cot side and pooling on the floor, its connector open
+    line = mat("ivline_soft", (0.45, 0.75, 1.0), 0.25)
+    t = tube("loose_line", [V((0.3, 0.1, 0.86)), V((0.4, -0.02, 0.8)), V((0.45, -0.12, 0.45)), V((0.5, -0.25, 0.06)),
+                            V((0.75, -0.45, 0.02)), V((0.95, -0.4, 0.02))], 0.007, line)
+    t["smooth"] = True
+    box("loose_conn", (1.4 * px, 2.2 * px, 1.4 * px), (0.97, -0.4, 0.03), M["white"])
+    box("loose_cap", (1.0 * px, 0.8 * px, 1.0 * px), (1.03, -0.36, 0.03), M["yellow"])
+    cam((1.85, -1.75, 1.05), (0.4, -0.15, 0.6), 30, 2.3, 2.8, -5)
 
 
 def exterior():
@@ -143,11 +147,12 @@ def pit(c, drop=(), **kw):
 
 
 def leaving():
+    """Board up, the car pulls out of the box toward the fast lane; the crew has stepped back on both sides."""
     S.pit_set(phase="go", crew_skip=("FL", "RL", "stab", "wing"))
     car = bpy.data.objects["car"]
-    car.location = (1.7, 4.3, 0)
-    car.rotation_euler = (0, 0, math.radians(-28))
-    cam((1.9, -1.4, 0.32), (1.2, 5.0, 0.6), 22, None, 2.8, -8)
+    car.location = (2.4, 5.4, 0)
+    car.rotation_euler = (0, 0, math.radians(-35))
+    cam((-1.3, -1.2, 0.65), (2.0, 5.2, 0.6), 26, None, 2.8, -6)
 
 
 def phone_call():
@@ -215,7 +220,7 @@ SHOTS = [  # n, start, end, builder, description
     (10, 16.90, 18.40, corridor(0, ((1.35, -2.3, 1.45), (0, 0.6, 0.9), 24, None, 2.8, -5)), "Tracking: the cot, ventilator and IV pole on the move."),
     (11, 18.40, 20.10, icu("chaos", ((0, 0.15, 4.6), (0, 0.15, 0), 22), top=True), "Cutaway top-down: several teams crowd one tiny bed."),
     (12, 20.10, 21.40, icu("chaos", ((0.15, -0.35, 2.15), (0, 0.35, 0.8), 26, None, 2.8, 6)), "High angle: many hands at once. In that rush..."),
-    (13, 21.40, 22.70, loose_line, "Floor level: an IV line has come loose and lies on the floor, dripping, while everyone looks elsewhere."),
+    (13, 21.40, 22.70, falling, "Mid-handover, everyone busy at the cot: a syringe tumbles off the edge and a line tugged loose falls to the floor."),
     (14, 22.70, 24.40, viewing, "From behind: two doctors watch a pit stop on the staff-room screen."),
     (15, 24.40, 26.20, pit(((-2.4, 5.6, 0.55), (0, -1.0, 0.6), 24, None, 2.8, 6), phase="arrive", car_y=-2.6), "Low behind the lollipop man: the car rolls in, twenty crew poised."),
     (16, 26.20, 27.60, pit(((5.2, 5.6, 2.4), (0.2, 0.5, 0.4), 22, None, 2.8, -4), phase="swap"), "Wide and high: car on the jacks, four tyres off at once (counter overlay: 20)."),
@@ -225,7 +230,7 @@ SHOTS = [  # n, start, end, builder, description
     (20, 31.37, 32.92, phone_call, "Close: the doctor's hand reaches for the phone (overlay: calling Ferrari)."),
     (21, 32.92, 34.90, ferrari(((0.1, -2.3, 1.6), (0, 3.0, 1.55), 30)), "Ferrari's engineers study the hospital's handover footage."),
     (22, 34.90, 37.08, ferrari(((0.0, 1.55, 1.9), (0, 3.0, 1.9), 33)), "Screen close-up: the handover, problems circled in red (overlay)."),
-    (23, 37.08, 38.90, pit(((0, 0.34, 0.95), (-0.6, 3.5, 1.7), 30, 3.4, 4.0)), "Driver's eye through the halo: the lollipop board ahead."),
+    (23, 37.08, 38.90, pit(((0, 0.45, 1.03), (-0.6, 3.5, 1.7), 30, 3.3, 4.0)), "Driver's eye through the halo: the lollipop board ahead."),
     (24, 38.90, 40.40, pit(((0.4, 2.6, 1.4), (-0.8, 4.2, 1.75), 28, 2.0, 2.8), crew_skip=("jacks",)), "The lollipop man: one person in charge."),
     (25, 40.40, 41.92, icu("order", ((0.55, 1.2, 2.1), (0, -0.75, 1.45), 40, 2.15, 2.8), skip=("o1",)), "The hospital's 'lollipop man': the anaesthetist in a red cap at the foot of the cot, hand raised, team turned to him."),
     (26, 41.92, 43.60, icu("order", ((0, 0.0, 4.6), (0, 0.0, 0), 22), top=True), "Cutaway top-down: everyone in a fixed spot (numbered roles overlay)."),
@@ -234,7 +239,7 @@ SHOTS = [  # n, start, end, builder, description
     (29, 46.67, 47.64, icu("order", ((1.75, 1.05, 1.9), (-0.15, -0.15, 0.95), 26, 2.0, 2.8, 4), skip=("o1", "o3")), "Calm, ordered handover. And it worked."),
     (30, 47.64, 50.10, chart(5.42, 3.15), "Block chart: errors per handover, 5.42 blocks to 3.15 (overlay: -42%)."),
     (31, 50.10, 52.60, chart(2.09, 1.07), "Block chart: missing information, 2.09 to 1.07, almost half."),
-    (32, 52.60, 54.30, leaving, "Low and tilted: board up, the car pulls out toward the fast lane, crew stepping clear."),
+    (32, 52.60, 54.30, leaving, "From behind the crew: board up, the car pulls out of the box and away toward the fast lane."),
     (33, 54.30, 56.30, pit(((1.6, 8.5, 1.6), (0, 0, 1.0), 32, None, 2.8, 4), car=False, phase="go"), "The empty box: crew stepping back, old tyres on the ground, the board up."),
     (34, 56.30, 58.10, tiny_hand, "Macro: the baby's hand around a gloved finger."),
     (35, 58.10, 60.00, surgeon(((0.25, 1.4, 1.25), (0, -0.4, 1.42), 36, 1.95, 2.2)), "Back on the surgeon, pushing in: the loop back to the opening question."),

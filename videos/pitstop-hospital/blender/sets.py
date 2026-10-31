@@ -37,6 +37,14 @@ POSE = dict(
 )
 
 
+def hand_world(root, k="R"):
+    """World position of a block person's hand (set by voxel.block_person), or None."""
+    if ("hand" + k) not in root:
+        return None
+    bpy.context.view_layer.update()
+    return root.matrix_world @ Vector(root["hand" + k])
+
+
 def P(name, x, y, rot, pose, outfit, **kw):
     pose_ = POSE[pose] if isinstance(pose, str) else pose
     return person(name, (x, y, 0), rot, pose_, outfit, **kw)
@@ -138,7 +146,7 @@ def pit_crew(skip=(), phase="ready", car=True):
             w.rotation_euler = (0, 0, math.radians(side * 25))
     if "jacks" not in skip:
         jp = "jack_lift" if swap else ("step_back" if go else "jack")
-        cast.append(P("fjack", 0, 4.0 + (0.6 if go else 0), 180, jp, "crew"))
+        cast.append(P("fjack", -1.25 if go else 0, 4.0 if not go else 3.9, 180, jp, "crew"))  # steps aside to let the car out
         j = jack("fjack_eq")
         j.location = (0, 2.95, 0)
         j.rotation_euler = (math.radians(-6) if swap else 0, 0, math.pi)
@@ -151,9 +159,14 @@ def pit_crew(skip=(), phase="ready", car=True):
         if "wing" not in skip:
             cast.append(P(f"wing{s}", s * (1.2 + (0.5 if go else 0)), 2.95, 180 - s * 30, "step_back" if go else "brace", "crew"))
     if "lolli" not in skip:
-        cast.append(P("lolliman", -0.9, 4.6, 180, "go_signal" if go else "lolli", "crew"))
+        lm = P("lolliman", -0.9, 4.6, 180, "go_signal" if go else "lolli", "crew")
+        cast.append(lm)
         l = lollipop("lolli_eq")
-        if go:  # board lifted high: go
+        h = hand_world(lm, "R")
+        if h is not None:  # the pole sits in his right hand; board leans toward the driver (or straight up for go)
+            l.location = h
+            l.rotation_euler = (0 if go else math.radians(18), 0, 0)
+        elif go:  # board lifted high: go
             l.location = (-0.72, 4.62, 1.15)
             l.rotation_euler = (0, 0, 0)
         else:
@@ -305,6 +318,16 @@ def icu_set(mode="chaos", baby=True, skip=()):
     if lib.STYLE.get("voxel"):
         import dress
         dress.icu_dress()
+        if baby:
+            hose = mat("hose", (0.85, 0.92, 0.96), 0.3)
+            ivl = mat("ivline_soft", (0.45, 0.75, 1.0), 0.25)
+            et = tube("et_hose", [V((0.0, 0.54, 0.86)), V((0.0, 0.5, 1.02)), V((-0.32, 0.86, 1.12)),
+                                  V((-0.78, 1.28, 1.05)), V((-0.95, 1.37, 0.95))], 0.014, hose)
+            iv = tube("iv_line", [V((-0.1, 0.48, 0.8)), V((-0.3, 0.62, 0.93)), V((-0.42, 0.78, 0.95)),
+                                  V((-0.95, 1.12, 1.08)), V((-1.45, 1.4, 1.68))], 0.006, ivl)
+            et["smooth"] = True
+            iv["smooth"] = True
+            box("iv_tape", (0.05, 0.04, 0.02), (-0.1, 0.48, 0.79), M["white"])
 
 
 # ---------------------------------------------------------------- hospital exterior (London)
@@ -378,9 +401,10 @@ def screen_image(name, img_path, size=(1.6, 0.9), loc=(0, 0, 1.5), rot=0.0, stre
 
 
 def viewing_room(img, outfit="doctor"):
-    """Dim staff room: two doctors watching a pit stop on a wall screen."""
+    """Staff room: two doctors watching a pit stop on a wall screen (screen-lit, but not murky)."""
     M = palette()
-    world(0.05, (0.8, 0.85, 0.9))
+    world(0.18, (0.8, 0.85, 0.9))
+    area("vr_ceiling", (0, 0, 3.0), (0, 0.3, 0.8), 140, 2.5, color=(1.0, 0.95, 0.88))
     box("vr_floor", (8, 8, 0.1), (0, 0, -0.05), M["clay2"])
     box("vr_wall", (8, 0.2, 3.2), (0, 2.6, 1.6), mat("vr_wall", (0.6, 0.66, 0.68), 0.7))
     box("vr_tv", (2.15, 0.08, 1.25), (0, 2.46, 1.6), M["dark"], bev=0.02)

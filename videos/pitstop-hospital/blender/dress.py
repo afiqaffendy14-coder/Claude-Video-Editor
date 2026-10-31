@@ -251,6 +251,8 @@ def pit_dress():
         box("rig_glow", (0.36, 0.36, 0.02), (-3.6, y, 3.62), mat("rigglow", (1, 1, 1), 0.3, emit=(1, 0.95, 0.85), emit_strength=8))
     # light: warm afternoon sun, cool sky fill
     sun("pit_sun", (40, 0, -55), 4.2, 1.5, (1.0, 0.9, 0.75))
+    bpy.context.scene.world.node_tree.nodes["Background"].inputs["Strength"].default_value = 1.5  # brighter sky fill
+    area("pit_bounce", (2, 9, 4), (0, 0, 0.6), 1800, 10, color=(0.95, 0.97, 1.0))  # fill the shadow side
 
 
 # ---------------------------------------------------------------- ICU

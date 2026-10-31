@@ -179,6 +179,8 @@ def voxelize_scene(b=PX):
             continue
         if ob.type == "MESH" and (len(ob.data.vertices) <= 4 or "screen" in ob.name):
             continue  # flat screens showing images stay as they are
+        if ob.get("smooth"):
+            continue  # tubes that must read as soft, curving lines
         if _is_box(ob) or _under_person(ob):
             for m in list(ob.modifiers):
                 if m.type == "BEVEL":
@@ -231,7 +233,7 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
     Th = R("Z", p["twist"] * 0.3)
     leg_len = 9 * P_ + 8 * P_ + 2 * P_
     pelvis = V((0, 0, leg_len - p["crouch"]))
-    parts = []
+    parts, hands = [], {}
     up, lo_, skin = M[o["upper"]], M[o["lower"]], M["skin"]
     # torso
     parts.append(_boxat(name + "_torso", (W, D, H), T, pelvis, (0, 0, H / 2), up))
@@ -274,6 +276,7 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
         Rf = Ra @ R("X", elbow)
         parts.append(_seg(name + "_fa" + k, el, Rf, 4 * P_, t * 0.96, up))
         wr = el + Rf @ V((0, 0, -4 * P_))
+        hands[k] = wr + Rf @ V((0, 0, -1.1 * P_))  # centre of the hand block, person-local
         parts.append(_seg(name + "_hand" + k, wr, Rf, 2.2 * P_, t * 0.92, M[o["hands"]]))
         # legs: thigh, shin, shoe
         lf, lside, knee = p["leg" + k]
@@ -288,6 +291,8 @@ def block_person(name, loc=(0, 0, 0), rot=0.0, pose=None, outfit="surgeon", scal
         parts.append(_boxat(name + "_shoe" + k, (t * 1.05, 6 * P_, 2 * P_), yaw, an, (0, P_, -P_), M[o["shoes"]]))
     root = link(bpy.data.objects.new(name, None))
     root["person"] = True
+    for k_, h_ in hands.items():
+        root["hand" + k_] = tuple(h_)
     for q in parts:
         q.parent = root
     root.location = loc
