@@ -39,6 +39,14 @@ Read this first. Reference build: `videos/pitstop-hospital/` (HANDOFF.md explain
 - Blender 5: F-curves live in layered-action channelbags (`bake.fcurves()`); refresh matrices
   (`view_layer.update()`) before parenting.
 
+## Keep this playbook current (every video)
+At the end of each video, without being asked:
+1. Add an entry to `videos/LOG.md` (template at the top): topic, title, decisions, what worked, what cost time.
+2. Add any new reusable set/prop/character/behaviour to `videos/LIBRARY.md`.
+3. If a choice is now settled (owner approved it or repeated it), promote it into this file; remove rules that changed.
+4. When the owner shares stats (views, retention, likes), add them to that video's LOG entry and note what to repeat.
+Keep entries short; this file stays under ~120 lines (it loads into every session).
+
 ## Posting
 Title = the hook question (<= ~40 chars, emoji ok). Description: 3-4 short paragraphs, the result with numbers, source
 line, 3 hashtags (#F1 #Formula1 #Shorts). Thumbnail: real frames, two-panel split, title text across the seam.
