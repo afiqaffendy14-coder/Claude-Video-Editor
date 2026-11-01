@@ -1,5 +1,7 @@
 # Channel Visual Style (low-poly take on Neo's "How Pit Stops Are So Fast")
 
+> **Superseded:** the channel now uses the blocky Blender style in `/CLAUDE.md`. Kept for reference only.
+
 Reference studied: Neo, "How Pit Stops Are So Fast" (8:49, 1920×960, 25 fps). This file describes its style; the reference video itself is not stored in the repo.
 
 ## What the reference does

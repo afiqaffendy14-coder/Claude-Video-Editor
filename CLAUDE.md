@@ -1,0 +1,44 @@
+# Channel playbook: F1 YouTube Shorts (blocky 3D)
+
+Read this first. Reference build: `videos/pitstop-hospital/` (HANDOFF.md explains each script). Reuse it; don't rebuild.
+`scripts/style-guide.md` is the OLD low-poly/Three.js style: superseded by this file.
+
+## The style (keep it identical across videos)
+- **Format:** 1080x1920, 30 fps, exactly 60.0 s, looped ending (last line runs straight into the first).
+- **Audience:** broad, not die-hard F1 fans. Real, surprising F1 story with a human angle.
+- **Look:** blocky, Minecraft-like 3D in Blender, but original characters/designs (never Minecraft's own assets).
+  Pixel-textured boxes, voxelised curves, bright saturated colours, soft daylight, colour grade in `boards/grade.sh`.
+  Ferrari/F1 red for crews; teal/blue for hospital-type worlds; yellow driver helmet.
+- **Voice:** ElevenLabs voice "F1 Narrator" (`T6dmRMFpaA2PwnRdtyjv`), continuous narration, no silent pauses,
+  natural pace; fit to 60 s with `tools/fit_vo.py`; word timings via ElevenLabs Scribe -> `tools/timing.json`.
+- **Script:** hook is a question in line 1; smooth idea-to-idea transitions (never "then"/"next"); no fluff;
+  facts sourced in the script file; never overclaim (e.g. "safer", not "saved lives", unless measured).
+- **Captions:** Montserrat Black, white with black outline, 6.2% of width, centred at 74% height (`tools/captions.mjs`).
+- **Sound:** synthesised SFX per shot (`tools/sfx.py`) under the VO; no copyrighted music.
+- **Camera:** one smooth eased move per shot, hard cuts on spoken words, subtle handheld shake only for urgent beats.
+- **Animation:** natural, weighted, no clipping/teleporting/foot sliding, hands really hold things, no sudden stops.
+
+## Workflow (in this order; don't reopen a finished step without the owner asking)
+1. Topic + title (question hook) -> 2. script (owner approves) -> 3. voiceover (2 takes, owner picks)
+4. storyboard as stills (`boards/build.mjs`) -> 5. animation: bake + `validate.py` + low-res previews
+6. ONE final render (`go.bat` / `redo.bat <shots>`) -> 7. title, description, tags, thumbnail (`tools/thumb.mjs`).
+
+## Efficiency rules (owner's usage matters)
+- Work on the owner's laptop (local session) so Blender previews use the GPU; never render the film on a CPU box.
+- 20-25 shots per minute, not 35. Prefer close-ups and single-subject shots; avoid crowds in tight spaces.
+- Batch feedback: collect all notes with timestamps, fix in one pass, re-render only changed shots (`redo.bat`).
+- Run `blender/validate.py` before any render; fix clipping/reach there, not by re-rendering.
+- Short replies; don't re-explain the pipeline; don't regenerate voice/assets that were approved.
+
+## Lessons from video 1 (build these in from the start)
+- Block characters have short arms (wrist <= ~0.42 m from shoulder): place people from their hand-hold points
+  (`pitstop.solve_root`) and give props handles at reachable heights (see the wheel-gun T-handle).
+- People need ~0.8-0.9 m between stations; give each person a fixed station and their own frame for hand tasks.
+- Cameras: check nobody stands between lens and subject; don't shoot a person bent toward the lens (shows cap only).
+- Material names are shared: use unique names for new materials (e.g. `nitrile_glove`, not `glove`).
+- Blender 5: F-curves live in layered-action channelbags (`bake.fcurves()`); refresh matrices
+  (`view_layer.update()`) before parenting.
+
+## Posting
+Title = the hook question (<= ~40 chars, emoji ok). Description: 3-4 short paragraphs, the result with numbers, source
+line, 3 hashtags (#F1 #Formula1 #Shorts). Thumbnail: real frames, two-panel split, title text across the seam.
