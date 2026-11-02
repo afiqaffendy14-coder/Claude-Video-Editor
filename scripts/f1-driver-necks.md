@@ -2,7 +2,7 @@
 
 Broad-audience short, exactly 60 s, continuous voiceover, looped ending (the last line runs straight into the first).
 
-## Script v1 (awaiting approval before voiceover)
+## Script (approved by the owner, 2026-11-02)
 
 Story shape: body question -> put the viewer in the seat ("your head") -> the force builds -> the shock image
 (a ten-year-old hanging off your helmet) -> it never stops -> what's at stake -> the strange training -> back to

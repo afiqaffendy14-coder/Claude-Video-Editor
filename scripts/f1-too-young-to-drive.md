@@ -2,7 +2,7 @@
 
 Broad-audience short, exactly 60 s, continuous voiceover, looped ending (the last line runs straight into the first).
 
-## Script v1 (awaiting approval before voiceover)
+## Script (approved by the owner, 2026-11-02)
 
 Story shape: impossible-sounding question -> the kid on the grid -> the contradiction (no licence) -> doubters ->
 he proves them right to worry and wrong to doubt -> twist (the rule book already changed behind him) -> payoff

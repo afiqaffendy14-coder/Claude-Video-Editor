@@ -2,7 +2,7 @@
 
 Broad-audience short, exactly 60 s, continuous voiceover, looped ending (the last line runs straight into the first).
 
-## Script v1 (awaiting approval before voiceover)
+## Script (approved by the owner, 2026-11-02)
 
 Story shape: wild question -> the secret is a plane wing flipped over -> the numbers line up -> the dream shot
 (the car on the ceiling of the Monaco tunnel) -> the dream falls apart -> honest verdict -> back to the question.

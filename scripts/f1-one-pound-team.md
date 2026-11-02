@@ -2,7 +2,7 @@
 
 Broad-audience short, exactly 60 s, continuous voiceover, looped ending (the last line runs straight into the first).
 
-## Script v1 (awaiting approval before voiceover)
+## Script (approved by the owner, 2026-11-02)
 
 Story shape: impossible-bargain question -> the team is abandoned -> one man refuses -> the £1 deal -> the
 underdog car with a secret -> shock first race -> fight and vindication -> double title -> twist (it becomes the
