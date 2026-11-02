@@ -15,7 +15,7 @@ Mercedes dynasty) -> back to the question. Transitions carried by the idea, no "
 5. He buys the entire team from Honda for a symbolic single pound.
 6. Barely any sponsors, a plain white car, and a last-minute Mercedes engine.
 7. Nobody expects much, but the car hides a secret underneath.
-8. A clever shape sucks it down onto the road, so it grips corners like it's on rails.
+8. Its floor is shaped to suck it down onto the road, so it sticks like glue through the corners.
 9. It comes from a gap in the rules that most teams missed.
 10. In the first race, the two white cars finish first and second.
 11. Jenson Button wins six of the first seven races.
