@@ -15,7 +15,7 @@ import voxel
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STILLS = os.path.join(ROOT, "boards", "stills")
-AUX = os.path.join(ROOT, "boards", "aux")
+AUX = os.path.join(ROOT, "boards", "tv")
 
 
 def dollhouse():
