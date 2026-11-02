@@ -22,7 +22,7 @@ the question. Second person throughout so the viewer feels it. Transitions carri
 12. So drivers train their necks almost every day.
 13. Straps pull their heads from every direction while they fight to hold still.
 14. Some lie on a bench and lift weights with just their heads.
-15. A muscle most of us never think about can decide who's still fast at the end of the race.
+15. A muscle most of us never think about can decide who's fastest at the end of the race.
 16. So now you know what to say when someone asks...
 
 (loops to line 1: "...when someone asks... Why do Formula One drivers have necks like bodybuilders?")

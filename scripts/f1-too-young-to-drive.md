@@ -14,7 +14,7 @@ he proves them right to worry and wrong to doubt -> twist (the rule book already
 4. Max Verstappen: the youngest driver in Formula One history.
 5. Back home, he isn't even old enough for a driving licence. In Belgium, you have to be eighteen.
 6. The paddock is furious: too young, too wild, someone will get hurt.
-7. Two weeks later in Malaysia, he finishes seventh: the youngest points scorer ever, by more than two years.
+7. Two weeks later in Malaysia, he finishes seventh and scores points. Nobody that young had ever done it; the record holder was nineteen.
 8. But the rule makers had already made up their minds.
 9. Months before his debut, they had quietly rewritten the rule book.
 10. From 2016, every driver must be eighteen, and hold a real road licence.

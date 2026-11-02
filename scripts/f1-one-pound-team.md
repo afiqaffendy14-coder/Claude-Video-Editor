@@ -12,14 +12,14 @@ Mercedes dynasty) -> back to the question. Transitions carried by the idea, no "
 2. December 2008: the financial crisis hits, and Honda quits Formula One overnight.
 3. A whole factory is told their team may never race again.
 4. But their boss, Ross Brawn, refuses to let it die.
-5. He buys the entire team for a symbolic single pound.
+5. He buys the entire team from Honda for a symbolic single pound.
 6. Barely any sponsors, a plain white car, and a Mercedes engine squeezed into a car built for Honda's.
-7. Nobody expects much, but hidden under the car is a trick: a gap in the rules that sucks it onto the track.
-8. At the first race, the two white cars finish first and second.
+7. Nobody expects much, but the car hides a secret: a sneaky shape underneath that glues it to the road, slipped through a gap in the rules.
+8. In the first race, the two white cars finish first and second.
 9. Jenson Button wins six of the first seven races.
 10. Rivals protest, judges rule it legal, and the underdogs keep winning.
 11. By the end of the year, the one-pound team wins both world championships.
-12. And the twist? Within weeks, Mercedes buys most of the team.
+12. Within weeks, Mercedes buys most of the team.
 13. That same factory becomes the Mercedes team that wins eight team championships in a row.
 14. Arguably the greatest bargain in sporting history, and it all started with one question...
 
