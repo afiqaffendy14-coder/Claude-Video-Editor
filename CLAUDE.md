@@ -1,7 +1,8 @@
 # Channel playbook: F1 YouTube Shorts (blocky 3D)
 
 Read this first. Reference build: `videos/pitstop-hospital/` (HANDOFF.md explains each script). Reuse it; don't rebuild.
-`scripts/style-guide.md` is the OLD low-poly/Three.js style: superseded by this file.
+`scripts/style-guide.md` and the CLAUDE.md/AGENTS.md inside older video folders (fuji-pixel, lauda-*, lowpoly-blue) are
+the OLD HyperFrames/Three.js style: superseded by this file. New videos go in `videos/<name>/`, copying pitstop-hospital.
 
 ## The style (keep it identical across videos)
 - **Format:** 1080x1920, 30 fps, exactly 60.0 s, looped ending (last line runs straight into the first).
