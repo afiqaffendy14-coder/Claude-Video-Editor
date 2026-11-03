@@ -32,6 +32,8 @@ the OLD HyperFrames/Three.js style: superseded by this file. New videos go in `v
 - 20-25 shots per minute, not 35. Prefer close-ups and single-subject shots; avoid crowds in tight spaces.
 - Batch feedback: collect all notes with timestamps, fix in one pass, re-render only changed shots (`redo.bat`).
 - Run `blender/validate.py` before any render; fix clipping/reach there, not by re-rendering.
+- Model: storyboard and animation need Opus at high effort. On Sonnet/medium (tried 2026-11-03) the animation didn't
+  match the storyboard. Save usage with fewer turns and batched notes, not a cheaper model.
 - Short replies; don't re-explain the pipeline; don't regenerate voice/assets that were approved.
 
 ## Lessons from video 1 (build these in from the start)
