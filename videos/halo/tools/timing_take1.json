@@ -1,0 +1,1063 @@
+{
+ "duration": 60.0,
+ "lines": [
+  {
+   "i": 1,
+   "text": "Imagine a Formula One car landing on your head.",
+   "start": 0.064,
+   "end": 2.704,
+   "words": [
+    {
+     "w": "Imagine",
+     "start": 0.064,
+     "end": 0.464
+    },
+    {
+     "w": "a",
+     "start": 0.544,
+     "end": 0.684
+    },
+    {
+     "w": "Formula",
+     "start": 0.724,
+     "end": 1.044
+    },
+    {
+     "w": "1",
+     "start": 1.264,
+     "end": 1.344
+    },
+    {
+     "w": "car",
+     "start": 1.404,
+     "end": 1.584
+    },
+    {
+     "w": "landing",
+     "start": 1.764,
+     "end": 2.084
+    },
+    {
+     "w": "on",
+     "start": 2.124,
+     "end": 2.224
+    },
+    {
+     "w": "your",
+     "start": 2.264,
+     "end": 2.344
+    },
+    {
+     "w": "head.",
+     "start": 2.444,
+     "end": 2.704
+    }
+   ]
+  },
+  {
+   "i": 2,
+   "text": "Lewis Hamilton doesn't have to.",
+   "start": 2.957,
+   "end": 4.397,
+   "words": [
+    {
+     "w": "Lewis",
+     "start": 2.957,
+     "end": 3.177
+    },
+    {
+     "w": "Hamilton",
+     "start": 3.217,
+     "end": 3.617
+    },
+    {
+     "w": "doesn't",
+     "start": 3.697,
+     "end": 3.937
+    },
+    {
+     "w": "have",
+     "start": 3.977,
+     "end": 4.177
+    },
+    {
+     "w": "to.",
+     "start": 4.237,
+     "end": 4.397
+    }
+   ]
+  },
+  {
+   "i": 3,
+   "text": "At Monza in 2021, Max Verstappen's car landed on top of his.",
+   "start": 4.602,
+   "end": 8.961,
+   "words": [
+    {
+     "w": "At",
+     "start": 4.602,
+     "end": 4.722
+    },
+    {
+     "w": "Monza",
+     "start": 4.782,
+     "end": 5.242
+    },
+    {
+     "w": "in",
+     "start": 5.282,
+     "end": 5.382
+    },
+    {
+     "w": "2021,",
+     "start": 5.542,
+     "end": 6.302
+    },
+    {
+     "w": "Max",
+     "start": 6.561,
+     "end": 6.801
+    },
+    {
+     "w": "Verstappen's",
+     "start": 6.82,
+     "end": 7.421
+    },
+    {
+     "w": "car",
+     "start": 7.481,
+     "end": 7.721
+    },
+    {
+     "w": "landed",
+     "start": 7.841,
+     "end": 8.141
+    },
+    {
+     "w": "on",
+     "start": 8.181,
+     "end": 8.301
+    },
+    {
+     "w": "top",
+     "start": 8.341,
+     "end": 8.501
+    },
+    {
+     "w": "of",
+     "start": 8.541,
+     "end": 8.621
+    },
+    {
+     "w": "his.",
+     "start": 8.681,
+     "end": 8.961
+    }
+   ]
+  },
+  {
+   "i": 4,
+   "text": "Between his head and the tyre was a curved bar called the halo.",
+   "start": 9.179,
+   "end": 12.759,
+   "words": [
+    {
+     "w": "Between",
+     "start": 9.179,
+     "end": 9.499
+    },
+    {
+     "w": "his",
+     "start": 9.539,
+     "end": 9.679
+    },
+    {
+     "w": "head",
+     "start": 9.739,
+     "end": 9.959
+    },
+    {
+     "w": "and",
+     "start": 9.999,
+     "end": 10.079
+    },
+    {
+     "w": "the",
+     "start": 10.099,
+     "end": 10.199
+    },
+    {
+     "w": "tire",
+     "start": 10.259,
+     "end": 10.579
+    },
+    {
+     "w": "was",
+     "start": 10.799,
+     "end": 10.899
+    },
+    {
+     "w": "a",
+     "start": 10.939,
+     "end": 10.999
+    },
+    {
+     "w": "curved",
+     "start": 11.079,
+     "end": 11.479
+    },
+    {
+     "w": "bar",
+     "start": 11.519,
+     "end": 11.759
+    },
+    {
+     "w": "called",
+     "start": 11.899,
+     "end": 12.119
+    },
+    {
+     "w": "the",
+     "start": 12.159,
+     "end": 12.279
+    },
+    {
+     "w": "halo.",
+     "start": 12.339,
+     "end": 12.759
+    }
+   ]
+  },
+  {
+   "i": 5,
+   "text": "When it arrived in 2018, fans called it ugly, and some drivers agreed.",
+   "start": 12.984,
+   "end": 17.389,
+   "words": [
+    {
+     "w": "When",
+     "start": 12.984,
+     "end": 13.084
+    },
+    {
+     "w": "it",
+     "start": 13.104,
+     "end": 13.204
+    },
+    {
+     "w": "arrived",
+     "start": 13.244,
+     "end": 13.604
+    },
+    {
+     "w": "in",
+     "start": 13.644,
+     "end": 13.724
+    },
+    {
+     "w": "2018,",
+     "start": 13.884,
+     "end": 14.544
+    },
+    {
+     "w": "fans",
+     "start": 14.857,
+     "end": 15.157
+    },
+    {
+     "w": "called",
+     "start": 15.197,
+     "end": 15.377
+    },
+    {
+     "w": "it",
+     "start": 15.417,
+     "end": 15.617
+    },
+    {
+     "w": "ugly,",
+     "start": 15.697,
+     "end": 16.017
+    },
+    {
+     "w": "and",
+     "start": 16.195,
+     "end": 16.329
+    },
+    {
+     "w": "some",
+     "start": 16.389,
+     "end": 16.569
+    },
+    {
+     "w": "drivers",
+     "start": 16.589,
+     "end": 16.929
+    },
+    {
+     "w": "agreed.",
+     "start": 16.969,
+     "end": 17.389
+    }
+   ]
+  },
+  {
+   "i": 6,
+   "text": "Mercedes boss Toto Wolff said, \"If you give me a chainsaw, I would take it off.\"",
+   "start": 17.599,
+   "end": 21.868,
+   "words": [
+    {
+     "w": "Mercedes",
+     "start": 17.599,
+     "end": 18.099
+    },
+    {
+     "w": "boss",
+     "start": 18.139,
+     "end": 18.359
+    },
+    {
+     "w": "Toto",
+     "start": 18.459,
+     "end": 18.779
+    },
+    {
+     "w": "Wolff",
+     "start": 18.879,
+     "end": 19.099
+    },
+    {
+     "w": "said,",
+     "start": 19.199,
+     "end": 19.419
+    },
+    {
+     "w": "\"If",
+     "start": 19.419,
+     "end": 19.728
+    },
+    {
+     "w": "you",
+     "start": 19.768,
+     "end": 19.848
+    },
+    {
+     "w": "give",
+     "start": 19.888,
+     "end": 20.008
+    },
+    {
+     "w": "me",
+     "start": 20.048,
+     "end": 20.108
+    },
+    {
+     "w": "a",
+     "start": 20.168,
+     "end": 20.228
+    },
+    {
+     "w": "chainsaw,",
+     "start": 20.268,
+     "end": 20.788
+    },
+    {
+     "w": "I",
+     "start": 21.088,
+     "end": 21.108
+    },
+    {
+     "w": "would",
+     "start": 21.128,
+     "end": 21.248
+    },
+    {
+     "w": "take",
+     "start": 21.308,
+     "end": 21.468
+    },
+    {
+     "w": "it",
+     "start": 21.508,
+     "end": 21.568
+    },
+    {
+     "w": "off.\"",
+     "start": 21.648,
+     "end": 21.868
+    }
+   ]
+  },
+  {
+   "i": 7,
+   "text": "But it's built to hold about twelve tonnes: a double-decker bus.",
+   "start": 22.073,
+   "end": 25.529,
+   "words": [
+    {
+     "w": "But",
+     "start": 22.073,
+     "end": 22.133
+    },
+    {
+     "w": "it's",
+     "start": 22.173,
+     "end": 22.333
+    },
+    {
+     "w": "built",
+     "start": 22.373,
+     "end": 22.553
+    },
+    {
+     "w": "to",
+     "start": 22.593,
+     "end": 22.693
+    },
+    {
+     "w": "hold",
+     "start": 22.733,
+     "end": 22.933
+    },
+    {
+     "w": "about",
+     "start": 22.993,
+     "end": 23.233
+    },
+    {
+     "w": "12",
+     "start": 23.293,
+     "end": 23.713
+    },
+    {
+     "w": "tons,",
+     "start": 23.773,
+     "end": 24.193
+    },
+    {
+     "w": "a",
+     "start": 24.449,
+     "end": 24.469
+    },
+    {
+     "w": "double-decker",
+     "start": 24.589,
+     "end": 25.109
+    },
+    {
+     "w": "bus.",
+     "start": 25.189,
+     "end": 25.529
+    }
+   ]
+  },
+  {
+   "i": 8,
+   "text": "In Bahrain in 2020, Romain Grosjean hit a steel barrier at nearly two hundred kilometres an hour.",
+   "start": 25.773,
+   "end": 31.692,
+   "words": [
+    {
+     "w": "In",
+     "start": 25.773,
+     "end": 25.893
+    },
+    {
+     "w": "Bahrain",
+     "start": 25.933,
+     "end": 26.413
+    },
+    {
+     "w": "in",
+     "start": 26.433,
+     "end": 26.532
+    },
+    {
+     "w": "2020,",
+     "start": 26.693,
+     "end": 27.313
+    },
+    {
+     "w": "Romain",
+     "start": 27.592,
+     "end": 27.892
+    },
+    {
+     "w": "Grosjean",
+     "start": 27.992,
+     "end": 28.472
+    },
+    {
+     "w": "hit",
+     "start": 28.532,
+     "end": 28.632
+    },
+    {
+     "w": "a",
+     "start": 28.692,
+     "end": 28.772
+    },
+    {
+     "w": "steel",
+     "start": 28.892,
+     "end": 29.112
+    },
+    {
+     "w": "barrier",
+     "start": 29.212,
+     "end": 29.612
+    },
+    {
+     "w": "at",
+     "start": 29.652,
+     "end": 29.752
+    },
+    {
+     "w": "nearly",
+     "start": 29.792,
+     "end": 30.072
+    },
+    {
+     "w": "200",
+     "start": 30.392,
+     "end": 30.792
+    },
+    {
+     "w": "kilometers",
+     "start": 30.832,
+     "end": 31.272
+    },
+    {
+     "w": "an",
+     "start": 31.312,
+     "end": 31.392
+    },
+    {
+     "w": "hour.",
+     "start": 31.472,
+     "end": 31.692
+    }
+   ]
+  },
+  {
+   "i": 9,
+   "text": "His car split in two and burst into flames.",
+   "start": 31.904,
+   "end": 34.624,
+   "words": [
+    {
+     "w": "His",
+     "start": 31.904,
+     "end": 32.064
+    },
+    {
+     "w": "car",
+     "start": 32.124,
+     "end": 32.324
+    },
+    {
+     "w": "split",
+     "start": 32.564,
+     "end": 32.764
+    },
+    {
+     "w": "in",
+     "start": 32.804,
+     "end": 32.924
+    },
+    {
+     "w": "two",
+     "start": 33.004,
+     "end": 33.364
+    },
+    {
+     "w": "and",
+     "start": 33.404,
+     "end": 33.484
+    },
+    {
+     "w": "burst",
+     "start": 33.624,
+     "end": 33.904
+    },
+    {
+     "w": "into",
+     "start": 33.944,
+     "end": 34.144
+    },
+    {
+     "w": "flames.",
+     "start": 34.184,
+     "end": 34.624
+    }
+   ]
+  },
+  {
+   "i": 10,
+   "text": "The halo shielded his head as the car tore through the steel.",
+   "start": 34.857,
+   "end": 38.017,
+   "words": [
+    {
+     "w": "The",
+     "start": 34.857,
+     "end": 34.937
+    },
+    {
+     "w": "halo",
+     "start": 34.997,
+     "end": 35.317
+    },
+    {
+     "w": "shielded",
+     "start": 35.477,
+     "end": 35.837
+    },
+    {
+     "w": "his",
+     "start": 35.877,
+     "end": 36.037
+    },
+    {
+     "w": "head",
+     "start": 36.097,
+     "end": 36.297
+    },
+    {
+     "w": "as",
+     "start": 36.337,
+     "end": 36.437
+    },
+    {
+     "w": "the",
+     "start": 36.477,
+     "end": 36.557
+    },
+    {
+     "w": "car",
+     "start": 36.617,
+     "end": 36.817
+    },
+    {
+     "w": "tore",
+     "start": 36.997,
+     "end": 37.297
+    },
+    {
+     "w": "through",
+     "start": 37.337,
+     "end": 37.517
+    },
+    {
+     "w": "the",
+     "start": 37.557,
+     "end": 37.637
+    },
+    {
+     "w": "steel.",
+     "start": 37.717,
+     "end": 38.017
+    }
+   ]
+  },
+  {
+   "i": 11,
+   "text": "Nearly half a minute later, he climbed out of the fire.",
+   "start": 38.236,
+   "end": 40.899,
+   "words": [
+    {
+     "w": "Nearly",
+     "start": 38.236,
+     "end": 38.456
+    },
+    {
+     "w": "half",
+     "start": 38.516,
+     "end": 38.716
+    },
+    {
+     "w": "a",
+     "start": 38.756,
+     "end": 38.796
+    },
+    {
+     "w": "minute",
+     "start": 38.836,
+     "end": 39.036
+    },
+    {
+     "w": "later,",
+     "start": 39.076,
+     "end": 39.416
+    },
+    {
+     "w": "he",
+     "start": 39.659,
+     "end": 39.759
+    },
+    {
+     "w": "climbed",
+     "start": 39.819,
+     "end": 40.159
+    },
+    {
+     "w": "out",
+     "start": 40.219,
+     "end": 40.339
+    },
+    {
+     "w": "of",
+     "start": 40.379,
+     "end": 40.439
+    },
+    {
+     "w": "the",
+     "start": 40.479,
+     "end": 40.559
+    },
+    {
+     "w": "fire.",
+     "start": 40.599,
+     "end": 40.899
+    }
+   ]
+  },
+  {
+   "i": 12,
+   "text": "Grosjean had doubted it. Now he called it the greatest thing F1 had brought in.",
+   "start": 41.114,
+   "end": 45.517,
+   "words": [
+    {
+     "w": "Grosjean",
+     "start": 41.114,
+     "end": 41.534
+    },
+    {
+     "w": "had",
+     "start": 41.574,
+     "end": 41.694
+    },
+    {
+     "w": "doubted",
+     "start": 41.734,
+     "end": 42.054
+    },
+    {
+     "w": "it.",
+     "start": 42.114,
+     "end": 42.254
+    },
+    {
+     "w": "Now",
+     "start": 42.537,
+     "end": 42.797
+    },
+    {
+     "w": "he",
+     "start": 42.837,
+     "end": 42.937
+    },
+    {
+     "w": "called",
+     "start": 42.997,
+     "end": 43.177
+    },
+    {
+     "w": "it",
+     "start": 43.217,
+     "end": 43.297
+    },
+    {
+     "w": "the",
+     "start": 43.337,
+     "end": 43.437
+    },
+    {
+     "w": "greatest",
+     "start": 43.497,
+     "end": 43.997
+    },
+    {
+     "w": "thing",
+     "start": 44.017,
+     "end": 44.337
+    },
+    {
+     "w": "F1",
+     "start": 44.437,
+     "end": 44.817
+    },
+    {
+     "w": "had",
+     "start": 44.857,
+     "end": 44.997
+    },
+    {
+     "w": "brought",
+     "start": 45.017,
+     "end": 45.277
+    },
+    {
+     "w": "in.",
+     "start": 45.357,
+     "end": 45.517
+    }
+   ]
+  },
+  {
+   "i": 13,
+   "text": "Back at Monza, Verstappen's rear tyre hit Hamilton's helmet, and the halo pushed it off.",
+   "start": 45.718,
+   "end": 50.579,
+   "words": [
+    {
+     "w": "Back",
+     "start": 45.718,
+     "end": 45.878
+    },
+    {
+     "w": "at",
+     "start": 45.898,
+     "end": 45.998
+    },
+    {
+     "w": "Monza,",
+     "start": 46.038,
+     "end": 46.418
+    },
+    {
+     "w": "Verstappen's",
+     "start": 46.636,
+     "end": 47.176
+    },
+    {
+     "w": "rear",
+     "start": 47.276,
+     "end": 47.496
+    },
+    {
+     "w": "tire",
+     "start": 47.556,
+     "end": 47.936
+    },
+    {
+     "w": "hit",
+     "start": 47.956,
+     "end": 48.136
+    },
+    {
+     "w": "Hamilton's",
+     "start": 48.176,
+     "end": 48.636
+    },
+    {
+     "w": "helmet,",
+     "start": 48.696,
+     "end": 49.036
+    },
+    {
+     "w": "and",
+     "start": 49.259,
+     "end": 49.339
+    },
+    {
+     "w": "the",
+     "start": 49.379,
+     "end": 49.459
+    },
+    {
+     "w": "halo",
+     "start": 49.519,
+     "end": 49.819
+    },
+    {
+     "w": "pushed",
+     "start": 49.939,
+     "end": 50.159
+    },
+    {
+     "w": "it",
+     "start": 50.199,
+     "end": 50.279
+    },
+    {
+     "w": "off.",
+     "start": 50.359,
+     "end": 50.579
+    }
+   ]
+  },
+  {
+   "i": 14,
+   "text": "Hamilton said it saved his neck. His team boss said it had definitely saved his life.",
+   "start": 50.808,
+   "end": 55.628,
+   "words": [
+    {
+     "w": "Hamilton",
+     "start": 50.808,
+     "end": 51.188
+    },
+    {
+     "w": "said",
+     "start": 51.288,
+     "end": 51.428
+    },
+    {
+     "w": "it",
+     "start": 51.468,
+     "end": 51.608
+    },
+    {
+     "w": "saved",
+     "start": 51.688,
+     "end": 51.968
+    },
+    {
+     "w": "his",
+     "start": 51.988,
+     "end": 52.148
+    },
+    {
+     "w": "neck.",
+     "start": 52.208,
+     "end": 52.468
+    },
+    {
+     "w": "His",
+     "start": 52.682,
+     "end": 52.842
+    },
+    {
+     "w": "team",
+     "start": 52.902,
+     "end": 53.082
+    },
+    {
+     "w": "boss",
+     "start": 53.162,
+     "end": 53.402
+    },
+    {
+     "w": "said",
+     "start": 53.462,
+     "end": 53.662
+    },
+    {
+     "w": "it",
+     "start": 53.868,
+     "end": 53.948
+    },
+    {
+     "w": "had",
+     "start": 53.968,
+     "end": 54.188
+    },
+    {
+     "w": "definitely",
+     "start": 54.248,
+     "end": 54.788
+    },
+    {
+     "w": "saved",
+     "start": 54.828,
+     "end": 55.088
+    },
+    {
+     "w": "his",
+     "start": 55.108,
+     "end": 55.228
+    },
+    {
+     "w": "life.",
+     "start": 55.288,
+     "end": 55.628
+    }
+   ]
+  },
+  {
+   "i": 15,
+   "text": "That boss was Toto Wolff.",
+   "start": 55.853,
+   "end": 57.557,
+   "words": [
+    {
+     "w": "That",
+     "start": 55.853,
+     "end": 56.033
+    },
+    {
+     "w": "boss",
+     "start": 56.073,
+     "end": 56.353
+    },
+    {
+     "w": "was",
+     "start": 56.617,
+     "end": 56.757
+    },
+    {
+     "w": "Toto",
+     "start": 56.817,
+     "end": 57.137
+    },
+    {
+     "w": "Wolff.",
+     "start": 57.237,
+     "end": 57.557
+    }
+   ]
+  },
+  {
+   "i": 16,
+   "text": "So next time you call it ugly, just...",
+   "start": 57.813,
+   "end": 59.888,
+   "words": [
+    {
+     "w": "So",
+     "start": 57.813,
+     "end": 57.933
+    },
+    {
+     "w": "next",
+     "start": 57.973,
+     "end": 58.173
+    },
+    {
+     "w": "time",
+     "start": 58.213,
+     "end": 58.413
+    },
+    {
+     "w": "you",
+     "start": 58.433,
+     "end": 58.513
+    },
+    {
+     "w": "call",
+     "start": 58.573,
+     "end": 58.713
+    },
+    {
+     "w": "it",
+     "start": 58.753,
+     "end": 58.913
+    },
+    {
+     "w": "ugly,",
+     "start": 59.013,
+     "end": 59.333
+    },
+    {
+     "w": "just-",
+     "start": 59.608,
+     "end": 59.888
+    }
+   ]
+  }
+ ]
+}

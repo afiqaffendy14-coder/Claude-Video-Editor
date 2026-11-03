@@ -33,3 +33,23 @@ Everything here already exists and is tested. Import it; don't rebuild it. Paths
 ## Camera
 - `anim.MOVES` (push/truck/crane/orbit/spin/follow) and `camera_path`.
 - `bake.SHAKE` (handheld noise) and `bake.RUN_CAM` (camera travels with runners).
+
+## From video 2 (paths under `videos/halo/`; see its HANDOFF.md)
+Generalised shared modules: prefer these copies over pitstop-hospital's.
+| What | Where | Notes |
+|---|---|---|
+| GPU setup | `blender/lib.py` (`lib.gpu()`) | Cycles on OptiX/CUDA (this laptop: CUDA) |
+| Characters | `blender/voxel.py` (`block_person`) | outfits carry their own skin/hair/helmet colour; headset |
+| Cars | `blender/props.py` | `f1car_block(halo=, helmet=, part="front"/"rear")`, `halo_part()`; wings, suspension, numbers |
+| Hands and props | `blender/choreo.py` | `Performer` hands ride on chest/head; `carry_props`; `gesture`, `head_keys`, `body_keys` |
+| Exact contact | `blender/ik.py` | hand/foot contact for still poses |
+| Static collision check | `blender/check.py` | per storyboard frame -> `boards/check.json` |
+| Crash physics | `blender/halo_anim.py` | `Crash` clock (ballistic arc, roll, rebound, slide), `tau_of`, `CrashDebris`, `Explosion`, `split_state` |
+| Final look | `blender/look.py` | AgX exposure per set, box-volume haze, rim lights; used by `render.py` unless PREVIEW |
+| Finish | `tools/finish.py` | per-scene grade, bloom, vignette, grain, captions, VO + ducked SFX, phone-safe MP4 |
+| SFX | `tools/sfx_sources.json`, `tools/sfx_mix.py` | ElevenLabs sound effects placed on the film's clocks |
+| Thumbnail render | `blender/thumb_roman.py`, `blender/thumb_shot.py` | dedicated hero render for the thumbnail |
+
+Sets and props (`blender/halo_sets.py`): Monza (grandstand, tifosi, flags, chicane and sausage kerbs, gravel, park
+trees), Bahrain at night (armco, split car, fire), studio, bus test rig, pedestal, car launch stage, pit wall, moving
+crowd cards (`crowd_cards`), red-X fan boards; chainsaw, extinguisher + foam, sign, double-decker bus, armco, fire.

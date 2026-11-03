@@ -12,6 +12,28 @@ One entry per video, newest first. Short bullets; this is what future sessions r
 - Stats (fill in later): views, avg % viewed, likes, subs gained. What to repeat:
 -->
 
+## 02. Toto Wolff Wanted to Chainsaw This Off. It Saved Hamilton's Life (2026-11) - videos/halo
+- **Topic / angle:** the halo: hated when it arrived in 2018 (Wolff: "If you give me a chainsaw, I would take it off"),
+  then it shielded Grosjean (Bahrain 2020) and pushed Verstappen's tyre off Hamilton's helmet (Monza 2021).
+- **Title, thumbnail:** the title is a statement, not a question; the hook line is "Imagine a Formula One car landing on
+  your head" (owner picked it from four options). Thumbnail: a dedicated render of Grosjean's car in the torn barrier,
+  red halo, "THIS SAVED F1 DRIVERS' LIVES" with an arrow. Kit in `videos/halo/posting/`.
+- **Decisions:**
+  - script v2 (`scripts/f1-halo.md`); "saved his life" only in the words of the people involved, never the narrator's;
+  - ElevenLabs "F1 Narrator", take 2, pauses capped at ~0.18 s, exactly 60.0 s;
+  - 24 shots; red halo as the film's only accent colour; generic cars by colour, no logos;
+  - ElevenLabs sound effects mixed by `tools/sfx_mix.py` (instead of video 1's synthesised SFX).
+- **Worked well:** one continuous physical crash clock (real arc, roll, rebound, slide to a stop) that every crash shot
+  samples; shot 6 opening on shot 5's last frame; moving crowd cards; `look.py` + `finish.py` for the final look.
+- **Cost time (and the fix for next time):**
+  - storyboard v1 too plain: the owner asked for much more detail and to show how things happen. Fix: the
+    "Owner's notes from video 2" in `CLAUDE.md`, applied from storyboard v1.
+  - several animation test rounds (v1-v3) before the final. Fix: lock poses/physics with `check.py`, `ik.py` and
+    `validate.py` before any test render.
+- **Files:** finished film `out/halo-final.mp4` (and an alternative voice version B), kept on the laptop only; the
+  original working folder with every frame is the old zip copy, `Downloads\f1 video\Claude-Video-Editor\videos\halo`.
+- **Stats:** (fill in after posting)
+
 ## 01. Why Did Surgeons Call Ferrari? 🏎️❤️ (2026-11) - videos/pitstop-hospital
 - **Topic / angle:** Great Ormond Street Hospital redesigned post-surgery handovers with Ferrari's pit crew
   (errors -42%, omissions -49%; Catchpole et al. 2007). Broad audience; human story via F1.

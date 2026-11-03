@@ -1,8 +1,11 @@
 # Channel playbook: F1 YouTube Shorts (blocky 3D)
 
-Read this first. Reference build: `videos/pitstop-hospital/` (HANDOFF.md explains each script). Reuse it; don't rebuild.
+Read this first. Reference builds (each HANDOFF.md explains its scripts; reuse them, don't rebuild):
+`videos/pitstop-hospital/` (video 1) and `videos/halo/` (video 2, newer). Halo has the generalised versions of the
+shared Blender modules (`lib`, `voxel`, `props`, `choreo`) plus `look.py`, `ik.py`, `check.py`, `tools/finish.py`:
+prefer halo's copy of a module; take resumable `go.bat`/`redo.bat` from pitstop-hospital.
 `scripts/style-guide.md` and the CLAUDE.md/AGENTS.md inside older video folders (fuji-pixel, lauda-*, lowpoly-blue) are
-the OLD HyperFrames/Three.js style: superseded by this file. New videos go in `videos/<name>/`, copying pitstop-hospital.
+the OLD HyperFrames/Three.js style: superseded by this file. New videos go in `videos/<name>/`.
 
 ## The style (keep it identical across videos)
 - **Format:** 1080x1920, 30 fps, exactly 60.0 s, looped ending (last line runs straight into the first).
@@ -39,6 +42,14 @@ the OLD HyperFrames/Three.js style: superseded by this file. New videos go in `v
 - Material names are shared: use unique names for new materials (e.g. `nitrile_glove`, not `glove`).
 - Blender 5: F-curves live in layered-action channelbags (`bake.fcurves()`); refresh matrices
   (`view_layer.update()`) before parenting.
+
+## Owner's notes from video 2 (halo storyboard; apply from the start)
+- More detail everywhere: cars (wings, suspension, numbers), helmets, every background; real places must look real.
+- Show how things happen, not just results (the launch, the swerve, the split, the climb out).
+- Real people as recognisable block characters (colours, helmets); generic designs, no logos. Crashes abstract, no injuries.
+- Poses and layout first, lighting and colour later. Physics above all: real contact, no clipping, foot slide or floating.
+- Natural acting: anticipation, secondary motion, reactions, idle life; exaggerate only for comic or impact beats.
+- Laptop: Blender 5.2.3, RTX 3050 6 GB; its NVIDIA driver is too old for OptiX, so Cycles uses CUDA (EEVEE unaffected).
 
 ## Keep this playbook current (every video)
 At the end of each video, without being asked:
