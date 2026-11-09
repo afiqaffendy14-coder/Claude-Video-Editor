@@ -4,3 +4,11 @@ out/
 .DS_Store
 .venv-audio/
 .venv-blender/
+.venv-tools/
+__pycache__/
+*.blend1
+# asset model-sheet renders stay on the laptop; keep only the small previews and reports
+library/**/sheet/**
+!library/**/sheet/**/
+!library/**/sheet/**/*-preview.jpg
+!library/**/sheet/**/*.md

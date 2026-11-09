@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Circuit Viewer</title>
+<!-- same three r186 build as the existing Three.js scenes (videos/lauda-sample/lib); loaders from the matching release -->
+<script type="importmap">
+{ "imports": { "three": "../../../../videos/lauda-sample/lib/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.186.0/examples/jsm/" } }
+</script>
+<style>
+  html, body { margin: 0; height: 100%; background: #9fb6cf; overflow: hidden; font: 13px system-ui, sans-serif; }
+  #hud { position: fixed; left: 10px; top: 10px; background: rgba(0,0,0,.65); color: #fff; padding: 8px 10px; border-radius: 6px; white-space: pre; }
+</style>
+</head>
+<body>
+<div id="hud">loading...</div>
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const file = new URLSearchParams(location.search).get("file") || "circuit_core.glb";
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.toneMapping = THREE.AgXToneMapping;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x9fb6cf);
+scene.fog = new THREE.Fog(0x9fb6cf, 600, 2600);
+const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 6000);
+// circuit frame -> glTF (Y up): x stays, Blender y becomes -z
+camera.position.set(-260, 120, -140);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(-60, 0, 10);
+scene.add(new THREE.HemisphereLight(0xdfe9ff, 0x4a6a3a, 1.6));
+const sun = new THREE.DirectionalLight(0xfff1dc, 2.6);
+sun.position.set(-300, 400, 200);
+scene.add(sun);
+const t0 = performance.now();
+new GLTFLoader().load(file, (g) => {
+  scene.add(g.scene);
+  let meshes = 0, inst = 0, instances = 0, tris = 0, nearest = 0;
+  g.scene.traverse((o) => {
+    if (!o.isMesh) return;
+    meshes++;
+    const n = o.isInstancedMesh ? o.count : 1;
+    if (o.isInstancedMesh) { inst++; instances += o.count; }
+    const idx = o.geometry.index;
+    tris += (idx ? idx.count : o.geometry.attributes.position.count) / 3 * n;
+    const m = Array.isArray(o.material) ? o.material[0] : o.material;
+    if (m.map && m.map.magFilter === THREE.NearestFilter) nearest++;
+  });
+  window.__stats = { file, meshes, instancedMeshes: inst, instances, triangles: Math.round(tris), nearestTextures: nearest,
+                     loadMs: Math.round(performance.now() - t0), three: THREE.REVISION };
+  document.getElementById("hud").textContent = JSON.stringify(window.__stats, null, 1);
+}, undefined, (e) => { document.getElementById("hud").textContent = "error: " + e; window.__stats = { error: String(e) }; });
+addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+</script>
+</body>
+</html>

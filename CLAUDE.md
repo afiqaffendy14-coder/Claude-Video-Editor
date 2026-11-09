@@ -4,6 +4,8 @@ Read this first. Reference builds (each HANDOFF.md explains its scripts; reuse t
 `videos/pitstop-hospital/` (video 1) and `videos/halo/` (video 2, newer). Halo has the generalised versions of the
 shared Blender modules (`lib`, `voxel`, `props`, `choreo`) plus `look.py`, `ik.py`, `check.py`, `tools/finish.py`:
 prefer halo's copy of a module; take resumable `go.bat`/`redo.bat` from pitstop-hospital.
+**Master assets live in `library/`** (2026 F1 car, go-kart, block character, Grand Prix circuit; see `videos/LIBRARY.md`):
+load them in every video instead of modelling new cars, people or tracks. Story shapes: `scripts/story-formats.md`.
 `scripts/style-guide.md` and the CLAUDE.md/AGENTS.md inside older video folders (fuji-pixel, lauda-*, lowpoly-blue) are
 the OLD HyperFrames/Three.js style: superseded by this file. New videos go in `videos/<name>/`.
 

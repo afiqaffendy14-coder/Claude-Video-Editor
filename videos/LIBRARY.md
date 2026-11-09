@@ -1,6 +1,19 @@
 # Reusable library
 
-Everything here already exists and is tested. Import it; don't rebuild it. Paths are under `videos/pitstop-hospital/`.
+Everything here already exists and is tested. Import it; don't rebuild it. **Start with the master assets in
+`library/`** (below); the per-video modules further down are under `videos/pitstop-hospital/` unless noted.
+
+## Master assets (`library/`; each folder's README shows how to load it)
+One blueprint per asset, shared by every video: load it, never remodel a car, kart, person or track inside a video
+folder. Change the blueprint in `library/` and rebuild. Same axes and scale everywhere (+Y forward, +Z up, 1 skin
+pixel = 4.5 cm, block character 1.44 m tall).
+| What | Where | Use |
+|---|---|---|
+| 2026 F1 car | `library/cars/f1_2026/` | `car_blender.load_car(name, livery=)`: silver_arrow, rosso, papaya, midnight; `["steer"]`, `bake_roll` |
+| Go-kart | `library/cars/kart/` | `kart_blender.load_kart(name, livery=, condition="beat_up")` (the fifth-hand kart), `tyre="wet"` |
+| Block character | `library/characters/block_character/` | `make_character(name, skin=, helmet=, pose=, face=)`, `set_pose`, `set_face`, `ik_hand`, `seat_in_car`; new person = new skin in `skins.py` |
+| Grand Prix circuit | `library/environments/f1_circuit/` | `circuit_blender.load_circuit(time_of_day=)`, 20 camera presets, `lap_frame`, `grid_slot`, `pit_box`, flags, garage doors |
+Each folder has `sheet/*-preview.jpg` (what it looks like). Full model-sheet renders stay on the laptop only.
 
 ## Pipeline
 | What | Where | Notes |
