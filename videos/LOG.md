@@ -12,6 +12,27 @@ One entry per video, newest first. Short bullets; this is what future sessions r
 - Stats (fill in later): views, avg % viewed, likes, subs gained. What to repeat:
 -->
 
+## 03. He Was 10. The F1 Boss Wrote Him a Deadline. (2026-11-09) - videos/hamilton-autograph
+- **Topic / angle:** 10-year-old Lewis Hamilton asks McLaren boss Ron Dennis for a job; Dennis writes "phone me in
+  nine years" in his autograph book. The boy stays anonymous (no 44, no helmet) until "Lewis Hamilton" is the last word.
+- **Title, thumbnail:** title and thumbnail never name him or show the grown driver; thumbnail = young Hamilton with
+  the boss (`blender/thumb_pair.py`). Kit in `videos/hamilton-autograph/posting/`.
+- **Decisions:**
+  - script v6 (`scripts/f1-hamilton-autograph.md`), "rollercoaster" story shape (`scripts/story-formats.md`);
+  - VO take 1, pauses capped at 0.18 s with a 0.5 s beat before the reveal; film 49.67 s, NO loop, hard cut on the name;
+  - 22 shots; first frame is the hook (boy looking up at the boss) with a Minecraft-style tooltip title at the top;
+  - real recorded SFX only (Mixkit free licence), the owner rejected ElevenLabs and synthesised sounds;
+  - final mix -14 LUFS (owner couldn't hear the voice in the car at lower levels);
+  - a real CC BY photo of Hamilton fades in on the name (credit in the description).
+- **Worked well:** library kart and cars (`library/`) instead of per-video models; extra liveries added at run time;
+  a storyboard rebuilt from each preview's own frames (`tools/board_from_video.py`) for batched notes.
+- **Cost time (and the fix for next time):**
+  - round 2 changed framings the owner already liked ("a downgrade"). Fix: only change what a note asks for.
+  - hand/tool contact (hammer, plate, book) took rounds. Fix: rigid tool angle to the forearm, check views + CHECK=1.
+  - a VO word got swallowed under a cut. Fix: `tools/shift_after.py` inserts frames and shifts everything after.
+- **Files:** finished film `out/hamilton-final.mp4` (+ phone copy), laptop only.
+- **Stats:** (fill in after posting)
+
 ## 02. Toto Wolff Wanted to Chainsaw This Off. It Saved Hamilton's Life (2026-11) - videos/halo
 - **Topic / angle:** the halo: hated when it arrived in 2018 (Wolff: "If you give me a chainsaw, I would take it off"),
   then it shielded Grosjean (Bahrain 2020) and pushed Verstappen's tyre off Hamilton's helmet (Monza 2021).

@@ -63,6 +63,20 @@ Generalised shared modules: prefer these copies over pitstop-hospital's.
 | SFX | `tools/sfx_sources.json`, `tools/sfx_mix.py` | ElevenLabs sound effects placed on the film's clocks |
 | Thumbnail render | `blender/thumb_roman.py`, `blender/thumb_shot.py` | dedicated hero render for the thumbnail |
 
+## From video 3 (paths under `videos/hamilton-autograph/`; see its HANDOFF.md)
+| What | Where | Notes |
+|---|---|---|
+| Library kart/cars in a film | `blender/ham_sets.py` (`kart()`, `car()`, `kart_driver`, `car_driver`) | kart at cadet scale `KART_S`; extra liveries added at run time |
+| Animated people per frame | `blender/ham_anim.py` | `alive`, `mixpose`, IK; static set built once + frame function; `EXPO` per-shot exposure |
+| Tooltip title box | `tools/title_mc.py` | Minecraft-style pixel-font title at the top of shot 1 |
+| VO pause cap / insert time | `tools/cap_vo.py`, `tools/shift_after.py` | cap pauses, keep a beat before the reveal; insert frames and shift everything after |
+| Grade per scene | `tools/grade_frames.py` | grade.sh + scene colour + luma band gamma, bloom, grain |
+| Real-recording SFX | `tools/sfx_mix_ham.py`, `assets/audio/sfx_mixkit/SOURCES.json` | Mixkit free licence, ducked under the voice |
+| Storyboard from a preview | `tools/board_from_video.py` + `boards/build.mjs` | send with every preview for batched notes |
+| Thumbnail pair render | `blender/thumb_pair.py` | two characters turned to camera |
+Sets (`ham_sets.py`): awards ballroom, kitchen, shed with kart stand, street at dusk, kart track and podium, trophy
+shelf, boss's office, Interlagos in the rain, pit wall; props: autograph book with page textures, trophy, flag, rain.
+
 Sets and props (`blender/halo_sets.py`): Monza (grandstand, tifosi, flags, chicane and sausage kerbs, gravel, park
 trees), Bahrain at night (armco, split car, fire), studio, bus test rig, pedestal, car launch stage, pit wall, moving
 crowd cards (`crowd_cards`), red-X fan boards; chainsaw, extinguisher + foam, sign, double-decker bus, armco, fire.

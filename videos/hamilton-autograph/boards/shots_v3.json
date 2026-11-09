@@ -1,0 +1,211 @@
+[
+ {
+  "n": 1,
+  "start": 0.0,
+  "end": 3.51,
+  "keys": [
+   "a",
+   "b"
+  ],
+  "desc": "Minecraft-style title box, no lower captions. a: side on, the camera arcs in as the tiny boy rises on his toes and lifts the book. b (cut on 'Formula'): from behind the boy, up at the boss leaning down to take it."
+ },
+ {
+  "n": 2,
+  "start": 3.51,
+  "end": 6.39,
+  "keys": [
+   "a",
+   "b"
+  ],
+  "desc": "Dennis takes the book and writes in it; the boy watches on tiptoe."
+ },
+ {
+  "n": 3,
+  "start": 6.39,
+  "end": 8.12,
+  "keys": [
+   "a",
+   "b"
+  ],
+  "desc": "Insert: the page. 'Phone me in 9 years' appears word by word as it's spoken, then a made-up signature. No captions."
+ },
+ {
+  "n": 4,
+  "start": 8.12,
+  "end": 10.55,
+  "keys": [
+   ""
+  ],
+  "desc": "Home, night: the dad at the table with the bills and a nearly empty coin jar rubs his eyes with the heel of his hand; the boy watches from the doorway."
+ },
+ {
+  "n": 5,
+  "start": 10.55,
+  "end": 12.28,
+  "keys": [
+   ""
+  ],
+  "desc": "The shed: the fifth-hand club kart (library kart, battered), the whole kart in shot, three-quarter from the front."
+ },
+ {
+  "n": 6,
+  "start": 12.28,
+  "end": 14.45,
+  "keys": [
+   "a",
+   "b"
+  ],
+  "desc": "a: the dad kneels and sands the side pod. b: the same kart fixed up like new; he stands back. Wide, the whole kart in shot."
+ },
+ {
+  "n": 7,
+  "start": 14.45,
+  "end": 17.07,
+  "keys": [
+   ""
+  ],
+  "desc": "Split screen, the dad's jobs: office desk (9:00); knocking a FOR SALE board into a front lawn with a mallet (18:00); scrubbing plates at a restaurant sink (23:00)."
+ },
+ {
+  "n": 8,
+  "start": 17.07,
+  "end": 19.72,
+  "keys": [
+   ""
+  ],
+  "desc": "The kart track paddock: kids by their karts (library karts, team colours). He's the only Black kid."
+ },
+ {
+  "n": 9,
+  "start": 19.72,
+  "end": 22.47,
+  "keys": [
+   ""
+  ],
+  "desc": "The kids and parents turn their backs and walk away one by one. He stands alone, helmet in hand."
+ },
+ {
+  "n": 10,
+  "start": 22.47,
+  "end": 25.77,
+  "keys": [
+   "a",
+   "b"
+  ],
+  "desc": "Closer and lighter: tears run down his cheeks, he wipes them with his glove, then straightens up as his dad comes."
+ },
+ {
+  "n": 11,
+  "start": 25.77,
+  "end": 28.87,
+  "keys": [
+   "a",
+   "b"
+  ],
+  "desc": "His dad kneels, turned toward us, talking, a hand on his shoulder; on 'track' he points at the circuit. The boy nods."
+ },
+ {
+  "n": 12,
+  "start": 28.87,
+  "end": 30.53,
+  "keys": [
+   ""
+  ],
+  "desc": "Wide: visor down, the karts launch and he takes the inside line. The wheels roll."
+ },
+ {
+  "n": 13,
+  "start": 30.53,
+  "end": 31.18,
+  "keys": [
+   ""
+  ],
+  "desc": "Wide: his kart crosses the line under the chequered flag."
+ },
+ {
+  "n": 14,
+  "start": 31.18,
+  "end": 32.01,
+  "keys": [
+   ""
+  ],
+  "desc": "'And again': he lifts a trophy on the top step."
+ },
+ {
+  "n": 15,
+  "start": 32.01,
+  "end": 32.79,
+  "keys": [
+   ""
+  ],
+  "desc": "'And again': a shelf crowded with trophies, the red book among them."
+ },
+ {
+  "n": 16,
+  "start": 32.79,
+  "end": 35.31,
+  "keys": [
+   "a",
+   "b"
+  ],
+  "desc": "In the boss's office he signs the contract, his dad behind him; then he and the boss shake hands, looking at each other."
+ },
+ {
+  "n": 17,
+  "start": 35.31,
+  "end": 38.35,
+  "keys": [
+   ""
+  ],
+  "desc": "Brazil 2008, last lap in the rain: his silver car closes on a slower white car. Fuller Interlagos: stands both sides, boards, light poles, towers, footbridge, city."
+ },
+ {
+  "n": 18,
+  "start": 38.35,
+  "end": 40.08,
+  "keys": [
+   ""
+  ],
+  "desc": "Two corners from the end: up the inside, side by side, and through."
+ },
+ {
+  "n": 19,
+  "start": 40.08,
+  "end": 43.04,
+  "keys": [
+   "a",
+   "b"
+  ],
+  "desc": "Across the line under the chequered flag; his crew in the garage erupt."
+ },
+ {
+  "n": 20,
+  "start": 43.04,
+  "end": 45.1,
+  "keys": [
+   "a",
+   "b"
+  ],
+  "desc": "Dennis on the pit wall: a slow breath, then a clenched fist pumped in front of his chest."
+ },
+ {
+  "n": 21,
+  "start": 45.1,
+  "end": 46.28,
+  "keys": [
+   ""
+  ],
+  "desc": "Callback: the fixed-up kart in the shed, the book on the wall behind it."
+ },
+ {
+  "n": 22,
+  "start": 46.28,
+  "end": 49.5,
+  "keys": [
+   "a",
+   "b",
+   "c"
+  ],
+  "desc": "The grown driver lifts his helmet off on 'Lewis'; on 'Hamilton' it fades into a real photo of him in November 2008 (CC BY 2.0, Alistair Rickman), held, then cut."
+ }
+]

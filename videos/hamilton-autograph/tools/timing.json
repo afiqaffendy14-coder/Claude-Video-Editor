@@ -1,0 +1,968 @@
+{
+ "duration": 48.271,
+ "lines": [
+  {
+   "i": 1,
+   "text": "A ten-year-old Black boy asked a Formula One boss for a job.",
+   "start": 0.038,
+   "end": 3.238,
+   "words": [
+    {
+     "w": "A",
+     "start": 0.038,
+     "end": 0.118
+    },
+    {
+     "w": "ten-year-old",
+     "start": 0.178,
+     "end": 0.638
+    },
+    {
+     "w": "Black",
+     "start": 0.718,
+     "end": 0.938
+    },
+    {
+     "w": "boy",
+     "start": 1.038,
+     "end": 1.338
+    },
+    {
+     "w": "asked",
+     "start": 1.418,
+     "end": 1.578
+    },
+    {
+     "w": "a",
+     "start": 1.618,
+     "end": 1.718
+    },
+    {
+     "w": "Formula",
+     "start": 1.758,
+     "end": 2.058
+    },
+    {
+     "w": "One",
+     "start": 2.138,
+     "end": 2.298
+    },
+    {
+     "w": "boss",
+     "start": 2.398,
+     "end": 2.638
+    },
+    {
+     "w": "for",
+     "start": 2.678,
+     "end": 2.758
+    },
+    {
+     "w": "a",
+     "start": 2.818,
+     "end": 2.878
+    },
+    {
+     "w": "job.",
+     "start": 2.958,
+     "end": 3.238
+    }
+   ]
+  },
+  {
+   "i": 2,
+   "text": "Ron Dennis wrote his answer in the boy's autograph book:",
+   "start": 3.512,
+   "end": 6.112,
+   "words": [
+    {
+     "w": "Ron",
+     "start": 3.512,
+     "end": 3.652
+    },
+    {
+     "w": "Dennis",
+     "start": 3.752,
+     "end": 4.032
+    },
+    {
+     "w": "wrote",
+     "start": 4.112,
+     "end": 4.292
+    },
+    {
+     "w": "his",
+     "start": 4.312,
+     "end": 4.412
+    },
+    {
+     "w": "answer",
+     "start": 4.492,
+     "end": 4.792
+    },
+    {
+     "w": "in",
+     "start": 4.832,
+     "end": 4.892
+    },
+    {
+     "w": "the",
+     "start": 4.912,
+     "end": 4.992
+    },
+    {
+     "w": "boy's",
+     "start": 5.032,
+     "end": 5.312
+    },
+    {
+     "w": "autograph",
+     "start": 5.372,
+     "end": 5.812
+    },
+    {
+     "w": "book:",
+     "start": 5.912,
+     "end": 6.112
+    }
+   ]
+  },
+  {
+   "i": 3,
+   "text": "phone me in nine years.",
+   "start": 6.39,
+   "end": 7.962,
+   "words": [
+    {
+     "w": "phone",
+     "start": 6.39,
+     "end": 6.67
+    },
+    {
+     "w": "me",
+     "start": 6.71,
+     "end": 6.91
+    },
+    {
+     "w": "in",
+     "start": 6.949,
+     "end": 7.05
+    },
+    {
+     "w": "nine",
+     "start": 7.15,
+     "end": 7.41
+    },
+    {
+     "w": "years.",
+     "start": 7.53,
+     "end": 7.962
+    }
+   ]
+  },
+  {
+   "i": 4,
+   "text": "But the boy's family had no money for racing.",
+   "start": 8.124,
+   "end": 10.324,
+   "words": [
+    {
+     "w": "But",
+     "start": 8.124,
+     "end": 8.204
+    },
+    {
+     "w": "the",
+     "start": 8.244,
+     "end": 8.324
+    },
+    {
+     "w": "boy's",
+     "start": 8.344,
+     "end": 8.624
+    },
+    {
+     "w": "family",
+     "start": 8.664,
+     "end": 9.004
+    },
+    {
+     "w": "had",
+     "start": 9.044,
+     "end": 9.204
+    },
+    {
+     "w": "no",
+     "start": 9.264,
+     "end": 9.444
+    },
+    {
+     "w": "money",
+     "start": 9.504,
+     "end": 9.744
+    },
+    {
+     "w": "for",
+     "start": 9.784,
+     "end": 9.884
+    },
+    {
+     "w": "racing.",
+     "start": 9.924,
+     "end": 10.324
+    }
+   ]
+  },
+  {
+   "i": 5,
+   "text": "His go-kart was fifth-hand.",
+   "start": 10.546,
+   "end": 12.006,
+   "words": [
+    {
+     "w": "His",
+     "start": 10.546,
+     "end": 10.686
+    },
+    {
+     "w": "go-kart",
+     "start": 10.726,
+     "end": 11.186
+    },
+    {
+     "w": "was",
+     "start": 11.226,
+     "end": 11.386
+    },
+    {
+     "w": "fifth-hand.",
+     "start": 11.426,
+     "end": 12.006
+    }
+   ]
+  },
+  {
+   "i": 6,
+   "text": "So his dad fixed it up to look like new,",
+   "start": 12.279,
+   "end": 14.219,
+   "words": [
+    {
+     "w": "So",
+     "start": 12.279,
+     "end": 12.359
+    },
+    {
+     "w": "his",
+     "start": 12.399,
+     "end": 12.539
+    },
+    {
+     "w": "dad",
+     "start": 12.579,
+     "end": 12.779
+    },
+    {
+     "w": "fixed",
+     "start": 12.919,
+     "end": 13.139
+    },
+    {
+     "w": "it",
+     "start": 13.159,
+     "end": 13.239
+    },
+    {
+     "w": "up",
+     "start": 13.319,
+     "end": 13.399
+    },
+    {
+     "w": "to",
+     "start": 13.458,
+     "end": 13.519
+    },
+    {
+     "w": "look",
+     "start": 13.559,
+     "end": 13.699
+    },
+    {
+     "w": "like",
+     "start": 13.739,
+     "end": 13.899
+    },
+    {
+     "w": "new,",
+     "start": 13.959,
+     "end": 14.219
+    }
+   ]
+  },
+  {
+   "i": 7,
+   "text": "and worked several jobs at once to keep him racing.",
+   "start": 14.449,
+   "end": 16.849,
+   "words": [
+    {
+     "w": "and",
+     "start": 14.449,
+     "end": 14.549
+    },
+    {
+     "w": "worked",
+     "start": 14.589,
+     "end": 14.809
+    },
+    {
+     "w": "several",
+     "start": 14.929,
+     "end": 15.249
+    },
+    {
+     "w": "jobs",
+     "start": 15.289,
+     "end": 15.489
+    },
+    {
+     "w": "at",
+     "start": 15.529,
+     "end": 15.649
+    },
+    {
+     "w": "once",
+     "start": 15.689,
+     "end": 15.969
+    },
+    {
+     "w": "to",
+     "start": 16.009,
+     "end": 16.069
+    },
+    {
+     "w": "keep",
+     "start": 16.129,
+     "end": 16.269
+    },
+    {
+     "w": "him",
+     "start": 16.289,
+     "end": 16.409
+    },
+    {
+     "w": "racing.",
+     "start": 16.469,
+     "end": 16.849
+    }
+   ]
+  },
+  {
+   "i": 8,
+   "text": "At the track, he was often the only Black kid.",
+   "start": 17.239,
+   "end": 19.676,
+   "words": [
+    {
+     "w": "At",
+     "start": 17.239,
+     "end": 17.319
+    },
+    {
+     "w": "the",
+     "start": 17.359,
+     "end": 17.439
+    },
+    {
+     "w": "track,",
+     "start": 17.499,
+     "end": 17.819
+    },
+    {
+     "w": "he",
+     "start": 18.076,
+     "end": 18.136
+    },
+    {
+     "w": "was",
+     "start": 18.176,
+     "end": 18.316
+    },
+    {
+     "w": "often",
+     "start": 18.376,
+     "end": 18.616
+    },
+    {
+     "w": "the",
+     "start": 18.656,
+     "end": 18.796
+    },
+    {
+     "w": "only",
+     "start": 18.876,
+     "end": 19.156
+    },
+    {
+     "w": "Black",
+     "start": 19.176,
+     "end": 19.416
+    },
+    {
+     "w": "kid.",
+     "start": 19.456,
+     "end": 19.676
+    }
+   ]
+  },
+  {
+   "i": 9,
+   "text": "He later said he was bullied and racially abused,",
+   "start": 19.888,
+   "end": 22.428,
+   "words": [
+    {
+     "w": "He",
+     "start": 19.888,
+     "end": 19.968
+    },
+    {
+     "w": "later",
+     "start": 20.008,
+     "end": 20.268
+    },
+    {
+     "w": "said",
+     "start": 20.308,
+     "end": 20.488
+    },
+    {
+     "w": "he",
+     "start": 20.528,
+     "end": 20.608
+    },
+    {
+     "w": "was",
+     "start": 20.648,
+     "end": 20.828
+    },
+    {
+     "w": "bullied",
+     "start": 20.868,
+     "end": 21.208
+    },
+    {
+     "w": "and",
+     "start": 21.308,
+     "end": 21.388
+    },
+    {
+     "w": "racially",
+     "start": 21.488,
+     "end": 21.868
+    },
+    {
+     "w": "abused,",
+     "start": 21.928,
+     "end": 22.428
+    }
+   ]
+  },
+  {
+   "i": 10,
+   "text": "and that he hid his tears so his dad wouldn't think he wasn't strong.",
+   "start": 22.639,
+   "end": 25.719,
+   "words": [
+    {
+     "w": "and",
+     "start": 22.639,
+     "end": 22.699
+    },
+    {
+     "w": "that",
+     "start": 22.739,
+     "end": 22.819
+    },
+    {
+     "w": "he",
+     "start": 22.859,
+     "end": 22.959
+    },
+    {
+     "w": "hid",
+     "start": 23.019,
+     "end": 23.159
+    },
+    {
+     "w": "his",
+     "start": 23.199,
+     "end": 23.359
+    },
+    {
+     "w": "tears",
+     "start": 23.419,
+     "end": 23.779
+    },
+    {
+     "w": "so",
+     "start": 23.819,
+     "end": 23.919
+    },
+    {
+     "w": "his",
+     "start": 23.939,
+     "end": 24.099
+    },
+    {
+     "w": "dad",
+     "start": 24.139,
+     "end": 24.379
+    },
+    {
+     "w": "wouldn't",
+     "start": 24.419,
+     "end": 24.659
+    },
+    {
+     "w": "think",
+     "start": 24.699,
+     "end": 24.879
+    },
+    {
+     "w": "he",
+     "start": 24.899,
+     "end": 24.999
+    },
+    {
+     "w": "wasn't",
+     "start": 25.039,
+     "end": 25.299
+    },
+    {
+     "w": "strong.",
+     "start": 25.399,
+     "end": 25.719
+    }
+   ]
+  },
+  {
+   "i": 11,
+   "text": "His dad told him:",
+   "start": 25.932,
+   "end": 26.732,
+   "words": [
+    {
+     "w": "His",
+     "start": 25.932,
+     "end": 26.072
+    },
+    {
+     "w": "dad",
+     "start": 26.112,
+     "end": 26.292
+    },
+    {
+     "w": "told",
+     "start": 26.352,
+     "end": 26.572
+    },
+    {
+     "w": "him:",
+     "start": 26.592,
+     "end": 26.732
+    }
+   ]
+  },
+  {
+   "i": 12,
+   "text": "always do your talking on the track.",
+   "start": 26.963,
+   "end": 28.804,
+   "words": [
+    {
+     "w": "always",
+     "start": 26.963,
+     "end": 27.403
+    },
+    {
+     "w": "do",
+     "start": 27.443,
+     "end": 27.543
+    },
+    {
+     "w": "your",
+     "start": 27.603,
+     "end": 27.723
+    },
+    {
+     "w": "talking",
+     "start": 27.783,
+     "end": 28.143
+    },
+    {
+     "w": "on",
+     "start": 28.203,
+     "end": 28.283
+    },
+    {
+     "w": "the",
+     "start": 28.303,
+     "end": 28.383
+    },
+    {
+     "w": "track.",
+     "start": 28.443,
+     "end": 28.804
+    }
+   ]
+  },
+  {
+   "i": 13,
+   "text": "So he did.",
+   "start": 29.034,
+   "end": 29.534,
+   "words": [
+    {
+     "w": "So",
+     "start": 29.034,
+     "end": 29.134
+    },
+    {
+     "w": "he",
+     "start": 29.174,
+     "end": 29.274
+    },
+    {
+     "w": "did.",
+     "start": 29.314,
+     "end": 29.534
+    }
+   ]
+  },
+  {
+   "i": 14,
+   "text": "He kept winning.",
+   "start": 29.746,
+   "end": 30.446,
+   "words": [
+    {
+     "w": "He",
+     "start": 29.746,
+     "end": 29.826
+    },
+    {
+     "w": "kept",
+     "start": 29.886,
+     "end": 30.046
+    },
+    {
+     "w": "winning.",
+     "start": 30.146,
+     "end": 30.446
+    }
+   ]
+  },
+  {
+   "i": 15,
+   "text": "Again, and again, and again.",
+   "start": 30.699,
+   "end": 32.695,
+   "words": [
+    {
+     "w": "Again,",
+     "start": 30.699,
+     "end": 31.079
+    },
+    {
+     "w": "and",
+     "start": 31.352,
+     "end": 31.452
+    },
+    {
+     "w": "again,",
+     "start": 31.512,
+     "end": 31.932
+    },
+    {
+     "w": "and",
+     "start": 32.175,
+     "end": 32.275
+    },
+    {
+     "w": "again.",
+     "start": 32.315,
+     "end": 32.695
+    }
+   ]
+  },
+  {
+   "i": 16,
+   "text": "Three years later, Dennis's team signed him.",
+   "start": 32.961,
+   "end": 35.266,
+   "words": [
+    {
+     "w": "Three",
+     "start": 32.961,
+     "end": 33.121
+    },
+    {
+     "w": "years",
+     "start": 33.181,
+     "end": 33.381
+    },
+    {
+     "w": "later,",
+     "start": 33.441,
+     "end": 33.761
+    },
+    {
+     "w": "Dennis's",
+     "start": 34.026,
+     "end": 34.246
+    },
+    {
+     "w": "team",
+     "start": 34.486,
+     "end": 34.686
+    },
+    {
+     "w": "signed",
+     "start": 34.806,
+     "end": 35.086
+    },
+    {
+     "w": "him.",
+     "start": 35.106,
+     "end": 35.266
+    }
+   ]
+  },
+  {
+   "i": 17,
+   "text": "And at twenty-three, two corners from the end of the season,",
+   "start": 35.473,
+   "end": 38.282,
+   "words": [
+    {
+     "w": "And",
+     "start": 35.473,
+     "end": 35.553
+    },
+    {
+     "w": "at",
+     "start": 35.593,
+     "end": 35.673
+    },
+    {
+     "w": "twenty-three,",
+     "start": 35.833,
+     "end": 36.373
+    },
+    {
+     "w": "two",
+     "start": 36.682,
+     "end": 36.802
+    },
+    {
+     "w": "corners",
+     "start": 36.922,
+     "end": 37.262
+    },
+    {
+     "w": "from",
+     "start": 37.282,
+     "end": 37.402
+    },
+    {
+     "w": "the",
+     "start": 37.442,
+     "end": 37.502
+    },
+    {
+     "w": "end",
+     "start": 37.542,
+     "end": 37.662
+    },
+    {
+     "w": "of",
+     "start": 37.702,
+     "end": 37.762
+    },
+    {
+     "w": "the",
+     "start": 37.802,
+     "end": 37.882
+    },
+    {
+     "w": "season,",
+     "start": 37.922,
+     "end": 38.282
+    }
+   ]
+  },
+  {
+   "i": 18,
+   "text": "he passed one last car.",
+   "start": 38.521,
+   "end": 40.021,
+   "words": [
+    {
+     "w": "he",
+     "start": 38.521,
+     "end": 38.621
+    },
+    {
+     "w": "passed",
+     "start": 38.681,
+     "end": 38.961
+    },
+    {
+     "w": "one",
+     "start": 39.121,
+     "end": 39.341
+    },
+    {
+     "w": "last",
+     "start": 39.401,
+     "end": 39.661
+    },
+    {
+     "w": "car.",
+     "start": 39.761,
+     "end": 40.021
+    }
+   ]
+  },
+  {
+   "i": 19,
+   "text": "By a single point, he became world champion.",
+   "start": 40.244,
+   "end": 42.923,
+   "words": [
+    {
+     "w": "By",
+     "start": 40.244,
+     "end": 40.344
+    },
+    {
+     "w": "a",
+     "start": 40.384,
+     "end": 40.524
+    },
+    {
+     "w": "single",
+     "start": 40.604,
+     "end": 40.884
+    },
+    {
+     "w": "point,",
+     "start": 41.004,
+     "end": 41.324
+    },
+    {
+     "w": "he",
+     "start": 41.563,
+     "end": 41.643
+    },
+    {
+     "w": "became",
+     "start": 41.683,
+     "end": 42.083
+    },
+    {
+     "w": "world",
+     "start": 42.143,
+     "end": 42.423
+    },
+    {
+     "w": "champion.",
+     "start": 42.463,
+     "end": 42.923
+    }
+   ]
+  },
+  {
+   "i": 20,
+   "text": "Racing for Ron Dennis.",
+   "start": 43.205,
+   "end": 44.685,
+   "words": [
+    {
+     "w": "Racing",
+     "start": 43.205,
+     "end": 43.685
+    },
+    {
+     "w": "for",
+     "start": 43.745,
+     "end": 43.885
+    },
+    {
+     "w": "Ron",
+     "start": 43.945,
+     "end": 44.145
+    },
+    {
+     "w": "Dennis.",
+     "start": 44.245,
+     "end": 44.685
+    }
+   ]
+  },
+  {
+   "i": 21,
+   "text": "The boy with the fifth-hand go-kart was Lewis Hamilton.",
+   "start": 45.266,
+   "end": 48.191,
+   "words": [
+    {
+     "w": "The",
+     "start": 45.266,
+     "end": 45.346
+    },
+    {
+     "w": "boy",
+     "start": 45.386,
+     "end": 45.606
+    },
+    {
+     "w": "with",
+     "start": 45.646,
+     "end": 45.746
+    },
+    {
+     "w": "the",
+     "start": 45.786,
+     "end": 45.886
+    },
+    {
+     "w": "fifth-hand",
+     "start": 45.946,
+     "end": 46.366
+    },
+    {
+     "w": "go-kart",
+     "start": 46.446,
+     "end": 46.966
+    },
+    {
+     "w": "was",
+     "start": 47.211,
+     "end": 47.351
+    },
+    {
+     "w": "Lewis",
+     "start": 47.411,
+     "end": 47.651
+    },
+    {
+     "w": "Hamilton.",
+     "start": 47.731,
+     "end": 48.191
+    }
+   ]
+  }
+ ]
+}
