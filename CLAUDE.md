@@ -2,11 +2,14 @@
 
 Read this first. Reference builds (each HANDOFF.md explains its scripts; reuse them, don't rebuild):
 `videos/pitstop-hospital/` (video 1), `videos/halo/` (video 2) and `videos/hamilton-autograph/` (video 3, newest:
-uses the `library/` assets). Halo has the generalised versions of the
-shared Blender modules (`lib`, `voxel`, `props`, `choreo`) plus `look.py`, `ik.py`, `check.py`, `tools/finish.py`:
-prefer halo's copy of a module; take resumable `go.bat`/`redo.bat` from pitstop-hospital.
+uses the `library/` assets). Shared Blender modules (`lib`, `voxel`, `props`, `choreo`, `look`, `ik`, `check`) and
+tools (`finish.py`, `captions.mjs`, sound mix): take the newest video's copy (hamilton-autograph, built on halo's);
+take resumable `go.bat`/`redo.bat` from pitstop-hospital.
 **Master assets live in `library/`** (2026 F1 car, go-kart, block character, Grand Prix circuit; see `videos/LIBRARY.md`):
 load them in every video instead of modelling new cars, people or tracks. Story shapes: `scripts/story-formats.md`.
+**Always use the latest:** load assets from `library/` by relative path (never copy them into a video); improve an
+asset only in `library/` and log it in LIBRARY.md's change list. Copy shared scripts from the newest reference build
+(top entry of `videos/LOG.md`). This folder is the only project folder; the old ZIP copy is not used.
 `scripts/style-guide.md` and the CLAUDE.md/AGENTS.md inside older video folders (fuji-pixel, lauda-*, lowpoly-blue) are
 the OLD HyperFrames/Three.js style: superseded by this file. New videos go in `videos/<name>/`.
 

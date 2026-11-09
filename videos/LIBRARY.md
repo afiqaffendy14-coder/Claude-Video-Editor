@@ -15,6 +15,17 @@ pixel = 4.5 cm, block character 1.44 m tall).
 | Grand Prix circuit | `library/environments/f1_circuit/` | `circuit_blender.load_circuit(time_of_day=)`, 20 camera presets, `lap_frame`, `grid_slot`, `pit_box`, flags, garage doors |
 Each folder has `sheet/*-preview.jpg` (what it looks like). Full model-sheet renders stay on the laptop only.
 
+**Always the latest version:** load assets straight from `library/` by a relative path (as
+`videos/hamilton-autograph/blender/ham_sets.py` does: `os.path.join(<repo root>, "library", ...)`), never copy them
+into a video folder, so every video gets the newest blueprint. To improve an asset, change it in `library/`, rebuild
+its `.blend` (`build_assets.py`), update its README and add a line to the change list below. A video that needs a
+one-off variant (e.g. a 2008 livery) adds it at run time, like `ham_sets.py`, without editing the library.
+These replace the older per-video versions: `library/cars/f1_2026` replaces `props.f1car_block` (videos 1-2), and
+`library/characters/block_character` replaces `voxel.block_person` (videos 1-3) for new videos.
+
+Asset change list (newest first; add one line per change):
+- 2026-11-09: library added to the project (F1 car 4 liveries, kart incl. fifth_hand, block character, circuit).
+
 ## Pipeline
 | What | Where | Notes |
 |---|---|---|
@@ -52,8 +63,8 @@ Generalised shared modules: prefer these copies over pitstop-hospital's.
 | What | Where | Notes |
 |---|---|---|
 | GPU setup | `blender/lib.py` (`lib.gpu()`) | Cycles on OptiX/CUDA (this laptop: CUDA) |
-| Characters | `blender/voxel.py` (`block_person`) | outfits carry their own skin/hair/helmet colour; headset |
-| Cars | `blender/props.py` | `f1car_block(halo=, helmet=, part="front"/"rear")`, `halo_part()`; wings, suspension, numbers |
+| Characters (old; use `library/characters`) | `blender/voxel.py` (`block_person`) | outfits carry their own skin/hair/helmet colour; headset |
+| Cars (old; use `library/cars/f1_2026`) | `blender/props.py` | `f1car_block(halo=, helmet=, part="front"/"rear")`, `halo_part()`; wings, suspension, numbers |
 | Hands and props | `blender/choreo.py` | `Performer` hands ride on chest/head; `carry_props`; `gesture`, `head_keys`, `body_keys` |
 | Exact contact | `blender/ik.py` | hand/foot contact for still poses |
 | Static collision check | `blender/check.py` | per storyboard frame -> `boards/check.json` |

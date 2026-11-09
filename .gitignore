@@ -11,4 +11,5 @@ __pycache__/
 library/**/sheet/**
 !library/**/sheet/**/
 !library/**/sheet/**/*-preview.jpg
+library/**/sheet/**/*-v[0-9]*-preview.jpg
 !library/**/sheet/**/*.md
